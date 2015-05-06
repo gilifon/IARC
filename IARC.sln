@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnLineRadioCourse", "OnLineRadioCourse\OnLineRadioCourse.csproj", "{0F11A4D9-7E9F-47DF-85ED-AF60228000F4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IARC2", "IARC2\IARC2.csproj", "{97E1848C-BC86-4C04-8005-BB4C1E0D72EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLRC2", "OLRC2\OLRC2.csproj", "{4532F1C0-5D02-454F-B3FA-471E1182D0B1}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F11A4D9-7E9F-47DF-85ED-AF60228000F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F11A4D9-7E9F-47DF-85ED-AF60228000F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F11A4D9-7E9F-47DF-85ED-AF60228000F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F11A4D9-7E9F-47DF-85ED-AF60228000F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97E1848C-BC86-4C04-8005-BB4C1E0D72EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97E1848C-BC86-4C04-8005-BB4C1E0D72EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97E1848C-BC86-4C04-8005-BB4C1E0D72EC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,0 +1,899 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="Keywords" content="">
+    <meta name="viewport" content="width=940, maximum-scale=1">
+    <meta name="Description" content="">
+    <link href="http://m1.pagewiz.net/Resources/style2/lpCommon.css?v=4.011835416352" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="assets/plugins/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
+
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+
+    <!--[if lt IE 9]>
+<style type="text/css">
+</style>
+<![endif]-->
+    <style>
+        .eHolder input[type="text"]{	    	       	        	       
+	        font-size:12px;
+	        height: 15px;
+	        width:140px; 
+	        float:inherit;
+	        direction: rtl;	
+	        padding-left:5px;	
+            padding-right:5px;	
+	        border:solid 1px #d1d1d1;
+	        border-radius: 3px;
+	        -webkit-border-radius: 3px;
+	        -moz-border-radius: 3px;	        
+	}
+
+        body
+        {
+            background-color: #d0d1d3;
+        }
+
+        #ElementsArea
+        {
+            position: absolute;
+            left: 50%;
+            top: 0px;
+            z-index: 10;
+            margin-left: -470px;
+        }
+
+        #SECTION2
+        {
+            position: relative;
+            width: 940px;
+            height: 75px;
+            margin: auto;
+            background-color: #ffffff;
+            background-position: 0% 0%;
+            background-repeat: repeat;
+            background-attachment: scroll;
+            background-size: auto;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            /*background-image: url(data:image/svg+xml;base64,PABzAHYAZwAgAHgAbQBsAG4AcwA9ACIAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHcAMwAuAG8AcgBnAC8AMgAwADAAMAAvAHMAdgBnACIAIAB3AGkAZAB0AGgAPQAiADEAMAAwACUAIgAgAGgAZQBpAGcAaAB0AD0AIgAxADAAMAAlACIAIAB2AGkAZQB3AEIAbwB4AD0AIgAwACAAMAAgADEAIAAxACIAIABwAHIAZQBzAGUAcgB2AGUAQQBzAHAAZQBjAHQAUgBhAHQAaQBvAD0AIgBuAG8AbgBlACIAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AGwAaQBuAGUAYQByAEcAcgBhAGQAaQBlAG4AdAAgAGkAZAA9ACIAZwA0ADUANQAiACAAZwByAGEAZABpAGUAbgB0AFUAbgBpAHQAcwA9ACIAdQBzAGUAcgBTAHAAYQBjAGUATwBuAFUAcwBlACIAIAB4ADEAPQAiADAAJQAiACAAeQAxAD0AIgAwACUAIgAgAHgAMgA9ACIAMAAlACIAIAB5ADIAPQAiADEAMAAwACUAIgA+AA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPABzAHQAbwBwACAAcwB0AG8AcAAtAGMAbwBsAG8AcgA9ACIAcgBnAGIAKAAyADQAOQAsADIANQAyACwAMgA0ADcAKQAiACAAcwB0AG8AcAAtAG8AcABhAGMAaQB0AHkAPQAiADEALgAwADAAIgAgAG8AZgBmAHMAZQB0AD0AIgAwACUAIgAvAD4APABzAHQAbwBwACAAcwB0AG8AcAAtAGMAbwBsAG8AcgA9ACIAcgBnAGIAKAAyADQANQAsADIANAA5ACwAMgA0ADAAKQAiACAAcwB0AG8AcAAtAG8AcABhAGMAaQB0AHkAPQAiADEALgAwADAAIgAgAG8AZgBmAHMAZQB0AD0AIgAxADAAMAAlACIALwA+ACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPAAvAGwAaQBuAGUAYQByAEcAcgBhAGQAaQBlAG4AdAA+AA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwAcgBlAGMAdAAgAHgAPQAiADAAIgAgAHkAPQAiADAAIgAgAHcAaQBkAHQAaAA9ACIAMQAiACAAaABlAGkAZwBoAHQAPQAiADEAIgAgAGYAaQBsAGwAPQAiAHUAcgBsACgAIwBnADQANQA1ACkAIgAgAC8APgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPAAvAHMAdgBnAD4A);
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(249,252,247,1)), color-stop(100%,rgba(245,249,240,1)));
+            background-image: -webkit-linear-gradient(top, rgba(249,252,247,1) 0%, rgba(245,249,240,1) 100%);
+            background-image: -o-linear-gradient(top, rgba(249,252,247,1) 0%, rgba(245,249,240,1) 100%);
+            background-image: -ms-linear-gradient(top, rgba(249,252,247,1) 0%, rgba(245,249,240,1) 100%);
+            background-image: linear-gradient(top, rgba(249,252,247,1) 0%, rgba(245,249,240,1) 100%);
+            background-image: -moz-linear-gradient(top, rgba(249,252,247,1) 0%, rgba(245,249,240,1) 100%);*/
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0;
+            -moz-border-radius-bottomleft: 0px;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0;
+            -webkit-border-bottom-left-radius: 0px;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0;
+            border-style: solid;
+            border-width: 0px;
+            border-color: rgb(0, 0, 0);
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #SECTION3
+        {
+            position: relative;
+            width: 940px;
+            height: 399px;
+            margin: auto;
+            background-color: transparent;
+            background-position: 0% 0%;
+            background-repeat: repeat;
+            background-attachment: scroll;
+            background-size: auto;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            background-image: url(data:image/svg+xml;base64,PABzAHYAZwAgAHgAbQBsAG4AcwA9ACIAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHcAMwAuAG8AcgBnAC8AMgAwADAAMAAvAHMAdgBnACIAIAB3AGkAZAB0AGgAPQAiADEAMAAwACUAIgAgAGgAZQBpAGcAaAB0AD0AIgAxADAAMAAlACIAIAB2AGkAZQB3AEIAbwB4AD0AIgAwACAAMAAgADEAIAAxACIAIABwAHIAZQBzAGUAcgB2AGUAQQBzAHAAZQBjAHQAUgBhAHQAaQBvAD0AIgBuAG8AbgBlACIAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AGwAaQBuAGUAYQByAEcAcgBhAGQAaQBlAG4AdAAgAGkAZAA9ACIAZwA0ADUANQAiACAAZwByAGEAZABpAGUAbgB0AFUAbgBpAHQAcwA9ACIAdQBzAGUAcgBTAHAAYQBjAGUATwBuAFUAcwBlACIAIAB4ADEAPQAiADAAJQAiACAAeQAxAD0AIgAwACUAIgAgAHgAMgA9ACIAMAAlACIAIAB5ADIAPQAiADEAMAAwACUAIgA+AA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPABzAHQAbwBwACAAcwB0AG8AcAAtAGMAbwBsAG8AcgA9ACIAcgBnAGIAKAAwACwAMQA4ADMALAAyADMANAApACIAIABzAHQAbwBwAC0AbwBwAGEAYwBpAHQAeQA9ACIAMQAuADAAMAAiACAAbwBmAGYAcwBlAHQAPQAiADAAJQAiAC8APgA8AHMAdABvAHAAIABzAHQAbwBwAC0AYwBvAGwAbwByAD0AIgByAGcAYgAoADAALAAxADUAOAAsADEAOQA1ACkAIgAgAHMAdABvAHAALQBvAHAAYQBjAGkAdAB5AD0AIgAxAC4AMAAwACIAIABvAGYAZgBzAGUAdAA9ACIAMQAwADAAJQAiAC8APgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBsAGkAbgBlAGEAcgBHAHIAYQBkAGkAZQBuAHQAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AHIAZQBjAHQAIAB4AD0AIgAwACIAIAB5AD0AIgAwACIAIAB3AGkAZAB0AGgAPQAiADEAIgAgAGgAZQBpAGcAaAB0AD0AIgAxACIAIABmAGkAbABsAD0AIgB1AHIAbAAoACMAZwA0ADUANQApACIAIAAvAD4ADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBzAHYAZwA+AA==);
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,183,234,1)), color-stop(100%,rgba(0,158,195,1)));
+            background-image: -webkit-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -o-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -ms-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -moz-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0;
+            -moz-border-radius-bottomleft: 0px;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0;
+            -webkit-border-bottom-left-radius: 0px;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0;
+            border-style: solid;
+            border-width: 0px;
+            border-color: rgb(0, 0, 0);
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #SECTION5
+        {
+            position: relative;
+            width: 940px;
+            height: 270px;
+            margin: auto;
+            background-color: #ffffff;
+            background-position: 0% 0%;
+            background-repeat: repeat;
+            background-attachment: scroll;
+            background-size: auto;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0;
+            -moz-border-radius-bottomleft: 0px;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0;
+            -webkit-border-bottom-left-radius: 0px;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0;
+            border-style: solid;
+            border-width: 0px;
+            border-color: rgb(0, 0, 0);
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #SECTION1
+        {
+            position: relative;
+            width: 940px;
+            height: 70px;
+            margin: auto;
+            background-color: #d7f8ff;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            /*background-image: url(data:image/svg+xml;base64,PABzAHYAZwAgAHgAbQBsAG4AcwA9ACIAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHcAMwAuAG8AcgBnAC8AMgAwADAAMAAvAHMAdgBnACIAIAB3AGkAZAB0AGgAPQAiADEAMAAwACUAIgAgAGgAZQBpAGcAaAB0AD0AIgAxADAAMAAlACIAIAB2AGkAZQB3AEIAbwB4AD0AIgAwACAAMAAgADEAIAAxACIAIABwAHIAZQBzAGUAcgB2AGUAQQBzAHAAZQBjAHQAUgBhAHQAaQBvAD0AIgBuAG8AbgBlACIAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AGwAaQBuAGUAYQByAEcAcgBhAGQAaQBlAG4AdAAgAGkAZAA9ACIAZwA0ADUANQAiACAAZwByAGEAZABpAGUAbgB0AFUAbgBpAHQAcwA9ACIAdQBzAGUAcgBTAHAAYQBjAGUATwBuAFUAcwBlACIAIAB4ADEAPQAiADAAJQAiACAAeQAxAD0AIgAwACUAIgAgAHgAMgA9ACIAMAAlACIAIAB5ADIAPQAiADEAMAAwACUAIgA+AA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPABzAHQAbwBwACAAcwB0AG8AcAAtAGMAbwBsAG8AcgA9ACIAcgBnAGIAKAAwACwAMQA4ADMALAAyADMANAApACIAIABzAHQAbwBwAC0AbwBwAGEAYwBpAHQAeQA9ACIAMQAuADAAMAAiACAAbwBmAGYAcwBlAHQAPQAiADAAJQAiAC8APgA8AHMAdABvAHAAIABzAHQAbwBwAC0AYwBvAGwAbwByAD0AIgByAGcAYgAoADAALAAxADUAOAAsADEAOQA1ACkAIgAgAHMAdABvAHAALQBvAHAAYQBjAGkAdAB5AD0AIgAxAC4AMAAwACIAIABvAGYAZgBzAGUAdAA9ACIAMQAwADAAJQAiAC8APgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBsAGkAbgBlAGEAcgBHAHIAYQBkAGkAZQBuAHQAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AHIAZQBjAHQAIAB4AD0AIgAwACIAIAB5AD0AIgAwACIAIAB3AGkAZAB0AGgAPQAiADEAIgAgAGgAZQBpAGcAaAB0AD0AIgAxACIAIABmAGkAbABsAD0AIgB1AHIAbAAoACMAZwA0ADUANQApACIAIAAvAD4ADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBzAHYAZwA+AA==);
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,183,234,1)), color-stop(100%,rgba(0,158,195,1)));
+            background-image: -webkit-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -o-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -ms-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -moz-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);*/
+            -moz-border-radius-topleft: 0px;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0px;
+            -moz-border-radius-bottomright: 0px;
+            -webkit-border-top-left-radius: 0px;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0px;
+            -webkit-border-bottom-right-radius: 0px;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border-style: solid;
+            border-width: 0px;
+            border-color: black;
+            -moz-box-shadow: 0px 0px 0px rgba(255,255,255,0);
+            -webkit-box-shadow: 0px 0px 0px rgba(255,255,255,0);
+            box-shadow: 0px 0px 0px rgba(255,255,255,0);
+        }
+
+        #elm_6
+        {
+            position: absolute;
+            z-index: 8;
+            height: 66px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 5px;
+            left: 870px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_7
+        {
+            position: absolute;
+            z-index: 9;
+            height: 196px;
+            width: 799px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 95px;
+            left: 101px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_9
+        {
+            position: absolute;
+            z-index: 19;
+            height: 170px;
+            width: 505px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 505px;
+            left: 44px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_10
+        {
+            position: absolute;
+            z-index: 20;
+            height: 230px;
+            width: 310px;
+            border: 4px solid #ffffff;
+            background-color: transparent;
+            top: 495px;
+            left: 574px;
+            background-image: url(data:image/svg+xml;base64,PABzAHYAZwAgAHgAbQBsAG4AcwA9ACIAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAHcAMwAuAG8AcgBnAC8AMgAwADAAMAAvAHMAdgBnACIAIAB3AGkAZAB0AGgAPQAiADEAMAAwACUAIgAgAGgAZQBpAGcAaAB0AD0AIgAxADAAMAAlACIAIAB2AGkAZQB3AEIAbwB4AD0AIgAwACAAMAAgADEAIAAxACIAIABwAHIAZQBzAGUAcgB2AGUAQQBzAHAAZQBjAHQAUgBhAHQAaQBvAD0AIgBuAG8AbgBlACIAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AGwAaQBuAGUAYQByAEcAcgBhAGQAaQBlAG4AdAAgAGkAZAA9ACIAZwA0ADUANQAiACAAZwByAGEAZABpAGUAbgB0AFUAbgBpAHQAcwA9ACIAdQBzAGUAcgBTAHAAYQBjAGUATwBuAFUAcwBlACIAIAB4ADEAPQAiADAAJQAiACAAeQAxAD0AIgAwACUAIgAgAHgAMgA9ACIAMAAlACIAIAB5ADIAPQAiADEAMAAwACUAIgA+AA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAPABzAHQAbwBwACAAcwB0AG8AcAAtAGMAbwBsAG8AcgA9ACIAcgBnAGIAKAAwACwAMQA4ADMALAAyADMANAApACIAIABzAHQAbwBwAC0AbwBwAGEAYwBpAHQAeQA9ACIAMQAuADAAMAAiACAAbwBmAGYAcwBlAHQAPQAiADAAJQAiAC8APgA8AHMAdABvAHAAIABzAHQAbwBwAC0AYwBvAGwAbwByAD0AIgByAGcAYgAoADAALAAxADUAOAAsADEAOQA1ACkAIgAgAHMAdABvAHAALQBvAHAAYQBjAGkAdAB5AD0AIgAxAC4AMAAwACIAIABvAGYAZgBzAGUAdAA9ACIAMQAwADAAJQAiAC8APgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBsAGkAbgBlAGEAcgBHAHIAYQBkAGkAZQBuAHQAPgANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAA8AHIAZQBjAHQAIAB4AD0AIgAwACIAIAB5AD0AIgAwACIAIAB3AGkAZAB0AGgAPQAiADEAIgAgAGgAZQBpAGcAaAB0AD0AIgAxACIAIABmAGkAbABsAD0AIgB1AHIAbAAoACMAZwA0ADUANQApACIAIAAvAD4ADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgADwALwBzAHYAZwA+AA==);
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,183,234,1)), color-stop(100%,rgba(0,158,195,1)));
+            background-image: -webkit-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -o-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -ms-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            background-image: -moz-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%);
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            -moz-border-radius-bottomleft: 5px;
+            -moz-border-radius-bottomright: 5px;
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -webkit-border-bottom-left-radius: 5px;
+            -webkit-border-bottom-right-radius: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+        }
+
+        #elm_11
+        {
+            position: absolute;
+            z-index: 21;
+            height: 180px;
+            width: 266px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 510px;
+            left: 597px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_17
+        {
+            position: absolute;
+            z-index: 28;
+            height: 52px;
+            width: 280px;
+            border: 1px solid rgb(112, 112, 112);
+            background-color: #49CC71;
+            top: 335px;
+            left: 72px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            -moz-border-radius-bottomleft: 5px;
+            -moz-border-radius-bottomright: 5px;
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -webkit-border-bottom-left-radius: 5px;
+            -webkit-border-bottom-right-radius: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
+        }
+
+        #elm_FormTitle
+        {
+            position: absolute;
+            z-index: 9;
+            height: 96px;
+            width: 350px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 170px;
+            left: 50px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+            text-decoration: underline;
+            color: #ffffff;
+        }
+
+        #elm_CallUs
+        {
+            position: absolute;
+            z-index: 9;
+            height: 36px;
+            width: 350px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 400px;
+            left: 0px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        #elm_18
+        {
+            position: absolute;
+            z-index: 29;
+            height: 41px;
+            width: 410px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 210px;
+            left: 73px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_19
+        {
+            position: absolute;
+            z-index: 30;
+            height: 41px;
+            width: 410px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 250px;
+            left: 73px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_20
+        {
+            position: absolute;
+            z-index: 31;
+            height: 41px;
+            width: 410px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 290px;
+            left: 73px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_23
+        {
+            position: absolute;
+            z-index: 34;
+            height: 137px;
+            width: 505px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 584px;
+            left: 44px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_24
+        {
+            position: absolute;
+            z-index: 35;
+            height: 260px;
+            width: 438px;
+            border: 0px solid rgb(0, 0, 0);
+            background-color: transparent;
+            top: 173px;
+            left: 461.5px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #elm_25
+        {
+            position: absolute;
+            z-index: 36;
+            height: 44px;
+            width: 573px;
+            border: 0px solid rgb(255, 255, 255);
+            background-color: transparent;
+            top: 16px;
+            left: 280px;
+            -moz-border-radius-topleft: 0;
+            -moz-border-radius-topright: 0px;
+            -moz-border-radius-bottomleft: 0;
+            -moz-border-radius-bottomright: 0;
+            -webkit-border-top-left-radius: 0;
+            -webkit-border-top-right-radius: 0px;
+            -webkit-border-bottom-left-radius: 0;
+            -webkit-border-bottom-right-radius: 0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            -moz-box-shadow: 0px 0px 0px #ffffff;
+            -webkit-box-shadow: 0px 0px 0px #ffffff;
+            box-shadow: 0px 0px 0px #ffffff;
+        }
+
+        #el_17
+        {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Arial;
+            color: #ffffff;
+        }
+
+        #elm_18 .TopHolder label
+        {
+            float: right;
+            width: 90px;
+            font-size: 15px;
+            font-weight: normal;
+            line-height: 30px;
+            margin-right: 10px;
+            font-family: Arial;
+            color: #ffffff;
+        }
+
+        #el_18
+        {
+            width: 280px;
+            height: 30px;
+            font-size: 12px;
+        }
+
+        #elm_19 .TopHolder label
+        {
+            float: right;
+            width: 90px;
+            font-size: 15px;
+            font-weight: normal;
+            line-height: 30px;
+            margin-right: 10px;
+            font-family: Arial;
+            color: #ffffff;
+        }
+
+        #el_19
+        {
+            width: 280px;
+            height: 30px;
+            font-size: 12px;
+        }
+
+        #elm_20 .TopHolder label
+        {
+            float: right;
+            width: 90px;
+            font-size: 15px;
+            font-weight: normal;
+            line-height: 30px;
+            margin-right: 10px;
+            font-family: Arial;
+            color: #ffffff;
+        }
+
+        #el_20
+        {
+            width: 280px;
+            height: 30px;
+            font-size: 12px;
+        }
+
+        .draggable
+        {
+            direction: trl;
+            text-align: left;
+            float: left;
+        }
+
+        *[etype=Headline]
+        {
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="ElementsArea">
+            <div class="draggable " name="Untitled" etype="Image" id="elm_6">
+                <img id="elm_6_image" height="100%" src="assets/img/landing/iarc_logo.jpg" title="" alt="" />
+            </div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_7">
+                <span id="elm_7_text">
+                    <p dir="rtl" style="text-align: right"><span style="color: #FFFFFF"><span style="font-size: 26px"><em>מחפשים תחביב המשלב טכנולוגיה ותקשורת עם אנשים בכל העולם?</em></span></span></p>
+
+                    <p dir="rtl" style="text-align: right"><span style="font-size: 20px"><span style="color: #FFFFFF">הצטרפו ל 3,000,000 חובבי רדיו ברחבי העולם והתחילו לקלוט ולשדר!&nbsp;</span></span></p>
+                </span>
+            </div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_9">
+                <span id="elm_9_text">
+                    <p dir="rtl" style="text-align: right;">
+                        <span style="font-size: 24px"><strong>הוצאת רישיון חובב רדיו</strong></span><br />
+                        <span style="color: inherit; font-size: 16px">אנו מתקשרים באמצעות שידור וקליטה בתדרים המוקצים לנו במדינות בהן אנו פועלים ולצורך כך, יש להוציא רישיון של חובב רדיו מטעם משרד התקשורת.</span>
+                    </p>
+
+                    <p>&nbsp;</p>
+                </span>
+            </div>
+            <div class="draggable " name="Untitled" etype="Shape" id="elm_10"></div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_11">
+                <span id="elm_11_text">
+                    <p dir="rtl" style="text-align: right"><strong><span style="font-size: 18px"><span style="color: #FFFFFF">אנו, חובבי הרדיו, מתקשרים אחד עם השני בכל רחבי העולם, בעזרת מכשירי רדיו ואיננו זקוקים לשום גורם מתווך, כך שגם כאשר כל המערכות האחרות קורסות, אנחנו יכולים להמשיך ולתקשר (חובבי הרדיו מסייעים במקרי חירום רבים כמו אסונות טבע, בהם אמצעי התקשורת האחרים מושבתים).</span></span></strong></p>
+                </span>
+            </div>
+            <div class="draggable " name="Untitled" etype="button" id="elm_17"><span tabindex="2" style="display: inline-block; vertical-align: middle; height: 100%"></span><span class="elButton" id="el_17">שלחו טופס</span></div>
+
+
+            <div class="draggable " name="Untitled" etype="Text" id="elm_FormTitle">
+                <span id="Span1">
+                    <p dir="rtl" style="text-align: right"><span style="color: #FFFFFF"><span style="font-size: 26px"><em>השאירו פרטים וניצור אתכם קשר</em></span></span></p>
+                </span>
+            </div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_CallUs">
+                <span id="Span2">
+                    <p dir="rtl" style="text-align: right"><span style="color: #FFFFFF"><span style="font-size: 26px"><em>או התקשרו ל 073-2158-203</em></span></span></p>
+                </span>
+            </div>
+
+            <div class="draggable " name="Untitled" etype="textbox" id="elm_18">
+                <div class="TopHolder">
+                    <label>שם</label><div class="eHolder">
+                        <input placeholder="" value="" tabindex="3" validationtype="None" isrequired="False" class="el" id="el_18" name="el_18" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="draggable " name="Untitled" etype="textbox" id="elm_19">
+                <div class="TopHolder">
+                    <label>טלפון</label><div class="eHolder">
+                        <input placeholder="" value="" tabindex="3" validationtype="None" isrequired="False" class="el" id="el_19" name="el_19" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="draggable " name="Untitled" etype="textbox" id="elm_20">
+                <div class="TopHolder">
+                    <label>אימייל</label><div class="eHolder">
+                        <input placeholder="" value="" tabindex="3" validationtype="None" isrequired="False" class="el" id="el_20" name="el_20" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_23">
+                <span id="elm_23_text">
+                    <p dir="rtl" style="text-align: right"><span style="font-size: 22px"><strong>קורס הכנה לבחינת חובבי הרדיו</strong></span></p>
+
+                    <p dir="rtl" style="text-align: right">
+                        <span style="font-size: 16px">כדי להתכונן לבחינה של משרד התקשורת בצורה הטובה ביותר, אגודת חובבי הרדיו הקימה קורס וירטואלי מקיף ומרתק באינטרנט, העוסק בכל הנושאים הרלוונטיים:
+חשמל, אלקטרוניקה, תקשורת רדיו ועוד...
+בנוסף, הנרשמים לקורס, יוכלו לתרגל את החומר בעזרת מצגות, מבחנים קודמים ושאלות לדוגמא שריכזנו עבורכם.</span>
+                    </p>
+
+                    <p>&nbsp;</p>
+                </span>
+            </div>
+            <div class="draggable " name="Untitled" etype="Image" id="elm_24">
+                <img id="elm_24_image" width="100%" height="100%" src="assets/img/landing/station.jpg" title="" alt="" />
+            </div>
+            <div class="draggable " name="Untitled" etype="Text" id="elm_25">
+                <span id="elm_25_text">
+                    <p dir="rtl" style="text-align: right"><span style="color: #104d7c"><span style="font-size: 36px"><strong>אגודת חובבי הרדיו בישראל</strong></span></span></p>
+                </span>
+            </div>
+
+        </div>
+        <div class="section" id="SECTION2" orderid="1">
+            <div class="section-centered"></div>
+        </div>
+        <div class="section" id="SECTION3" orderid="2">
+            <div class="section-centered"></div>
+        </div>
+        <div class="section" id="SECTION5" orderid="3">
+            <div class="section-centered"></div>
+        </div>
+        <div class="section" id="SECTION1" orderid="4">
+            <div class="section-centered">
+                <div class="container">
+                    <ul class="social-icons social-icons-color" style="margin-top: 20px; margin-left: 50px">
+                        <li style="padding: 0 5px 0 0"><a href="https://www.facebook.com/groups/353267071379649/" target="_blank" data-original-title="Facebook" class="social_facebook"></a></li>
+                        <li style="padding: 0 5px 0 0"><a href="https://twitter.com/iarc_info" target="_blank" data-original-title="Twitter" class="social_twitter"></a></li>
+                        <li style="padding: 0 5px 0 0"><a href="http://iarcinfo.wordpress.com/" target="_blank" data-original-title="Wordpress" class="social_wordpress"></a></li>
+                        <li style="padding: 0 5px 0 0"><a href="https://plus.google.com/u/0/b/101436536481101172135/photos/101436536481101172135/albums" target="_blank" data-original-title="google plus" class="social_googleplus"></a></li>
+                    </ul>
+                    <div dir="rtl" style="text-align: right; margin-right: 45px;"><span style="color: #24618f"><span style="font-size: 16px"><strong>בקרו אותנו <a href="http://www.iarc.org/iarc/" target="_blank">באתר האינטרנט</a> של אגודת חובבי הרדיו וברשתות החברתיות!</strong></span></span></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var errmsg = '';
+        function clearForm() {
+            $('#el_18').val('');
+            $('#el_19').val('');
+            $('#el_20').val('');
+        }
+
+        function validate() {
+            var name = $('#el_18').val().trim();
+            var phone = $('#el_19').val().trim();
+            var email = $('#el_20').val().trim();
+
+            var isValid = true;
+
+            if (name == '') {
+                errmsg = 'לא לשכוח לרשום שם..<br/>';
+                isValid = false;
+            }
+            if (phone == '') {
+                errmsg += 'טלפון הוא שדה חובה..<br/>';
+                isValid = false;
+            }
+            if (email == '') {
+                errmsg += 'אימייל הוא שדה חובה..<br/>';
+                isValid = false;
+            }
+
+
+            return isValid;
+        }
+
+        $('#el_17').click(function () {
+            //window.location.href = "target.html";
+            //return;
+
+            $('#el_17').attr("disabled", true);
+
+            var name = $('#el_18').val();
+            var phone = $('#el_19').val();
+            var email = $('#el_20').val();
+
+            if (validate()) {
+                $.ajax({
+                    type: "POST",
+                    url: "Server/sendreq.php",
+                    data: { 'request': { 'n': name, 'p': phone, 'e': email } }
+                }).done(function (data) {
+                    App.display(data);
+                    clearForm();
+                    errmsg = '';
+                    $('#el_17').attr("disabled", false);
+                    window.location.href = "target.html";
+                }).error(function (xhr, ajaxOptions, thrownError) {
+                    alert(jQuery.parseJSON(xhr.responseText).error);
+                    errmsg = '';
+                    $('#el_17').attr("disabled", false);
+                });
+            }
+            else {
+                App.display(errmsg, 'error');
+                errmsg = '';
+                $('#el_17').attr("disabled", false);
+            }
+
+        })
+    </script>
+
+    <script>(function () {
+    var _fbq = window._fbq || (window._fbq = []);
+    if (!_fbq.loaded) {
+        var fbds = document.createElement('script');
+        fbds.async = true;
+        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+    }
+    _fbq.push(['addPixelId', '672739846102543']);
+})();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', 'PixelInitialized', {}]);
+    </script>
+    <noscript>
+        <img height="1" width="1" alt="" style="display: none" src="https://www.facebook.com/tr?id=672739846102543&amp;ev=NoScript" />
+    </noscript>
+
+    <!-- Google Code for &#1512;&#1497;&#1502;&#1512;&#1511;&#1496;&#1497;&#1504;&#1490; &#1495;&#1493;&#1489;&#1489;&#1497; &#1492;&#1512;&#1491;&#1497;&#1493; -->
+    <!-- Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. For instructions on adding this tag and more information on the above requirements, read the setup guide: google.com/ads/remarketingsetup -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 971694260;
+        var google_conversion_label = "MNQUCKTPqwoQtMGrzwM";
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display: inline;">
+            <img height="1" width="1" style="border-style: none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/971694260/?value=1.00&amp;label=MNQUCKTPqwoQtMGrzwM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+</body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-53035920-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+</html>

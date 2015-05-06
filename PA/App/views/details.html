@@ -1,0 +1,185 @@
+﻿<div class="container" style="background-color: #f5fbff; direction: rtl">
+    <h2>טופס פרטים אישיים</h2>
+    <div id="registration-form" class="form-horizontal" data-parsley-validate>
+        <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="editGroup" value="0" data-bind="checked: isEdit" />
+                            תצוגה
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="editGroup" value="1" data-bind="checked: isEdit" />
+                            עריכה</label>
+                    </div>
+        </div>
+        <div class="row">
+            <div id="picbox" class="col-md-2">
+            </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="licensenum" class="control-label">דרגה</label>
+                        <select id="vision" class="form-control input-sm selectpicker show-menu-arrow" data-bind="options: licenseclasses(), value: licenseclass, optionsText: 'text', optionsValue: 'value', enable: false"></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="licensenum" class="control-label">מספר רשיון</label>
+                        <input type="text" class="form-control" id="licensenum" placeholder="מספר רשיון" data-bind="value: licensenum, enable: false" tabindex="3" data-parsley-errors-messages-disabled data-parsley-type="digits" required data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הרישיון שלך - ספרות בלבד">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="id" class="control-label">תעודת זהות</label>
+                        <input type="text" class="form-control" id="id" placeholder="תעודת זהות" data-bind="value: id, enable: isEdit()=='1'" tabindex="2" data-parsley-errors-messages-disabled data-parsley-type="digits" required data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר תעודת הזהות שלך - ספרות בלבד">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="callsign" class="control-label">אות קריאה</label>
+                        <input type="text" class="form-control" id="callsign" placeholder="אות קריאה" data-bind="value: callsign, enable: false" tabindex="1" data-parsley-errors-messages-disabled required data-toggle="tooltip" data-trigger="focus" title="הכנס את אות הקריאה שלך" style="text-transform: uppercase">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="elastname" class="control-label">שם משפחה באנגלית</label>
+                        <input type="text" class="form-control" id="elastname" placeholder="שם משפחה באנגלית" data-bind="value: elastname, enable: isEdit()=='1'" tabindex="8" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="efirstname" class="control-label">שם פרטי באנגלית</label>
+                        <input type="text" class="form-control" id="efirstname" placeholder="שם פרטי באנגלית" data-bind="value: efirstname, enable: isEdit()=='1'" tabindex="7" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="lastname" class="control-label">שם משפחה</label>
+                        <input type="text" class="form-control" id="lastname" placeholder="שם משפחה" data-bind="value: lastname, enable: isEdit()=='1'" tabindex="6" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="firstname" class="control-label">שם פרטי</label>
+                        <input type="text" class="form-control" id="firstname" placeholder="שם פרטי" data-bind="value: firstname, enable: isEdit()=='1'" tabindex="5" data-parsley-errors-messages-disabled required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-2" style="margin-top: 25px">
+                        <label class="checkbox checkbox-inline">
+                            <input type="checkbox" name="flavorGroup" value="m" data-bind="checked: family_head" disabled />
+                            ראש משפחה
+                        </label>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 25px">
+                        <!--<label for="gender" class="control-label">מין</label>-->
+                        <label class="radio radio-inline">
+                            <input type="radio" name="flavorGroup" value="m" data-bind="checked: gender, enable: isEdit()=='1'" />
+                            זכר
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="flavorGroup" value="f" data-bind="checked: gender, enable: isEdit()=='1'" />
+                            נקבה</label>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="birthdate" class="control-label">תאריך לידה</label>
+                        <div class='input-group date' id='birthdate' data-date-format="YYYY/MM/DD" tabindex="9">
+                            <span class="input-group-addon"><span class="icon icon-time"></span>
+                            </span>
+                            <input type='text' class="form-control" data-bind="value: birthdate, enable: isEdit()=='1'" data-parsley-errors-messages-disabled required />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="house" class="control-label">דירה</label>
+                        <input type="text" class="form-control" id="house" placeholder="דירה" data-bind="value: house, enable: isEdit()=='1'" tabindex="15">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="address" class="control-label">כתובת</label>
+                        <input type="text" class="form-control" id="address" placeholder="כתובת" data-bind="value: address, enable: isEdit()=='1'" tabindex="14" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="city" class="control-label">עיר</label>
+                        <input type="text" class="form-control" id="city" placeholder="עיר" data-bind="value: city, enable: isEdit()=='1'" tabindex="13" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="country" class="control-label">מדינה</label>
+                        <input type="text" class="form-control" id="country" placeholder="אזרחות" data-bind="value: country, enable: isEdit()=='1'" tabindex="19" data-parsley-errors-messages-disabled required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="inputEmail1" class="control-label">אימייל</label>
+                        <input type="email" class="form-control" id="email" placeholder="אימייל" data-bind="value: email, enable: isEdit()=='1'" tabindex="20" data-parsley-errors-messages-disabled required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="mobile" class="control-label">נייד</label>
+                        <input type="text" class="form-control" id="mobile" placeholder="נייד" data-bind="value: mobile, enable: isEdit()=='1'" tabindex="18" data-parsley-errors-messages-disabled data-parsley-type="digits" data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הטלפון הנייד שלך - ספרות בלבד">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="phone" class="control-label">טלפון</label>
+                        <input type="text" class="form-control" id="phone" placeholder="טלפון" data-bind="value: phone, enable: isEdit()=='1'" tabindex="17" data-parsley-errors-messages-disabled data-parsley-type="digits" data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הטלפון שלך - ספרות בלבד">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="zip" class="control-label">מיקוד</label>
+                        <input type="text" class="form-control" id="zip" placeholder="מיקוד" data-bind="value: zip, enable: isEdit()=='1'" tabindex="16" data-parsley-errors-messages-disabled required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9">
+                        <label class="radio radio-inline">
+                            <input type="checkbox" name="membershipGroup" value="2014" data-bind="checked: membership" disabled />
+                            2014
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="checkbox" name="membershipGroup" value="2013" data-bind="checked: membership" disabled />
+                            2013
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="checkbox" name="membershipGroup" value="2012" data-bind="checked: membership" disabled />
+                            2012
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="checkbox" name="membershipGroup" value="2011" data-bind="checked: membership" disabled />
+                            2011
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="checkbox" name="membershipGroup" value="2010" data-bind="checked: membership" disabled />
+                            2010
+                        </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="inputEmail1" class="control-label">חברות בחמש השנים האחרונות</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-success pull-left" data-bind="command: Send, enable: isEdit()=='1'">שלח</button>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה" data-bind="enable: isEdit()=='1'">
+                    </div>
+                    <div class="col-md-2 text-left"><span data-bind="text: file"></span></div>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-2">
+                        <!--<button id="SendBtn" type="button" class="btn btn-default" data-bind="click: Clear">נקה</button>-->
+                        <!--<button id="צור תמונות" type="button" class="btn btn-default" data-bind="click: ImageGen">נקה</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="content-box">
+        <div class="clear">
+            <!--<input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">-->
+            <!--<span style="padding-left: 5px; vertical-align: middle;"><i>PNG, JPG, or GIF (500K max file size)</i></span>-->
+            <div id="errormsg" class="clearfix redtext">
+            </div>
+            <div id="pic-progress-wrap" class="progress-wrap" style="margin-top: 10px; margin-bottom: 10px;">
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>
+

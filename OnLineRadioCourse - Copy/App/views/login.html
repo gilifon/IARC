@@ -1,0 +1,19 @@
+﻿<div style="margin-top: 50px; direction: rtl">
+    <div class="span4" style="float:right">
+        <div class="well">
+            <h4>שלום, נא הכנס שם וסיסמה</h4>
+            <div class="alert alert-error" data-bind="visible: showLoginAlert">
+                <a class="close" data-dismiss="alert" href="#">x</a>השם ו\או הסיסמה שגויים
+            </div>
+            <div>
+                <input data-bind="value: username" class="span3" placeholder="שם משתמש" type="text" name="username">
+                <input data-bind="value: password" class="span3" placeholder="סיסמה" type="password" name="password">
+            </div>
+            <div>
+                <button data-bind="click: login" class="btn-info btn" type="submit">
+                    הכנס
+                </button>                
+            </div>
+        </div>
+    </div>
+</div>

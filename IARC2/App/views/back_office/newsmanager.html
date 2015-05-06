@@ -1,0 +1,46 @@
+﻿<div class="text-right" style="direction: rtl">
+
+    <div class="row margin-bottom-40">
+        <div class="col-md-12">
+            <div class="panel panel-grey margin-bottom-40 text-right">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-right">ניהול חדשות</h4>
+                </div>
+                <table class="table table-striped table-condensed Xsortable">
+                    <thead>
+                        <tr>
+                            <th class="text-right" data-unsortable>מחק</th>
+                            <th class="text-right" data-source="title">כותרת</th>
+                            <th class="text-right" data-source="author">מחבר</th>
+                            <th class="text-right" data-source="tags">תגיות</th>
+                            <th class="text-right" data-source="is_active">פעיל</th>
+                            <th class="text-right" data-source="is_abstract">תקציר</th>
+                            <th class="text-right" data-source="date">תאריך</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sortable1" data-bind="foreach: itemList">
+                        <tr>
+                            <td ><a style="text-decoration: none; cursor: pointer" class="icon-trash" data-bind="click: remove"></a></td>
+                            <td>
+                                <span data-bind="editable: title, editableOptions: { name: 'title', pk: id, url: '/save' }"></span>
+                            </td>
+                            <td>
+                                <span data-bind="editable: author, editableOptions: { name: 'author', pk: id, url: '/save' }"></span>
+                            </td>
+                            <td>
+                                <span data-bind="editable: tags, editableOptions: { name: 'tags', pk: id, url: '/save' }"></span>
+                            </td>
+                            <td>
+                                <span data-type="checklist" data-bind="editable: is_active, editableOptions: { name: 'is_active', pk: id, url: '/save' }, source: [{value: '1', text: 'Is Active'}]"></span>
+                            </td>
+
+                            <!--<td><input type="checkbox" data-bind="checked: is_active == '1'" disabled="disabled" /></td>-->
+                            <td><input type="checkbox" data-bind="checked: is_abstract == '1'" disabled="disabled" /></td>
+                            <td><span data-bind="html: date"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

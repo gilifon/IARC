@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="ISO-8859-8">
+    <style type="text/css">
+        label
+        {
+            display: block;
+        }
+
+        .quiz
+        {
+            width: 300px;
+            padding-bottom: 10px;
+        }
+
+            .quiz form
+            {
+                padding: 3px;
+                border: 1px dashed #000;
+            }
+
+            .quiz p
+            {
+                padding: 3px;
+                border: 1px solid #000;
+            }
+
+                .quiz p b
+                {
+                    font: 120% verdana;
+                    color: #006666;
+                }
+
+        .question
+        {
+            font: 90% verdana;
+            color: #006666;
+            margin-bottom: 15px;
+        }
+
+        .answers
+        {
+            font: 75% verdana;
+        }
+    </style>
+    <title>Quiz</title>
+</head>
+<body style="direction: rtl; height: 345px;">
+    <div id="quiz1" class="quiz"></div>
+    <div id="quiz2" class="quiz"></div>
+
+    <script type="text/javascript">
+        var quizArray = [
+'41~63~1.	עבור איזה סוג לווינים נקודת ה- sub satellite point נשארת קבועה~HEO~LEO~גיאוסינכרוניים~גיאומגנטיים',
+'20~72~:זמן מחזור של לווין מוגדר כ~הזמן שנמצא באפוגי~הזמן שנמצא בפריגיי~הזמן שנדרש לביצוע הקפה שלמה~הזמן שנדרש לעבור מהאפוגיי לפריגיי',
+'20~69~איזה מהמשפטים הבאים מתאר אנטנה איזוטרופי?~נטנה אנכית הממוקמת בחלל החופשי.~נטנה אופקית המשמשת כאנטנת ייחוס.~נטנה תיאורטית שמשמשת כייחוס להגבר אנטנה.~נטנה כיוונית שמשמשת יחוס לחישובי הגבר אנטנה.',
+'34~71~הגורם שיכול ליצור על רכיבים ריאקטיביים מתח גבוה ממתח המקור הוא:~תהודה~קיבול~השראות~התנגדות',
+'107~89~מהו קיטוב גל אלקטרומגנטי שהשדה המגנטי שלו מקביל לקרקע?~מעגלי~אופקי~אליפטי~אנכי'
+        ];
+        
+
+        var qpp = 2;
+        // questions per page to display
+        var reslink = "";
+        // file to link to at end of quiz
+
+        // Quiz Javascript
+        // copyright 29th October 2006, 4th June 2011, by Stephen Chapman
+        // permission to use this Javascript on your web page is granted
+        // provided that all of the code in this script (including these
+        // comments) is used without any alteration
+        (function (quizArray, qpp, reslink) {
+            var perPage = 0;
+            var n1 = 109;
+            var n2 = 13;
+            var reslink = '';
+            var qsParm = [];
+            function qs() {
+                var query = window.location.search.substring(1);
+                var parms = query.split('&');
+                for (var i = 0;
+                i < parms.length;
+                i++) {
+                    var pos = parms[i].indexOf('=');
+                    if (pos > 0) {
+                        var key = parms[i].substring(0, pos);
+                        var val = parms[i].substring(pos + 1);
+                        qsParm[key] = val;
+                    }
+                }
+            }
+            qsParm['qnum'] = 0;
+            qsParm['cor'] = 0;
+            qsParm['fin'] = 0;
+            qs();
+
+            var qnum = qsParm['qnum'];
+
+            var cor = qsParm['cor'];
+            cor = cor % n1;
+
+            function loadQuiz() {
+                if (qnum >= quizArray.length) displayResult();
+                else {
+                    displayQuiz(ent = document.getElementById('quiz1'), qnum++);
+                    for (var j = 2; j <= qpp; j++)
+                    {
+                        if ((ent = document.getElementById('quiz' + j)) && qnum < quizArray.length) displayQuiz(ent, qnum++);
+                    }
+                    var newB = document.createElement("button");
+                    newB.style.styleFloat = 'right';
+                    newB.style.cssFloat = 'right';
+                    newB.setAttribute("style", "float: right; margin-top:10px;");
+                    newB.onclick = function () {
+                        nextPage(qnum);
+                        return false;
+                    };
+                    var newTb = document.createTextNode('הבא >>');
+                    newB.appendChild(newTb);
+                    ent.appendChild(newB);
+                }
+            }
+            function displayQuiz(ent, qnum) {
+                perPage++;
+                var qna = quizArray[qnum].split('~');
+                var newF = document.createElement("form");
+                var newDq = document.createElement("div");
+                newDq.className = 'question';
+                newDq.appendChild(document.createTextNode(Number(qnum + 1) + ': ' + qna[2]));
+                newF.appendChild(newDq);
+                newDq = document.createElement("div");
+                newDq.className = 'answers';
+                for (var i = 3;
+                qna[i] != null && qna[i] != '';
+                i++) {
+                    var newDa = document.createElement("label");
+                    newDa.htmlFor = 'a' + qnum + i;
+                    /*@cc_on @if (@_jscript) var newR = document.createElement("<input name='a"+qnum+"'>");
+                    @else */ var newR = document.createElement("input");
+                newR.name = 'a'+qnum;
+                    /* @end @*/ newR.type = 'radio';
+                    newR.id = 'a' + qnum + i;
+                    newR.value = i;
+                    newDa.appendChild(newR);
+                    newDa.appendChild(document.createTextNode(' ' + qna[i] + ' '));
+                    newDq.appendChild(newDa);
+                } newF.appendChild(newDq);
+                document.getElementById('quiz' + perPage).appendChild(newF);
+            }
+            function displayResult() {
+                var newP = document.createElement("p");
+                newP.style.textAlign = 'center';
+                var newB = document.createElement("b");
+                newB.appendChild(document.createTextNode('ברכותי,'));
+                newB.appendChild(document.createElement("br"));
+                newB.appendChild(document.createTextNode(' השלמת את המבחן '));
+                newP.appendChild(newB);
+                newP.appendChild(document.createElement("br"));
+                newP.appendChild(document.createElement("br"));
+                newP.appendChild(document.createTextNode('ענית נכון על ' + cor + ' מתוך ' + qnum + ' השאלות שנשאלת.'));
+
+                if (reslink != '') {
+                    newP.appendChild(document.createElement("br"));
+                    newA = document.createElement("a");
+                    newA.href = reslink + '?cor=' + cor + '&qnum=' + qnum;
+                    newA.appendChild(document.createTextNode('פרטים נוספים'));
+                    newP.appendChild(newA);
+                }
+                document.getElementById('quiz1').appendChild(newP);
+                var newC = document.createElement("button");
+                newC.style.styleFloat = 'right';
+                newC.onclick = function () {
+                    cor = 0;
+                    nextPage(0);
+                    return false;
+                };
+                newC.appendChild(document.createTextNode('חזור למבחן'));
+                document.getElementById('quiz1').appendChild(newC);
+
+            }
+            function checkAnswer(e, b, g, q) {
+                var a = -1;
+                var x = (b % n2) + 2;
+                for (var i = 3;
+                document.getElementById(e + i) ;
+                i++) {
+                    if (document.getElementById(e + i).checked) {
+                        a = i - 3;
+                    }
+                } var c = (g % x);
+                return a == c ? 1 : 0;
+            }
+            function nextPage(qnum) {
+                for (var i = qnum - perPage; i < qnum; i++) {
+                    var qna = quizArray[i].split('~');
+                    cor += checkAnswer('a' + i, qna[1], qna[0], i);
+                }
+                var thispage = self.location.href;
+                var www = thispage.lastIndexOf('?');
+                if (www != -1) thispage = thispage.substr(0, www);
+                var p = Math.floor((Math.random() * 8) + 2);
+                var m = (p * n1) + cor;
+                var nxt = thispage + '?qnum=' + qnum + '&cor=' + m;
+                if (qnum >= quizArray.length) nxt += '&fin=1';
+                location.href = nxt;
+            }
+            loadQuiz();
+
+        })(quizArray, qpp, reslink);
+
+    </script>
+</body>
+
+
+</html>

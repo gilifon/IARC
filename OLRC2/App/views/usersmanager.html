@@ -1,0 +1,101 @@
+﻿<div class="text-right" style="direction: rtl">
+
+    <div class="row margin-bottom-10">
+        <div class="col-md-12">
+            <h2><span class="label label-user">ניהול משתמשים</span></h2>
+        </div>
+    </div>
+
+    <div class="row margin-bottom-10">
+        <div class="col-md-12">
+            <h4>הוסף משתמש חדש</h4>
+        </div>
+    </div>
+
+    <div class="row margin-bottom-10">
+        <div class="col-md-3">
+            <a data-bind="click: clearControl" class="btn btn-user"><span class="glyphicon glyphicon-refresh"></span> נקה</a>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: pw2" placeholder="אימות סיסמה" type="password" tabindex="3" />
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: pw" placeholder="סיסמה" type="password" tabindex="2" />
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: un" placeholder="שם משתמש" type="text" tabindex="1" />
+        </div>
+    </div>
+
+    <div class="row margin-bottom-10" style="direction: rtl">
+        <div class="col-md-3">
+            <a data-bind="click: addItem" class="btn btn-user"><span class="glyphicon glyphicon-hdd"></span> שמור</a>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: em" placeholder="כתובת מייל" type="text" tabindex="6" />
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: ln" placeholder="שם משפחה" type="text" tabindex="5" />
+        </div>
+        <div class="col-md-3">
+            <input class="form-control text-right" data-bind="value: fn" placeholder="שם פרטי" type="text" tabindex="4" />
+        </div>
+    </div>
+
+    
+    <div class="row margin-bottom-10">    
+        <div class="col-md-3 pull-right">
+            <label class="control-label">קורס:</label>
+            <label class="radio-inline" style="margin: 0 15px 0 30px">
+                <input data-bind="checked: course" type="radio" name="course" value="1" />א
+            </label>
+            <label class="radio-inline">
+                <input data-bind="checked: course" type="radio" name="course" value="2" />ב-ד
+            </label>
+        </div>
+        <div class="col-md-2 pull-right">
+            <label class="checkbox-inline">
+                <input data-bind="value: role" type="checkbox" />משתמש מוגבל
+            </label>
+        </div>
+    </div>
+
+
+    <div class="row margin-bottom-40">
+        <div class="col-md-12">
+            <div class="panel panel-user margin-bottom-40 text-right">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-right">רשימת משתמשים</h4>
+                </div>
+                <table class="table table-striped table-condensed sortable">
+                    <thead>
+                        <tr>
+                            <th class="text-right" data-unsortable>מחק</th>
+                            <th class="text-right" data-unsortable>&nbsp;</th>
+                            <th class="text-right" data-source="username">שם משתמש</th>
+                            <th class="text-right" data-source="firstname">שם פרטי</th>
+                            <th class="text-right" data-source="lastname">שם משפחה</th>
+                            <th class="text-right" data-source="email">כתובת מייל</th>
+                            <th class="text-right" data-source="lastlogin">חיבור אחרון</th>
+                            <th class="text-right" data-source="course">קורס</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sortable1" data-bind="foreach: itemList">
+                        <tr>
+                            <td ><a style="text-decoration: none; cursor: pointer" class="icon-trash" data-bind="click: remove"></a></td>
+                            <td>
+                                <label data-bind="text: ($index() + 1)" class="badge label-user"></label>
+                            </td>
+                            <td><span data-bind="html: username"></span></td>
+                            <td><span data-bind="html: firstname"></span></td>
+                            <td><span data-bind="html: lastname"></span></td>
+                            <td><span data-bind="html: email"></span></td>
+                            <td><span data-bind="html: lastlogin"></span></td>
+                            <td><span data-bind="html: (course == '2')?'ב-ד':'א'"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

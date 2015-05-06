@@ -1,0 +1,17 @@
+﻿<div data-bind="foreach: items">
+    <div class="col-md-6">
+        <div class="magazine-news-img">
+            <a data-bind="attr: { 'href': url }" target="_blank">
+                <img alt="" data-bind="attr: { 'src': image }" class="img-responsive">
+            </a>
+        </div>
+        <h3><a data-bind="attr: { 'href': url }" target="_blank"><span data-bind="    html: title"></span></a></h3>
+        <div class="by-author">
+            <span data-bind="html: date"></span>&nbsp;\&nbsp; 
+            <strong><span data-bind="html: author"></span></strong>
+        </div>
+        <p><span data-bind="html: content"></span></p>
+    </div>
+</div>
+
+

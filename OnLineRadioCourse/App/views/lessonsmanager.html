@@ -1,0 +1,79 @@
+﻿<div style="margin-top: 50px; direction: rtl">
+    <span class="btn-large btn-danger span11 pull-right" style="color: #f6f6f6; text-align: center">ניהול שיעורים</span>
+    <div class="pull-right">
+        <h4>הוסף שיעור חדש</h4>
+        <i id="loadingImage" class="icon-spinner icon-2x icon-spin pull-right centered"></i>
+        <div class="span11 form-inline">
+            <div class="span7 pull-right">
+                <input class="span7" data-bind="value: desc" placeholder="תיאור" type="text" />
+            </div>
+            <div class="span2 pull-right">
+                    נוהל
+                    <input type="radio" value="0" name="section" data-bind="checked: section"/>                
+                    טכני
+                    <input type="radio" value="1" name="section" data-bind="checked: section"/>
+            </div>
+            <span class="pull-left" style="position: relative">
+                <span style="z-index: 99999; position: absolute; left: 0">
+                    <input id="fileToUpload" type="file" name="fileToUpload" data-bind="event: { change: submit }" style="opacity: 0; width: 95px">
+                </span>
+                <span>
+                    <button id="uploadBtn" class="btn btn-danger fileinput-button pull-left">
+                        <span class="icon-file icon-white"></span>
+                        <span>בחר קובץ</span>
+                    </button>
+                </span>
+            </span>
+        </div>
+
+    </div>
+    <div style="clear: both; height: 20px"></div>
+    
+    <span class="btn btn-danger span6 pull-right" style="color: #f6f6f6; text-align: center">נוהל</span>
+    <div style="clear: both; height: 10px"></div>
+    <div class="span11 pull-right">
+        <table class="table table-striped table-condensed">
+            <thead style="background-color: #555555; color: #eeeeee">
+                <tr>
+                    <th style="width: 30px;">&nbsp;</th>
+                    <th style="width: 20px;">מחק</th>
+                    <th>תיאור</th>
+                </tr>
+            </thead>
+            <tbody class="sortable1" data-bind="foreach: itemList">
+                <tr data-bind="attr: { 'id': id }" style="cursor:move">
+                    <td>
+                        <label data-bind="text: ($index() + 1)" class="badge label-important"></label>
+                    </td>
+                    <td><a style="text-decoration: none; cursor: pointer" class="icon-trash" data-bind="click: remove"></a></td>
+                    <td><span data-bind="html: d"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="clear: both; height: 20px"></div>
+    <span class="btn btn-danger span6 pull-right" style="color: #f6f6f6; text-align: center">טכני</span>
+    <div style="clear: both; height: 10px"></div>
+    <div class="span11 pull-right">
+        <table class="table table-striped table-condensed">
+            <thead style="background-color: #555555; color: #eeeeee">
+                <tr>
+                    <th style="width: 30px;">&nbsp;</th>
+                    <th style="width: 20px;">מחק</th>
+                    <th>תיאור</th>
+                </tr>
+            </thead>
+            <tbody class="sortable2" data-bind="foreach: itemList2">
+                <tr data-bind="attr: { 'id': id }" style="cursor:move">
+                    <td>
+                        <label data-bind="text: ($index() + 1)" class="badge label-important"></label>
+                    </td>
+                    <td><a style="text-decoration: none; cursor: pointer" class="icon-trash" data-bind="click: remove"></a></td>
+                    <td><span data-bind="html: d"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

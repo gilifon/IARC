@@ -1,0 +1,24 @@
+﻿<div class="container">
+    <div class="headline">
+        <h2>מרכולית</h2>
+    </div>
+    <p>זה המקום לפרסם ציוד למכירה ולמסירה או לחפש ציוד שאתם זקוקים לו.
+    <br />לכל חבר יש לשונית "מרכולית" ב<a href="http://www.iarc.org/pa/" target="_blank">איזור האישי</a> ושם ניתן לנהל את המודעות.</p>
+    <hr />
+    <div class="clients-page">
+        <div data-bind="foreach: items">
+            <div class="col-md-12">
+                <span class="icon" data-bind="css: { 'icon-usd': type == '1', 'icon-shopping-cart': type == '2', 'icon-gift': type == '3' }"></span>
+                <div>
+                    <span data-bind="html: moment(date_added).format('DD-MM-YYYY')"></span>&nbsp;<span class="label label-default" data-bind="    html: uniq"></span>,&nbsp;<span data-bind="    html: name_heb"></span>&nbsp;<span data-bind="    html: family_heb"></span>,&nbsp;<span data-bind="    html: email"></span>&nbsp;<i class="icon-envelope-alt"></i>&nbsp;<span data-bind="    html: cel"></span>&nbsp;<i class="icon-phone-sign"></i>&nbsp;<span data-bind="    html: call"></span>&nbsp;
+                    <div data-bind="html: text">
+                    </div>
+                    <div>
+                        <span data-bind="visible: type == '1'">מחיר:<span data-bind="    html: price"></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-bottom-20"></div>
+        </div>
+    </div>
+</div>

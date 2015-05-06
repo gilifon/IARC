@@ -1,0 +1,56 @@
+﻿<div class="container">
+    <div class="row-fluid privacy text-left" style="direction: ltr">
+        <h2>Holyland Contest - Log Upload</h2>
+        <h5>Please enter your email, select the category, add the log file and send</h5>
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Log files will be accepted until May 31st.
+        </div>
+        <hr />
+        <div id="registration-form" class="form-horizontal" data-parsley-validate>
+
+            <div class="form-group ">
+                <div class="col-md-2">
+                    <label for="email" class="col-md-2 control-label ">Email</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="email" class="form-control" id="email" placeholder="Email" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="category" class="col-md-2 control-label ">Category</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="selectpicker" id="category" data-bind="options: categories, value: category, optionsCaption: 'Category'" required>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <div class="col-md-1">
+                    <button id="ClearBtn" type="button" class="btn btn-default" data-bind="click: Clear">Clear</button>
+                </div>
+                <div class="col-md-2">
+                    <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="Select File">
+                </div>
+                <div class="col-md-8"><span data-bind="text: file"></span></div>
+                <div class="col-md-1">
+                    <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <div class="clear">
+                <!--<input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">-->
+                <!--<span style="padding-left: 5px; vertical-align: middle;"><i>PNG, JPG, or GIF (500K max file size)</i></span>-->
+                <div id="errormsg" class="clearfix redtext">
+                </div>
+                <div id="pic-progress-wrap" class="progress-wrap" style="margin-top: 10px; margin-bottom: 10px;">
+                </div>
+
+                <div id="picbox" class="clear" style="padding-top: 0px; padding-bottom: 10px;">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

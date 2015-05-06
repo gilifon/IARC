@@ -1,0 +1,51 @@
+﻿<div class="container">
+    <div class="row-fluid">
+        <h2>Callbook - רשימת חברי האגודה</h2>
+        <div class="row margin-bottom-20">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4 pull-right" style="max-width: 350px; margin-top:8px;">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="  search-query form-control" placeholder="Search" data-bind="value: searchInput, valueUpdate: 'afterkeydown'" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button">
+                                <span class="icon icon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Striped Rows-->
+        <div class="panel panel-green margin-bottom-40">
+            <div class="panel-heading">
+                <h4 class="panel-title">חברי אגודת חובבי הרדיו בישראל</h4>
+            </div>
+            <table class="table table-striped table-hover" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="text-right">אות קריאה</th>
+                        <th class="text-right">שם פרטי</th>
+                        <th class="text-right">שם משפחה</th>
+                        <th class="text-right">QTH</th>
+                        <th class="text-right">מייל</th>
+                        <th class="text-right">טלפון</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: members">
+                    <tr>
+                        <td class="text-right" data-bind="text: call"></td>
+                        <td class="text-right" data-bind="text: name_heb"></td>
+                        <td class="text-right" data-bind="text: family_heb"></td>
+                        <td class="text-right" data-bind="text: city"></td>
+                        <td class="text-right" data-bind="text: email_fwd"></td>
+                        <td class="text-right" data-bind="text: cel"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

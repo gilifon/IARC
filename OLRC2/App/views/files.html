@@ -1,0 +1,29 @@
+﻿<div class="text-right">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-black margin-bottom-40 text-right">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-right">קבצים</h4>
+                </div>
+                <table class="table table-striped table-condensed" style="direction: rtl">
+                    <thead>
+                        <tr>
+                            <th style="width: 20px;">&nbsp</th>
+                            <th class="text-right">קובץ בנושא</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: fileList">
+                        <tr>
+                            <td>
+                                <label data-bind="text: ($index() + 1)" class="badge badge-inverse"></label>
+                            </td>
+                            <td><a target="_blank" data-fancybox-type="iframe" data-bind="attr: { 'href': '/lessons/Content/files/' + t }" style="text-decoration: none; cursor: pointer"><span data-bind="    html: d"></span></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

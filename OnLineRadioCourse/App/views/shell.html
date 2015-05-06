@@ -1,0 +1,78 @@
+﻿<div>
+    <div class="navbar navbar-fixed-top pull-right">
+        <div class="navbar-inner">
+            <a class="brand" data-bind="attr: { href: '#/home' }">
+                <span>&nbsp;</span>
+                <span title="קורס רדיו מתוקשב">קורס רדיו מתוקשב</span>
+                <!--<i class="icon-signal"></i>-->
+                <i class="gicon_router"></i>
+
+            </a>
+            <ul class="nav pull-right" data-bind="foreach: router.visibleRoutes, visible: isLoggedIn">
+                <li data-bind="css: { active: isActive }, visible: !(restricted && $parent.role() == 'restricted')"><a class="pull-right" data-bind="    attr: { href: hash }, html: name"></a></li>
+            </ul>
+            <div class="loader pull-right" data-bind="css: { active: router.isNavigating }">
+                <i class="icon-spinner icon-2x icon-spin"></i>
+            </div>
+            <div class="pull-left">
+                <a target="_blank" data-bind="attr: { href: 'http://www.iarc.org/iarc/he/' }">
+                    <img data-bind="attr: { src: Image }" alt="" alt="iarc" width="42px" height="42px" style="width: 42px; height: 42px;" />
+                </a>
+            </div>
+            <div class="pull-left">
+                <ul class="nav pull-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-bind="text: (isLoggedIn()) ? fullName() : 'ברוכים הבאים'"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#/userdetails" data-bind="visible: isLoggedIn()">פרטי משתמש&nbsp;&nbsp;<i class="icon-cog"></i></a></li>
+                            <li class="divider" data-bind="visible: isLoggedIn()"></li>
+                            <li class="nav-header">צריכת אנרגיה</li>
+                            <li><a data-bind="click: function () { setTheme('dark'); }">QRP&nbsp;&nbsp;<i class="icon-globe"></i></a></li>
+                            <li><a data-bind="click: function () { setTheme('original'); }">QRO&nbsp;&nbsp;<i class="icon-certificate"></i></a></li>
+                            <li class="divider"></li>
+                            <li><a data-bind="click: logout"><span data-bind="    text: (isLoggedIn()) ? 'התנתק' : 'התחבר'"></span>&nbsp;&nbsp;<i class="icon-off"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pull-left">
+                <ul class="nav pull-left">
+                    <li class="dropdown" data-bind="visible: isAdmin() "><a href="#" class="dropdown-toggle"
+                        data-toggle="dropdown"><span data-bind="text: 'תפריט ניהול'"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#/lessonsmanager">ניהול שיעורים&nbsp;&nbsp;<i class="icon-facetime-video"></i></a></li>
+                            <!--<li><a href="#/addvideos">ניהול הרצאות&nbsp;&nbsp;<i class="icon-facetime-video"></i></a></li>-->
+                            <li><a href="#/addpresentations">ניהול מצגות&nbsp;&nbsp;<i class="icon-film"></i></a></li>
+                            <li><a href="#/examsmanager">ניהול מבחנים&nbsp;&nbsp;<i class="icon-pencil"></i></a></li>
+                            <li><a href="#/addlinks">ניהול קישורים&nbsp;&nbsp;<i class="icon-share"></i></a></li>
+                            <li><a href="#/filesmanager">ניהול קבצים&nbsp;&nbsp;<i class="icon-file"></i></a></li>
+                            <li><a href="#/addusers">ניהול משתמשים&nbsp;&nbsp;<i class="icon-user"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <div class="container-fluid page-host" style="direction: rtl">
+        <!--ko compose: { 
+            model: router.activeItem, //wiring the router
+            afterCompose: router.afterCompose, //wiring the router
+            transition:'entrance', //use the 'entrance' transition when switching views
+            cacheViews:true //telling composition to keep views in the dom, and reuse them (only a good idea with singleton view models)
+        }-->
+        <!--/ko-->
+    </div>
+
+    <!--<div class="navbar navbar-fixed-bottom pull-right">
+        <div class="navbar-inner">
+            <ul class="nav pull-right">
+                <li><a class="pull-right">עיצוב תכנון ופיתוח: גיל ליאני</a></li>
+            </ul>
+        </div>
+    </div>-->
+</div>

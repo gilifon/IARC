@@ -1,0 +1,199 @@
+/***************************
+Added by Wojo Design
+***************************/
+/****Add to Cart Dialog****/
+.cartDialog{
+	z-index:100;
+	position:relative;
+	width:345px;
+	height:345px;
+	background:#fff url(../images/added-to-cart.jpg) no-repeat;
+	text-align:center;
+}
+.cartDialog h3{
+	margin:0;
+	padding-top:35px;
+	font-size:17px;
+	line-height:20px;
+}
+.buttons{
+	width: 330px;
+	height: 30px;
+	overflow:hidden;
+	position:absolute;
+	bottom:25px;
+	left:0;
+}
+.cartDialog .simpleCart_checkout,
+#buy-more-frames{
+	display:inline-block;
+	vertical-align:middle;
+	width:154px;
+	height:30px;
+	background:url(../images/check-out.gif);
+	text-indent:-9999px;
+	overflow:hidden;
+	margin-left:5px;
+}
+#buy-more-frames{
+	background:url(../images/buy-more-frames.gif);
+	margin-left:17px;
+	
+}
+.left{float:left}
+.right{float:right}
+.alignLeft{text-align:left}
+.alignRight{text-align:right}
+/* >> The Magnificent CLEARFIX << */
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix { display: inline-block; }
+* html .clearfix { height: 1%; } /* Hides from IE-mac \*/
+.clearfix { display: block; }
+
+.simpleCart_shelfItem label{
+	color:#000;
+	font-size:13px;
+}
+
+#item-quantity{
+	width:36px;
+	padding:8px;
+	border:1px solid #cbcbcb;
+	vertical-align:middle;
+}
+/****cart bar****/
+.cartBar{
+	border-top:1px solid #171717;
+	border-bottom:1px solid #171717;
+	background: #272727; /* Old browsers */
+	background: -moz-linear-gradient(top, #272727 0%, #161616 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#272727), color-stop(100%,#161616)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #272727 0%,#161616 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #272727 0%,#161616 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #272727 0%,#161616 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#272727', endColorstr='#161616',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #272727 0%,#161616 100%); /* W3C */
+	-webkit-box-shadow:inset 0px 1px 0px rgba(255,255,255,.2);
+	-moz-box-shadow:inset 0px 1px 0px rgba(255,255,255,.2)
+	box-shadow:inset 0px 1px 0px rgba(255,255,255,.2);
+	color:#fff;
+	font-size:12px;
+	text-align:center;
+	overflow:hidden;
+	position:fixed;
+	z-index:1001;
+	top:0;
+	left:0;
+	width:100%;
+	margin-top:-44px;
+}
+.cartBar ul{
+	height:32px;
+	list-style:none;
+	display:inline-block;
+	width:auto;
+	padding:10px 0 0 0;
+	margin:0;
+}
+.cartBar ul li{
+	float:left;
+	padding:0 10px;
+	border-right:1px solid #000;
+	border-left:1px solid #474747;
+	height:22px;
+	line-height:22px;
+}
+.cartBar ul li.first{
+	border-left:none;
+}
+.cartBar ul li.last{
+	border-right:none;
+}
+.cartBar strong{
+	color:#ccc;
+}
+.cartBar a{
+	color:#fff;
+	text-transform:uppercase;
+}
+.cartBar a:hover{
+	color:#39f;
+}
+.cartBar .simpleCart_checkout{
+	display:block;
+	width:92px;
+	height:28px;
+	text-indent:-9999px;
+	overflow:hidden;
+	background:url(../images/btnCheckout.png);
+	margin-top:-3px;
+	opacity: 0.88;
+}
+.cartBar .simpleCart_checkout:hover{
+	opacity: 1;
+}
+.cartBar .simpleCart_checkout:active{
+	opacity: 1;
+	background-position:-92px 0;
+}
+#cart{
+	display:none;
+	width:100%;
+	background:#202020;
+	border-top:1px solid #171717;
+	padding:20px 0;
+}
+#cart:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+#cart { display: inline-block; }
+* html #cart { height: 1%; } /* Hides from IE-mac \*/
+#cart { display: none; }
+
+.cartMeta{
+	display:inline-block;
+}
+.simpleCart_items{
+	width:810px;
+	margin:0 auto;
+}
+.cartHeaders{
+	background:#111;
+	height:14px;
+	padding:4px 0;
+}
+.cartHeaders div{
+	float:left;
+	margin:0 10px;
+	text-align:left;
+}
+.itemContainer{
+	clear:both;
+	height:16px;
+	padding:8px 0;
+	border-bottom:1px solid #111;
+	border-top:1px solid #2c2c2c;
+}
+.itemContainer:first-child{
+	border-top:none;
+}
+.itemContainer:last-child{
+	border-bottom:none;
+}
+.itemContainer div{
+	float:left;
+	margin:0 10px;
+	text-align:left;
+}
+.itemName{width:180px}
+.itemSize{width:110px}
+.itemPrice{width:90px}
+.itemOptions{width:270px}
+.itemQuantity{
+	width:60px;
+	text-align:center !important;
+}
+
+.shipping-info{
+	float:left;
+	margin-left:10px;
+}
+

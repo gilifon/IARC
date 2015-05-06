@@ -1,0 +1,36 @@
+﻿<div data-bind="foreach: items">
+    <div class="search-blocks search-blocks-top-sea">
+        <div class="row">
+            <div class="col-md-4 search-img">
+                <img alt="" data-bind="attr: { 'src': image }" class="img-responsive">
+                <!--<ul class="list-unstyled" style="direction: ltr">
+                    <li><i class="icon-briefcase"></i><span data-bind="html: address"></span></li>
+                    <li>
+                        <i class="icon-map-marker"></i>
+                        <a data-bind="attr: { 'href': location_url }" target="_blank"><span data-bind="    html: location"></span>
+                        </a>
+                    </li>
+                    <li><i class="icon-calendar"></i><span data-bind="html: date"></span></li>
+                </ul>-->
+            </div>
+            <div class="col-md-8">
+                <h2><span data-bind="html: title"></span></h2>
+                <p data-bind="html: body">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 search-img">
+                <ul class="list-unstyled">
+                    <li><i class="icon-briefcase"></i><span data-bind="html: address"></span></li>
+                    <li>
+                        <i class="icon-map-marker"></i>
+                        <a data-bind="attr: { 'href': location_url }" target="_blank"><span data-bind="    html: location"></span>
+                        </a>
+                    </li>
+                    <li><i class="icon-calendar"></i><span data-bind="html: date"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

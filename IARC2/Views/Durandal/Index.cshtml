@@ -1,0 +1,122 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="apple-touch-startup-image" href="~/Content/images/ios-startup-image-landscape.png" media="(orientation:landscape)" />
+    <link rel="apple-touch-startup-image" href="~/Content/images/ios-startup-image-portrait.png" media="(orientation:portrait)" />
+    <link rel="apple-touch-icon" href="~/Content/images/icon.png" />
+
+    <title>IARC | Welcome...</title>
+
+    <!-- Meta -->
+    <meta name="description" content="IARC - Israeli Amature Radio Club">
+    <meta name="author" content="Gil Lianni. Dec 2013.">
+
+    <!-- CSS Global Compulsory-->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/headers/header2.css">
+    <!--<link rel="stylesheet" href="~/assets/plugins/bootstrap/css/bootstrap-responsive.min.css">-->
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="~/assets/plugins/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="~/assets/plugins/flexslider/flexslider.css">
+    <link rel="stylesheet" href="~/assets/plugins/parsley/css/parsley.css">
+    <link rel="stylesheet" href="~/assets/plugins/toastr/toastr.min.css">
+    <!-- CSS Page Style -->
+    <link rel="stylesheet" href="~/assets/css/pages/page_search.css">
+    <link rel="stylesheet" href="~/assets/css/pages/page_magazine.css">
+    <link rel="stylesheet" href="~/assets/css/pages/portfolio-v2.css">    
+    <link rel="stylesheet" href="~/assets/css/pages/SimpleCart.css">    
+    <!-- CSS Theme -->
+    <link rel="stylesheet" href="~/assets/css/themes/light.css" id="style_color">
+    <link rel="stylesheet" href="~/assets/css/themes/headers/header2-light.css" id="style_color-header-2">
+    <!-- x-editable (bootstrap version) -->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap3-editable/css/bootstrap-editable.css" />
+    <!-- datetimepicler (bootstrap version) -->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap-datetimepicler/css/bootstrap-datetimepicker.min.css" />
+    <!-- Bootstrap-Select -->
+    <link rel="stylesheet" href="~/assets/plugins/select/bootstrap-select.min.css" />
+    
+    @Styles.Render("~/Content/css")
+
+    <script type="text/javascript">
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            var mq = "@@-ms-viewport{width:auto!important}";
+            msViewportStyle.appendChild(document.createTextNode(mq));
+            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+        }
+    </script>
+</head>
+<body style="direction: rtl">
+    <div id="applicationHost">
+        @Html.Partial("_splash")
+    </div>
+
+    @Scripts.Render("~/Scripts/vendor.js")
+    <script type="text/javascript" src="~/Scripts/require.js" data-main="App/main"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+
+    <!-- JS Global Compulsory -->
+    <script type="text/javascript" src="~/assets/plugins/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/hover-dropdown.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/back-to-top.js"></script>
+    
+    <!-- JS Implementing Plugins -->
+    
+    <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>-->
+     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyChQFDBzrm0P-0KBhTsOkq0VCIQGOYGd_8"></script>
+    <script type="text/javascript" src="~/assets/plugins/gmap/gmap.js"></script>
+    <script type="text/javascript" src="~/assets/js/pages/contact.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/flexslider/jquery.flexslider-min.js"></script>
+    <!--<script type="text/javascript" src="~/assets/plugins/datepicker/js/bootstrap-datepicker.js"></script>-->
+    <script type="text/javascript" src="~/assets/plugins/parsley/js/parsley.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/toastr/toastr.min.js"></script>
+    <!-- JS Page Level -->
+    <script type="text/javascript" src="~/assets/js/app.js"></script>
+    <script type="text/javascript" src="~/assets/js/linq.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/shamir-sortable.js"></script>
+    <script type="text/javascript" src="~/assets/js/knockout.command.js"></script>
+    <script type="text/javascript" src="~/assets/js/simpleCart.min.js"></script>
+    <!-- x-editable (bootstrap version) -->
+    <script type="text/javascript" src="~/assets/plugins/bootstrap3-editable/js/bootstrap-editable.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/bootstrap3-editable/js/knockout.x-editable.min.js"></script>
+
+    <!-- datetimepicler (bootstrap version) -->
+    <script type="text/javascript" src="~/assets/plugins/bootstrap-datetimepicler/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- Simple Ajax Uploader -->
+    <script type="text/javascript" src="~/assets/plugins/SimpleAjaxUploader/SimpleAjaxUploader.min.js"></script>
+
+    <!-- Bootstrap-Select -->
+    <script type="text/javascript" src="~/assets/plugins/select/bootstrap-select.min.js"></script>
+    
+       
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            App.init();
+            App.initSliders();
+
+            //toggle `popup` / `inline` mode
+            //$.fn.editable.defaults.mode = 'inline';
+        });
+</script>
+    <!--[if lt IE 9]>
+    <script src="~/assets/plugins/respond.js"></script>
+<![endif]-->
+   
+
+</body>
+</html>

@@ -1,2 +1,2 @@
-cd "C:\Users\oem\Documents\Visual Studio 2013\Projects\IARC\IARC2"
+cd "C:\Users\gill\Source\Repos\IARC\IARC2"
 weyland build

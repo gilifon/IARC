@@ -40,6 +40,8 @@
         }
     </style>
     <script type="text/javascript">
+        alert(document.referrer);
+        alert(document.referrer.indexOf("index.html"));
         if (document.referrer != 'http://www.iarc.org/inquiries/' && document.referrer.indexOf("index.html") == -1)
             window.location.href = "index.html";
     </script>

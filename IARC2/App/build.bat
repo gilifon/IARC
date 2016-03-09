@@ -1,2 +1,2 @@
-cd "C:\Users\gill\Source\Repos\IARC\IARC2"
+cd "C:\4X6HP\Copy\HAM\iarc.org\IARC-master\IARC2"
 weyland build

@@ -15,13 +15,20 @@
     <AssemblyName>IARC2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -207,6 +214,7 @@
     <Content Include="App\views\aguda.html" />
     <Content Include="App\views\components\events.html" />
     <Content Include="App\views\gallery.html" />
+    <Content Include="App\views\holyland\holylandlogs.html" />
     <Content Include="App\views\holyland\holylandsquares.html" />
     <Content Include="App\views\import.html" />
     <Content Include="App\views\squares.html" />
@@ -681,7 +689,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49534</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/IARC2</IISUrl>
+          <IISUrl>http://localhost:49534/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

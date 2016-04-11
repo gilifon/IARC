@@ -89,7 +89,8 @@
 //                 .replace(/'/g, '&#39;')
 //                 .replace(/</g, '&lt;')
 //                 .replace(/>/g, '&gt;');
-//    }
+//    }
+
 //    var SetTooltips = function ()
 //    {
 //        $('#mobile').tooltip();
@@ -132,7 +133,8 @@
 //            var btn = document.getElementById('upload-btn'),
 //       wrap = document.getElementById('pic-progress-wrap'),
 //       picBox = document.getElementById('picbox'),
-//       errBox = document.getElementById('errormsg');
+//       errBox = document.getElementById('errormsg');
+
 
 //            uploader = new ss.SimpleUpload({
 //                button: btn,
@@ -319,10 +321,14 @@ define('viewmodels/register', ["services/utilities", "services/httpService", "se
 
  I = ko.asyncCommand({
      execute: function (t) {
-         $("#registration-form").parsley().validate(),
-         $("#registration-form").parsley().isValid() ? 1 == r.getQueueSize() && 1 == a.getQueueSize() ? r.submit() : (n.display("אל תשכח לצרף תמונה ואישור תשלום",
-         "error"),
-         t(!0)) : t(!0)
+         $("#registration-form").parsley().validate();
+         //$("#registration-form").parsley().isValid() ? 1 == r.getQueueSize() && 1 == a.getQueueSize() ? r.submit() : (n.display("אל תשכח לצרף תמונה ואישור תשלום", "error"), t(!0)) : t(!0)
+         if ($("#registration-form").parsley().isValid())
+         {
+             r.submit();
+             t(!0);
+         }
+             
      },
      canExecute: function () { return !0 }
  });

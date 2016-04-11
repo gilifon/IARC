@@ -133,9 +133,9 @@
             <div class="col-md-10">
                 <textarea class="form-control" id="cv" placeholder="נא לרשום כאן קורות חיים" data-bind="value: cv" tabindex="19" style="resize: none"></textarea>
             </div>
-            <label for="cv" class="col-md-2 control-label">קורות חיים</label>
+            <label for="cv" class="col-md-2 control-label">קורות חיים בקצרה</label>
         </div>
-        <div class="form-group">
+        <!--<div class="form-group">
             <div class="col-md-1">
                 <button type="button" class="btn btn-success pull-left" data-bind="command: Send">שלח</button>
             </div>
@@ -145,6 +145,22 @@
             <div class="col-md-2 text-left"><span data-bind="text: file"></span></div>
             <div class="col-md-2">
                 <input type="button" id="payment-btn" class="btn btn-primary btn-large clearfix" value="צרף אישור תשלום">
+            </div>
+            <div class="col-md-2 text-left"><span data-bind="text: paymentfile"></span></div>
+            <div class="col-md-2">
+                <button id="SendBtn" type="button" class="btn btn-default" data-bind="click: Clear">נקה</button>
+            </div>
+        </div>-->
+        <div class="row">
+            <div class="col-md-1">
+                <button type="button" class="btn btn-success pull-left" data-bind="command: Send">שלח</button>
+            </div>
+            <div class="col-md-2">
+                <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">
+            </div>
+            <div class="col-md-2 text-left"><span data-bind="text: file"></span></div>
+            <div class="col-md-2">
+                <input type="button" id="payment-btn" class="btn btn-primary btn-large clearfix" value="צרף אישור תשלום">או שלח צ'ק לפי הנחיה טלפונית
             </div>
             <div class="col-md-2 text-left"><span data-bind="text: paymentfile"></span></div>
             <div class="col-md-2">

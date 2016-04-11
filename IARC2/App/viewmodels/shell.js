@@ -46,6 +46,7 @@
                 { route: 'HolylandContest', title: 'Holyland Contest', moduleId: 'viewmodels/holyland/holylandcontest', nav: true },
                 { route: 'HolylandAward', title: 'Holyland Award', moduleId: 'viewmodels/holyland/holylandaward', nav: true },
                 { route: 'HolylandResults', title: 'Holyland Contest Results', moduleId: 'viewmodels/holyland/holylandresults', nav: true },
+                { route: 'HolylandResultsISR', title: 'Holyland Contest Results - Israeli Stations', moduleId: 'viewmodels/holyland/holylandresults_isr', nav: true },
                 { route: 'LogUpload', title: 'Log Upload', moduleId: 'viewmodels/holyland/logupload', nav: true },
                 { route: 'SilentKeyForest', title: 'Silent Key Forest', moduleId: 'viewmodels/english/skf', nav: true },
                 { route: 'Meetings', title: 'Meetings', moduleId: 'viewmodels/english/meetings', nav: true },
@@ -63,7 +64,9 @@
                 { route: 'Squares', title: 'Squares', moduleId: 'viewmodels/squares', nav: true },
                 { route: 'HolylandSquares', title: 'Holyland Squares', moduleId: 'viewmodels/holyland/holylandsquares', nav: true },
 				{ route: 'HolylandLogs', title: 'Holyland Logs', moduleId: 'viewmodels/holyland/holylandlogs', nav: true },
+                { route: 'Certificategenerator', title: 'Certificate Generator', moduleId: 'viewmodels/holyland/certificategenerator', nav: true },                
                 { route: 'Gallery', title: 'Gallery', moduleId: 'viewmodels/gallery', nav: true },
+                
             ]).buildNavigationModel();
 
             return router.activate();

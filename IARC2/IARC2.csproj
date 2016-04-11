@@ -155,7 +155,9 @@
     <Content Include="App\viewmodels\contact.js" />
     <Content Include="App\viewmodels\about.js" />
     <Content Include="App\viewmodels\aguda.js" />
+    <Content Include="App\viewmodels\holyland\certificategenerator.js" />
     <Content Include="App\viewmodels\holyland\holylandlogs.js" />
+    <Content Include="App\viewmodels\holyland\holylandresults_isr.js" />
     <Content Include="App\viewmodels\holyland\holylandsquares.js" />
     <Content Include="App\viewmodels\import.js" />
     <Content Include="App\viewmodels\squares.js" />
@@ -208,7 +210,9 @@
     <Content Include="App\views\aguda.html" />
     <Content Include="App\views\components\events.html" />
     <Content Include="App\views\gallery.html" />
+    <Content Include="App\views\holyland\certificategenerator.html" />
     <Content Include="App\views\holyland\holylandlogs.html" />
+    <Content Include="App\views\holyland\holylandresults_isr.html" />
     <Content Include="App\views\holyland\holylandsquares.html" />
     <Content Include="App\views\import.html" />
     <Content Include="App\views\squares.html" />

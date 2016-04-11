@@ -27,7 +27,7 @@
         var P16 = new google.maps.LatLng(32.315934, 34.862816);
         var P18 = new google.maps.LatLng(32.0553536, 34.8621609);
         var P73 = new google.maps.LatLng(32.764199, 35.016099);
-        var P45 = new google.maps.LatLng(33.128886, 35.785405);
+        //var P45 = new google.maps.LatLng(33.128886, 35.785405);
         
         
         
@@ -49,7 +49,7 @@
         var M16 = new google.maps.Marker({ position: P16, map: map, animation: google.maps.Animation.DROP, title: "ממסר נתניה - R16 - 145.400" });
         var M18 = new google.maps.Marker({ position: P18, map: map, animation: google.maps.Animation.DROP, title: "ממסר קרית אונו - R18 - 145.450" });
         var M73 = new google.maps.Marker({ position: P73, map: map, animation: google.maps.Animation.DROP, title: "ממסר חיפה - UHF - R73 - 438.725" });
-        var M45 = new google.maps.Marker({ position: P45, map: map, animation: google.maps.Animation.DROP, title: "ממסר בנטל - R4.5 - 145.7125" });
+        //var M45 = new google.maps.Marker({ position: P45, map: map, animation: google.maps.Animation.DROP, title: "ממסר בנטל - R4.5 - 145.7125" });
 
         M73.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
 
@@ -101,8 +101,8 @@
         google.maps.event.addListener(M18, 'mouseout', out_func);
         google.maps.event.addListener(M73, 'mouseover', function (e) { e.radius = 80000; over_func(e); });
         google.maps.event.addListener(M73, 'mouseout', out_func);
-        google.maps.event.addListener(M45, 'mouseover', function (e) { e.radius = 50000; over_func(e); });
-        google.maps.event.addListener(M45, 'mouseout', out_func);
+        //google.maps.event.addListener(M45, 'mouseover', function (e) { e.radius = 50000; over_func(e); });
+        //google.maps.event.addListener(M45, 'mouseout', out_func);
 
     }
     var vm = {

@@ -1,2 +1,2 @@
-cd "C:\Users\gill\Documents\Visual Studio 2012\Projects\IARC\OLRC2"
+cd "C:\Users\gill\Source\Repos\IARC\OLRC2"
 weyland build

@@ -30,7 +30,8 @@ this.getCount = function () {
         },
         logs: logs,
 		counter:counter,
-        searchInput: searchInput
+		searchInput: searchInput,
+        year: moment()._d.getUTCFullYear()
     };
 
     return vm;

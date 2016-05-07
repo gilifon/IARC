@@ -33,8 +33,8 @@ var App = function () {
 
     function handleBootstrap() {
         jQuery('.carousel').carousel({
-            interval: 15000,
-            pause: 'hover'
+            interval: 5000,
+            pause: 'none'
         });
         jQuery('.tooltips').tooltip();
         jQuery('.popovers').popover();
@@ -106,7 +106,7 @@ var App = function () {
             handleIEFixes();
             handleSearch();
             handleSwitcher();
-            handleBoxed();
+            handleBoxed();            
         },
 
         initSliders: function () {
@@ -184,6 +184,33 @@ var App = function () {
                 slideWidth: 360,
                 slideMargin: 10
             });            
+        },
+
+        display: function (message, type) {
+            toastr.options = {
+                "positionClass": "toast-top-full-width",
+                "fadeIn": 300,
+                "fadeOut": 1000,
+                "timeOut": 3000,
+                "extendedTimeOut": 1000
+            };
+
+            switch (type) {
+                case 'error':
+                    toastr.error(message, 'Oops!');
+                    break;
+                case 'info':
+                    toastr.info(message, 'Info!');
+                    break;
+                case 'warning':
+                    toastr.warning(message, 'Warning!');
+                    break;
+                case 'Success':
+                    toastr.warning(message, 'OK!');
+                    break;
+                default:
+                    toastr.success(message, 'OK!');
+            }
         },
 
     };

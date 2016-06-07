@@ -332,12 +332,14 @@
     <Content Include="assets\img\main\2.jpg" />
     <Content Include="assets\img\main\3.jpg" />
     <Content Include="assets\img\main\4.jpg" />
+    <Content Include="assets\img\main\4x4trail.jpg" />
     <Content Include="assets\img\main\9.jpg" />
     <Content Include="assets\img\main\about.jpg" />
     <Content Include="assets\img\main\applicationform.jpg" />
     <Content Include="assets\img\main\archive.jpg" />
     <Content Include="assets\img\main\articles.jpg" />
     <Content Include="assets\img\main\bandplan.jpg" />
+    <Content Include="assets\img\main\classroom.jpg" />
     <Content Include="assets\img\main\directors.jpg" />
     <Content Include="assets\img\main\emergency.jpg" />
     <Content Include="assets\img\main\expeditions.jpg" />

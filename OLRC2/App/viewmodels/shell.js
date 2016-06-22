@@ -43,6 +43,7 @@
 
                 { route: 'lessonsmanager', title: 'ניהול שיעורים', moduleId: 'viewmodels/lessonsmanager', nav: false, visible: false, admin: true, restricted: false },
                 { route: 'usersmanager', title: 'ניהול משתמשים', moduleId: 'viewmodels/usersmanager', nav: false, visible: false, admin: true, restricted: false },
+                { route: 'inquierymanager', title: 'ניהול מתעניינים', moduleId: 'viewmodels/inquierymanager', nav: false, visible: false, admin: true, restricted: false },
                 { route: 'presentationsmanager', title: 'ניהול מצגות', moduleId: 'viewmodels/presentationsmanager', nav: false, visible: false, admin: true, restricted: false },
                 { route: 'examsmanager', title: 'ניהול מבחנים', moduleId: 'viewmodels/examsmanager', nav: false, visible: false, admin: true, restricted: false },
                 { route: 'linksmanager', title: 'ניהול קישורים', moduleId: 'viewmodels/linksmanager', nav: false, visible: false, admin: true, restricted: false },

@@ -149,6 +149,7 @@
     <Content Include="App\viewmodels\examsmanager.js" />
     <Content Include="App\viewmodels\presentationsmanager.js" />
     <Content Include="App\viewmodels\userdetails.js" />
+    <Content Include="App\viewmodels\inquierymanager.js" />
     <Content Include="App\viewmodels\usersmanager.js" />
     <Content Include="App\viewmodels\exams.js" />
     <Content Include="App\viewmodels\files.js" />
@@ -165,6 +166,7 @@
     <Content Include="App\views\examsmanager.html" />
     <Content Include="App\views\presentationsmanager.html" />
     <Content Include="App\views\userdetails.html" />
+    <Content Include="App\views\inquierymanager.html" />
     <Content Include="App\views\usersmanager.html" />
     <Content Include="App\views\exams.html" />
     <Content Include="App\views\files.html" />
@@ -380,6 +382,7 @@
     <Content Include="Server\link\error_log" />
     <Content Include="Server\presentation\error_log" />
     <Content Include="Server\user\error_log" />
+    <Content Include="Server\user\getinquieries.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

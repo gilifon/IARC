@@ -1,0 +1,41 @@
+﻿<div class="text-right" style="direction: rtl">
+
+    <div class="row margin-bottom-10">
+        <div class="col-md-12">
+            <h2><span class="label label-user">ניהול מתעניינים</span></h2>
+        </div>
+    </div>
+
+    <div class="row margin-bottom-40">
+        <div class="col-md-12">
+            <div class="panel panel-user margin-bottom-40 text-right">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-right">רשימת מתעניינים</h4>
+                </div>
+                <table class="table table-striped table-condensed sortable">
+                    <thead>
+                        <tr>
+                            <th class="text-right" data-unsortable>&nbsp;</th>
+                            <th class="text-right" data-source="name">שם</th>
+                            <th class="text-right" data-source="mail">כתובת מייל</th>
+                            <th class="text-right" data-source="phone">טלפון</th>
+                            <th class="text-right" data-source="timestamp">תאריך</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody class="sortable1" data-bind="foreach: itemList">
+                        <tr>
+                            <td>
+                                <label data-bind="text: ($index() + 1)" class="badge label-user"></label>
+                            </td>
+                            <td><span data-bind="html: name"></span></td>
+                            <td><span data-bind="html: mail"></span></td>
+                            <td><span data-bind="html: phone"></span></td>
+                            <td><span data-bind="html: timestamp"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

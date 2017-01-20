@@ -11,19 +11,19 @@
 
         switch (type) {
             case 'error':
-                toastr.error(message, 'שגיאה!');
+                toastr.error(message, 'Error!');
                 break;
             case 'info':
-                toastr.info(message, 'לידיעתך!');
+                toastr.info(message, 'Info!');
                 break;
             case 'warning':
-                toastr.warning(message, 'אזהרה!');
+                toastr.warning(message, 'Warning!');
                 break;
             case 'Success':
-                toastr.warning(message, 'יופי!');
+                toastr.warning(message, 'O.K.!');
                 break;
             default:
-                toastr.success(message, 'יופי!');
+                toastr.success(message, 'O.K.!');
         }
     };
 

@@ -3,31 +3,31 @@
     var shell = require('viewmodels/shell');
 
 
-    var email = ko.observable();
-    var category = ko.observable();
-    var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
+    //var email = ko.observable();
+    //var category = ko.observable();
+    //var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
     var file = ko.observable();
     var uploader;
 
     var Clear = function () {
-        $('#registration-form').parsley().reset();
-        email("");
-        category("");
+        //$('#registration-form').parsley().reset();
+        //email("");
+        //category("");
         file("");
         uploader.removeCurrent();
     }
 
     var Send = ko.asyncCommand({
         execute: function (complete) {
-            $('#registration-form').parsley().validate();
-            if ($('#registration-form').parsley().isValid()) {
+            //$('#registration-form').parsley().validate();
+            //if ($('#registration-form').parsley().isValid()) {
                 if (uploader.getQueueSize() > 0) {
                     uploader.submit();
                 }
                 else {
                     displayService.display('Do not forget to select your log file', 'error');
                 }
-            }
+            //}
             complete(true);
         },
         canExecute: function (isExecuting) {
@@ -140,7 +140,8 @@
                         var info = {
                             'info':
                             {
-                                'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                //'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'timestamp': response.timestamp, 'filename': response.file
                             }
                         };
                         httpService.post("/ws/upload_log.php", info).done(function (data) {
@@ -165,9 +166,9 @@
 
         },
 
-        email: email,
-        category: category,
-        categories: categories,
+        //email: email,
+        //category: category,
+        //categories: categories,
         file: file,
         Clear: Clear,
         Send: Send,

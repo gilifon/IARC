@@ -2,13 +2,13 @@
     <div class="row-fluid text-left" style="direction: ltr">
 		<div class="margin-bottom-40"></div>
         <div class="row margin-bottom-10">
-			<div class="col-md-8">
+			<div class="col-md-12">
 			<strong>
 			This page contains a list of all logs that have been submitted for the Holyland Contest <span data-bind="text: year"></span>. The page is updated each time it is refreshed in your browser. Your log is not officially received until it appears on this page. Send any questions to 4z4kx@iarc.org
 			</strong>
 			</div>
             <div class="col-md-8">
-			<h3><span data-bind="html: counter"></span> Logs were received</h2>
+			<h3><span data-bind="html: counter"></span> Logs were received</h3>
             </div>
             <div class="col-md-4 pull-right" style="max-width: 350px; margin-top:8px;">
                 <div id="custom-search-input">
@@ -34,17 +34,27 @@
                 <thead>
                     <tr>
                         <th>Callsign</th>
-                        <th>DXCC</th>
-                        <th>Continent</th>
-                        <th>Category</th>
+                        <th>Name</th>
+                        <th>Category - Mode</th>
+                        <th>Category - Operator</th>
+                        <th>Category - Power</th>
+                        <th>Country</th>
+                        <th>Points (estimation)</th>
+                        <th>Valid QSOs (estimation)</th>
+                        <th>Year</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: logs">
                     <tr>
-                        <td data-bind="text: call"></td>
-                        <td data-bind="text: dxcc"></td>
-                        <td data-bind="text: continent"></td>
-                        <td data-bind="text: category"></td>
+                        <td data-bind="text: callsign"></td>
+                        <td data-bind="text: name"></td>
+                        <td data-bind="text: category_mode"></td>
+                        <td data-bind="text: category_op"></td>
+                        <td data-bind="text: category_power"></td>
+                        <td data-bind="text: country"></td>
+                        <td data-bind="text: points"></td>
+                        <td data-bind="text: qsos"></td>
+                        <td data-bind="text: year"></td>
                     </tr>
                 </tbody>
             </table>

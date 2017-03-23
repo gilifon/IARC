@@ -64,7 +64,8 @@
                 { route: 'Squares', title: 'Squares', moduleId: 'viewmodels/squares', nav: true },
                 { route: 'HolylandSquares', title: 'Holyland Squares', moduleId: 'viewmodels/holyland/holylandsquares', nav: true },
 				{ route: 'HolylandLogs', title: 'Holyland Logs', moduleId: 'viewmodels/holyland/holylandlogs', nav: true },
-                { route: 'Certificategenerator', title: 'Certificate Generator', moduleId: 'viewmodels/holyland/certificategenerator', nav: true },                
+                { route: 'Certificategenerator', title: 'Certificate Generator', moduleId: 'viewmodels/holyland/certificategenerator', nav: true },
+                { route: 'HolylandRules', title: 'Holyland Rules', moduleId: 'viewmodels/holyland/holylandrules', nav: true },
                 { route: 'Gallery', title: 'Gallery', moduleId: 'viewmodels/gallery', nav: true },
                 
             ]).buildNavigationModel();

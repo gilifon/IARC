@@ -48,9 +48,10 @@ if (include "../isauthorized.php")
     $headers = "From:" . $from . "\r\n";
     $headers .= "Reply-To: admin@iarc.org\r\n"; 
     $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text\r\n";
+    $headers .= "Content-Type: text/html\r\n";
     //$headers .= 'Bcc: gilifon@gmail.com' . "\r\n";
-    mail($to,'A Lesson has been added',$newlesson[t].' - '.$newlesson[d],$headers);
+    $body = 'A lesson has been added to the online course website (NOT attached here):<br/>'.$newlesson['d'].'<br/> Please visite the online course<br/> http://iarc.org/lessons/#home';
+    mail($to,'A lesson has been added',$body,$headers);
     ###########################################################################################################
     
     $sql="INSERT INTO `audit` (`username`, `tab`, `operation`) VALUES ('$name','lesson','add')";

@@ -659,6 +659,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="weyland-config.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="ws\hl_4x.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

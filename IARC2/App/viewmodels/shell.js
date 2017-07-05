@@ -61,6 +61,7 @@
                 { route: 'Register', title: 'Register', moduleId: 'viewmodels/register', nav: true },
                 { route: 'Shop', title: 'Shop', moduleId: 'viewmodels/shop', nav: true },
                 { route: 'Import', title: 'Import', moduleId: 'viewmodels/import', nav: true },
+                { route: 'Exams', title: 'Exams', moduleId: 'viewmodels/exams', nav: true },
                 { route: 'Squares', title: 'Squares', moduleId: 'viewmodels/squares', nav: true },
                 { route: 'HolylandSquares', title: 'Holyland Squares', moduleId: 'viewmodels/holyland/holylandsquares', nav: true },
 				{ route: 'HolylandLogs', title: 'Holyland Logs', moduleId: 'viewmodels/holyland/holylandlogs', nav: true },

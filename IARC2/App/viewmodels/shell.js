@@ -59,6 +59,7 @@
                 { route: 'NewsManager', title: 'News Manager', moduleId: 'viewmodels/back_office/newsmanager', nav: false },
                 { route: 'Market', title: 'Market', moduleId: 'viewmodels/market', nav: true },
                 { route: 'Register', title: 'Register', moduleId: 'viewmodels/register', nav: true },
+                { route: 'OnlineCourse', title: 'Online Course', moduleId: 'viewmodels/onlinecourse', nav: true },
                 { route: 'Shop', title: 'Shop', moduleId: 'viewmodels/shop', nav: true },
                 { route: 'Import', title: 'Import', moduleId: 'viewmodels/import', nav: true },
                 { route: 'Exams', title: 'Exams', moduleId: 'viewmodels/exams', nav: true },

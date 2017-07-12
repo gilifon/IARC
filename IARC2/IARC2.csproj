@@ -163,6 +163,7 @@
     <Content Include="App\viewmodels\holyland\holylandsquares.js" />
     <Content Include="App\viewmodels\import.js" />
     <Content Include="App\viewmodels\exams.js" />
+    <Content Include="App\viewmodels\onlinecourse.js" />
     <Content Include="App\viewmodels\squares.js" />
     <Content Include="App\viewmodels\wwff.js" />
     <Content Include="App\viewmodels\echolink.js" />
@@ -220,6 +221,7 @@
     <Content Include="App\views\holyland\holylandsquares.html" />
     <Content Include="App\views\import.html" />
     <Content Include="App\views\exams.html" />
+    <Content Include="App\views\onlinecourse.html" />
     <Content Include="App\views\squares.html" />
     <Content Include="App\views\wwff.html" />
     <Content Include="App\views\echolink.html" />

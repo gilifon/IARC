@@ -214,6 +214,7 @@
     <Content Include="App\views\contact.html" />
     <Content Include="App\views\aguda.html" />
     <Content Include="App\views\components\events.html" />
+    <Content Include="App\views\freq_old.html" />
     <Content Include="App\views\gallery.html" />
     <Content Include="App\views\examforms.html" />
     <Content Include="App\views\holyland\holylandrules.html" />

@@ -2,14 +2,21 @@
 
     var shell = require('viewmodels/shell');
     var logs = ko.observableArray();
-	var counter = ko.observableArray();
+    var counter = ko.observableArray();
+    var DXCCcounter = ko.observableArray();
     var searchInput = ko.observable();
 
     this.getlogs = function () {
-        httpService.get("/ws/hl_2015.php?d=" + Date.now()).done(function (data) { logs(data); }).error(utilities.handleError);
+        httpService.get("/ws/hl_2015.php?d=" + Date.now()).done(function (data) {
+            logs(data);
+            counter(Enumerable.From(logs()).Count());
+            DXCCcounter(Enumerable.From(logs()).Select("$.country").Distinct().Count());
+        }).error(utilities.handleError);
     }  
 this.getCount = function () {
-        httpService.get("/ws/hl2015_count.php?d=" + Date.now()).done(function (data) { counter(data); }).error(utilities.handleError);
+    httpService.get("/ws/hl2015_count.php?d=" + Date.now()).done(function (data) {
+        counter(data);
+    }).error(utilities.handleError);
     }	
 
     var vm = {
@@ -22,14 +29,15 @@ this.getCount = function () {
                 utilities.applyRowSearch("#dataTable tbody tr", newValue);
             });
 			getlogs();
-			getCount();
+			//getCount();
             searchInput('');
         },
         compositionComplete: function () {
             
         },
         logs: logs,
-		counter:counter,
+        counter: counter,
+        DXCCcounter:DXCCcounter,
 		searchInput: searchInput,
         year: moment()._d.getUTCFullYear()
     };

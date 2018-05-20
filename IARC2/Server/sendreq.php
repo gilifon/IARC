@@ -1,4 +1,4 @@
-<?php 
+<?php
 
     $request = $_POST["request"];
     header('Content-type: application/json');
@@ -14,5 +14,5 @@
     ###########################################################################################################
 
     echo json_encode('Your message has been successfuly sent');
-?> 
 
+?>

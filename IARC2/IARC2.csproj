@@ -164,6 +164,7 @@
     <Content Include="App\viewmodels\holyland\holylandsquares.js" />
     <Content Include="App\viewmodels\import.js" />
     <Content Include="App\viewmodels\exams.js" />
+    <Content Include="App\viewmodels\event_registration.js" />
     <Content Include="App\viewmodels\onlinecourse.js" />
     <Content Include="App\viewmodels\squares.js" />
     <Content Include="App\viewmodels\wwff.js" />
@@ -206,6 +207,7 @@
     <Content Include="App\viewmodels\shell.js" />
     <Content Include="App\viewmodels\dashboard.js" />
     <Content Include="App\viewmodels\components\events.js" />
+    <Content Include="App\views\event_registration.html" />
     <Content Include="App\views\about.html" />
     <Content Include="App\views\back_office\newsmanager.html" />
     <Content Include="App\views\components\features.html" />
@@ -667,6 +669,7 @@
     <Content Include="weyland-config.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="ws\hl_4x.php" />
+    <Content Include="Server\event_registration.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

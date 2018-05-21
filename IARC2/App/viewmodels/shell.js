@@ -23,6 +23,7 @@
                 { route: 'HagalMain', title: 'Hagal', moduleId: 'viewmodels/hagalmain', nav: true },
                 { route: 'About', title: 'About', moduleId: 'viewmodels/about', nav: true },
                 { route: 'EventRegistration', title: 'Event Registration', moduleId: 'viewmodels/event_registration', nav: true },
+                { route: 'EventRegistrationAdmin', title: 'Event Registration Admin', moduleId: 'viewmodels/event_registration_admin', nav: false },
                 { route: 'Membership', title: 'Membership', moduleId: 'viewmodels/membership', nav: true },
                 { route: 'Repeaters', title: 'Repeaters', moduleId: 'viewmodels/repeaters', nav: true },
                 { route: 'Hagal', title: 'Hagal', moduleId: 'viewmodels/hagal', nav: true },

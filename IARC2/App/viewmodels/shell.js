@@ -26,6 +26,7 @@
                 { route: 'EventRegistrationAdmin', title: 'Event Registration Admin', moduleId: 'viewmodels/event_registration_admin', nav: false },
                 { route: 'Membership', title: 'Membership', moduleId: 'viewmodels/membership', nav: true },
                 { route: 'Repeaters', title: 'Repeaters', moduleId: 'viewmodels/repeaters', nav: true },
+                { route: 'RepeatersMap', title: 'Repeaters Map', moduleId: 'viewmodels/repeatersmap', nav: true },
                 { route: 'Hagal', title: 'Hagal', moduleId: 'viewmodels/hagal', nav: true },
                 { route: 'HagalArchive', title: 'Hagal Archive', moduleId: 'viewmodels/hagalarchive', nav: true },
                 { route: 'Protocols', title: 'Protocols', moduleId: 'viewmodels/protocols', nav: true },

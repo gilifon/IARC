@@ -167,6 +167,7 @@
     <Content Include="App\viewmodels\event_registration.js" />
     <Content Include="App\viewmodels\onlinecourse.js" />
     <Content Include="App\viewmodels\event_registration_admin.js" />
+    <Content Include="App\viewmodels\repeatersmap.js" />
     <Content Include="App\viewmodels\squares.js" />
     <Content Include="App\viewmodels\wwff.js" />
     <Content Include="App\viewmodels\echolink.js" />
@@ -229,6 +230,7 @@
     <Content Include="App\views\exams.html" />
     <Content Include="App\views\onlinecourse.html" />
     <Content Include="App\views\event_registration_admin.html" />
+    <Content Include="App\views\repeatersmap.html" />
     <Content Include="App\views\squares.html" />
     <Content Include="App\views\wwff.html" />
     <Content Include="App\views\echolink.html" />

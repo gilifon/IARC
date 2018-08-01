@@ -381,6 +381,8 @@
     <Content Include="assets\img\pages\holyland\holyland-mobile.jpg" />
     <Content Include="assets\img\pages\holyland\holyland-squares.jpg" />
     <Content Include="assets\img\pages\holyland\holyland.jpg" />
+    <Content Include="assets\img\pages\import\btn1.PNG" />
+    <Content Include="assets\img\pages\import\import_page.png" />
     <Content Include="assets\img\pages\repeaters\repeaters.jpg" />
     <Content Include="assets\img\posts\1.jpg" />
     <Content Include="assets\img\posts\2.jpg" />

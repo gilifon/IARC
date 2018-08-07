@@ -363,6 +363,7 @@
     <Content Include="assets\img\main\hagal.jpg" />
     <Content Include="assets\img\main\ham.jpg" />
     <Content Include="assets\img\main\holyland.jpg" />
+    <Content Include="assets\img\main\HolyLogger.png" />
     <Content Include="assets\img\main\m.jpeg" />
     <Content Include="assets\img\main\media.jpg" />
     <Content Include="assets\img\main\membership.jpg" />

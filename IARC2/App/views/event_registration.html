@@ -1,17 +1,27 @@
 ﻿<div class="container">
     <div class="row-fluid privacy">
 
-        <h2>הרשמה ליום השדה בנחל תנינים</h2>
+        <h2>הרצאה תהיה בנושא מכשירי מדידה</h2>
         <p>
-            שלום לציבור החובבים.<br />
-            במטרה להיערך כיאות ליום השדה (שיערך בשמורת נחל תנינים ב-14 בספטמבר), אנחנו מבקשים שכל מי שמגיע ירשם וגם יוסיף את מספר הנילווים .<br />
-            לדוגמא - ״ישראל ישראלי פלוס שניים״.<br />
-            ההרשמה אינה מחייבת אבל תעזור לנו להיערך בהתאם.<br />
-            תודה ושנה טובה !<br />
+            שלום לכולם,<br />
+            בתאריך ה 22.11 נקיים הרצאה לחובבי רדיו.<br />
+            ההרצאה תהיה בנושא מכשירי מדידה ותינתן על ידי איליה 4Z1UF.<br />
+            בהרצאה יודגמו בפועל:<br />
+            Spectrum analyzer<br />
+            Signal generator<br />
+            Network analyzer<br />
+            הציוד שיודגם יהיה ציוד מתוצרת Rohde & Schwarz  באדיבות איסטרוניקס ועל כך תודתנו לאיסטרוניקס.<br />
+            ההרצאה תתחיל בשעה 19:00 ותארך כשעתיים.<br />
+            במידה ואתה מעוניין אנא מלא את פרטיך בטבלת ההרשמה. מספר המקומות מוגבל. נודיע לך האם יש מקום פנוי עבורך.<br />
+            במידה ויהיה מספר רב של מעוניינים, נשקול קיום הרצאה נוספת.<br />
+            אנו נצלם את ההרצאה ונעלה אותה לאתר האגודה זמן מה אחרי קיומה.<br />
+            בברכה. ועד האגודה.
         </p>
         <hr />
         <p>
-            <input type="text" class="form-control" id="address" placeholder="שם או אות קריאה + מספר משתתפים" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="200"><br />
+            <input type="text" class="form-control" id="personalname" placeholder="שם" data-bind="value: name" tabindex="1" width="120"><br />
+            <input type="text" class="form-control" id="callsign" placeholder="אות קריאה" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="120"><br />
+            <input type="text" class="form-control" id="email" placeholder="אימייל" data-bind="value: email" tabindex="1" width="120"><br />
             <button id="SendBtn" type="button" class="btn btn-success" data-bind="click: Send">הרשם</button>
         </p>
     </div>

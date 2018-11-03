@@ -677,6 +677,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="ws\hl_4x.php" />
     <Content Include="Server\event_registration.php" />
+    <Content Include="ws\get_event_registrants.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,7 +4,7 @@
     var list = ko.observableArray();
 
     this.getList= function () {
-        httpService.get("/ws/get_event_registrants.php?d=" + Date.now()).done(function (result) { list(result.data); }).error(utilities.handleError);
+        httpService.get("/ws/get_event_registrants.php?d=" + Date.now()).done(function (result) { list(result); }).error(utilities.handleError);
     }
     
     var vm = {

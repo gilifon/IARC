@@ -148,7 +148,6 @@
     <Content Include="App\services\themeManager.js" />
     <Content Include="App\services\utilities.js" />
     <Content Include="App\viewmodels\gallery.js" />
-    <Content Include="App\viewmodels\back_office\newsmanager.js" />
     <Content Include="App\viewmodels\components\features.js" />
     <Content Include="App\viewmodels\components\news_abstract.js" />
     <Content Include="App\viewmodels\components\news.js" />
@@ -210,7 +209,6 @@
     <Content Include="App\viewmodels\components\events.js" />
     <Content Include="App\views\event_registration.html" />
     <Content Include="App\views\about.html" />
-    <Content Include="App\views\back_office\newsmanager.html" />
     <Content Include="App\views\components\features.html" />
     <Content Include="App\views\components\news_abstract.html" />
     <Content Include="App\views\components\news.html" />

@@ -1,5 +1,5 @@
 <?
-include ("db_logbook.inc");
+include ("db_web.inc");
 include('error.inc');
 ini_set('display_errors',1);
 error_reporting(E_ALL);
@@ -7,11 +7,11 @@ $loc = setlocale(LC_ALL, 'he_IL.utf-8');
 
 $res = array();
 
-foreach (glob("C:\wamp64\www\iarc\Content\annual\*.pdf") as $filename) {	
+foreach (glob("C:\wamp64\www\iarc\Content\finance\*.pdf") as $filename) {	
 	$shortname = basename($filename);
-	$url = 'http://iarc.org/site/Content/annual/' . $shortname;
+	$url = 'http://www.iarc.team/iarc/Content/finance/' . $shortname;
 	$filename = basename($filename,".pdf");
-	$y = substr($filename, 7, 4);
+	$y = substr($filename, 8, 4);
 	//$m = substr($filename, 11, 2);
 	//$vol = "$m/01/$y";	
 	//$vol = strftime("%B %Y", strtotime($vol));

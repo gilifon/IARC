@@ -6,8 +6,9 @@ error_reporting(E_ALL);
 
 //header("Content-type: application/json; charset=utf-8");
 header('Content-type: application/json');
-
-$result = mysqli_query($Link, "select year, `call`, `continent`, `category`, `qso`, `points`, `mults`, `score`, `operator` from hlwtest where active = 1  and `dxcc` = 'Israel'  order by year, `category` DESC, `score` DESC") or die('Error: ' . mysqli_error($Link));
+$year = date("Y");
+//$result = mysql_query("select `call`, `continent`, `category`, `qso`, `points`, `mults`, `score`, `operator` from hlwtest where active = 0 and `year` = '2015' order by `call` DESC");
+$result = mysqli_query($GLOBALS["___mysqli_ston"], "select `call`, `dxcc`, `continent`, `category` from hlwtest where active = 0 and `year` = '$year' order by `call` ASC");
 while($obj = mysqli_fetch_object($result)) {
 $res[] = $obj;
 }

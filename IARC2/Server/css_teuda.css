@@ -1,0 +1,63 @@
+#call {
+	position: absolute;
+	font-family:Verdana;
+	left: 260px;
+	top: 575px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#name {
+	position: absolute;
+	font-family:Arial;
+	left: 455px;
+	top: 575px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#place {
+	position: absolute;
+	font-family:Verdana;
+	left: 932px;
+	top: 575px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#dxcc {
+	position: absolute;
+	font-family:Arial;
+	left: 590px;
+	top: 607px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#year {
+	position: absolute;
+	font-family:Arial;
+	left: 495px;
+	top: 680px;
+	font-weight: bold;
+	color: blue;
+}
+
+#world {
+	position: absolute;
+	font-family:Arial;
+	left: 820px;
+	top: 600px;
+	font-weight: bold;
+	color: red;
+}
+
+#cont {
+	position: absolute;
+	font-family:Arial;
+	left: 820px;
+	top: 600px;
+	font-weight: bold;
+	color: red;
+	font-size: 14pt;
+}

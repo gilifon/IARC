@@ -7,7 +7,7 @@ $loc = setlocale(LC_ALL, 'he_IL.utf-8');
 
 $res = array();
 
-foreach (glob("C:\wamp64\www\iarc\Content\hagal\*.pdf") as $filename) {	
+foreach (glob("/home1/iarcorg/public_html/site/Content/hagal/*.pdf") as $filename) {	
 	$shortname = basename($filename);
 	$url = 'http://iarc.org/site/Content/hagal/' . $shortname;
 	$filename = basename($filename,".pdf");

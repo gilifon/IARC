@@ -140,7 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\services\holylandUtility.js" />
-    <Content Include="App\main-built.js" />
     <Content Include="App\main.js" />
     <Content Include="App\services\cachingService.js" />
     <Content Include="App\services\displayService.js" />
@@ -528,6 +527,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="favicon.ico" />
     <Content Include="getmysquare.html" />
     <Content Include="__index.html" />
     <Content Include="old_index.html" />
@@ -583,23 +583,22 @@
     <Content Include="Content\docs\rad_manual_april_2011.pdf" />
     <Content Include="Content\docs\4x_cept.pdf" />
     <Content Include="fonts\zaam.ttf" />
-    <Content Include="ws\annual.php" />
-    <Content Include="ws\register.php" />
-    <Content Include="ws\bo\news\get.php" />
-    <Content Include="ws\db_logbook.inc" />
-    <Content Include="ws\db_web.inc" />
-    <Content Include="ws\error.inc" />
-    <Content Include="ws\events.php" />
-    <Content Include="ws\features.php" />
-    <Content Include="ws\finance.php" />
-    <Content Include="ws\hagal.php" />
-    <Content Include="ws\hl.php" />
-    <Content Include="ws\news.php" />
-    <Content Include="ws\news_abstract.php" />
-    <Content Include="ws\protocol.php" />
-    <Content Include="ws\skf.php" />
-    <Content Include="ws\skf_count.php" />
-    <Content Include="ws\vaad.php" />
+    <Content Include="Server\annual.php" />
+    <Content Include="Server\register.php" />
+    <Content Include="Server\db_logbook.inc" />
+    <Content Include="Server\db_web.inc" />
+    <Content Include="Server\error.inc" />
+    <Content Include="Server\events.php" />
+    <Content Include="Server\features.php" />
+    <Content Include="Server\finance.php" />
+    <Content Include="Server\hagal.php" />
+    <Content Include="Server\hl.php" />
+    <Content Include="Server\news.php" />
+    <Content Include="Server\news_abstract.php" />
+    <Content Include="Server\protocol.php" />
+    <Content Include="Server\skf.php" />
+    <Content Include="Server\skf_count.php" />
+    <Content Include="Server\vaad.php" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.eot" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.ttf" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.woff" />
@@ -675,12 +674,13 @@
     <Content Include="Views\Web.config" />
     <Content Include="weyland-config.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
-    <Content Include="ws\hl_4x.php" />
+    <Content Include="Server\hl_4x.php" />
     <Content Include="Server\event_registration.php" />
-    <Content Include="ws\get_event_registrants.php" />
+    <Content Include="Server\get_event_registrants.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ws\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -4,7 +4,7 @@
     var items = ko.observableArray();
 
     var getItems = function () {
-        httpService.get("/ws/markolit.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+        httpService.get("Server/markolit.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
     }
     var vm = {
         activate: function () {

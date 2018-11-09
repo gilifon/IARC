@@ -28,7 +28,7 @@
                         'email': email()
                     }
                 };
-                httpService.post("/ws/event_registration.php", info).done(function (data) {
+                httpService.post("Server/event_registration.php", info).done(function (data) {
                     displayService.display(data);
                     complete(true);
                     callsign('');

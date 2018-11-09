@@ -4,7 +4,7 @@
     var hagal = ko.observableArray();
 
     this.getHagal = function () {
-        httpService.get("/ws/hagal.php?d=" + Date.now()).done(function (data) { hagal(data); }).error(utilities.handleError);
+        httpService.get("Server/hagal.php?d=" + Date.now()).done(function (data) { hagal(data); }).error(utilities.handleError);
     }
 
     var vm = {

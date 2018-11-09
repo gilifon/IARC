@@ -4,7 +4,7 @@
     var files = ko.observableArray();
 
     this.getHagalFiles = function () {
-        httpService.get("/ws/broadcasted_hagal.php?d=" + Date.now()).done(function (data) { files(data); }).error(utilities.handleError);
+        httpService.get("Server/broadcasted_hagal.php?d=" + Date.now()).done(function (data) { files(data); }).error(utilities.handleError);
     }
 
     var vm = {

@@ -7,14 +7,14 @@
     var searchInput = ko.observable();
 
     this.getlogs = function () {
-        httpService.get("/ws/hl_2015.php?d=" + Date.now()).done(function (data) {
+        httpService.get("Server/hl_2015.php?d=" + Date.now()).done(function (data) {
             logs(data);
             counter(Enumerable.From(logs()).Count());
             DXCCcounter(Enumerable.From(logs()).Select("$.country").Distinct().Count());
         }).error(utilities.handleError);
     }  
 this.getCount = function () {
-    httpService.get("/ws/hl2015_count.php?d=" + Date.now()).done(function (data) {
+    httpService.get("Server/hl2015_count.php?d=" + Date.now()).done(function (data) {
         counter(data);
     }).error(utilities.handleError);
     }	

@@ -15,7 +15,7 @@
         }, this);
 
     this.getResults = function () {
-        httpService.get("/ws/hl_4x.php?d=" + Date.now()).done(function (data) { results(data); }).error(utilities.handleError);
+        httpService.get("Server/hl_4x.php?d=" + Date.now()).done(function (data) { results(data); }).error(utilities.handleError);
     }
 
     var vm = {

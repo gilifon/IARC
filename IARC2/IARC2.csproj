@@ -529,6 +529,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="getmysquare.html" />
+    <Content Include="Server\css_teuda.css" />
     <Content Include="__index.html" />
     <Content Include="old_index.html" />
     <Content Include="assets\js\shamir-sortable.js" />
@@ -598,7 +599,6 @@
     <Content Include="Server\protocol.php" />
     <Content Include="Server\skf.php" />
     <Content Include="Server\skf_count.php" />
-    <Content Include="Server\vaad.php" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.eot" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.ttf" />
     <Content Include="assets\plugins\bootstrap\fonts\fontawesome-webfont.woff" />
@@ -677,6 +677,28 @@
     <Content Include="Server\hl_4x.php" />
     <Content Include="Server\event_registration.php" />
     <Content Include="Server\get_event_registrants.php" />
+    <Content Include="Server\authenticate.php" />
+    <Content Include="Server\broadcasted_hagal.php" />
+    <Content Include="Server\db_logbookP.inc" />
+    <Content Include="Server\db_webP.inc" />
+    <Content Include="Server\errorP.inc" />
+    <Content Include="Server\hl2015_count.php" />
+    <Content Include="Server\hl_2015.php" />
+    <Content Include="Server\hl_cert.pdf" />
+    <Content Include="Server\markolit.php" />
+    <Content Include="Server\pa.php" />
+    <Content Include="Server\register_new.php" />
+    <Content Include="Server\shop.php" />
+    <Content Include="Server\sqs.php" />
+    <Content Include="Server\template.pdf" />
+    <Content Include="Server\test.php" />
+    <Content Include="Server\test1.php" />
+    <Content Include="Server\teuda.php" />
+    <Content Include="Server\teuda_test.php" />
+    <Content Include="Server\Uploader.php" />
+    <Content Include="Server\uploadHandler.php" />
+    <Content Include="Server\upload_log.php" />
+    <Content Include="Server\upload_log_test.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

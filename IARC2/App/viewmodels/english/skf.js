@@ -6,10 +6,10 @@
     var searchInput = ko.observable();
 
     this.getSKF = function () {
-        httpService.get("/ws/skf.php?d=" + Date.now()).done(function (data) { skf(data); }).error(utilities.handleError);
+        httpService.get("Server/skf.php?d=" + Date.now()).done(function (data) { skf(data); }).error(utilities.handleError);
     }
     this.getSKFCount = function () {
-        httpService.get("/ws/skf_count.php?d=" + Date.now()).done(function (data) { skfcount(data); }).error(utilities.handleError);
+        httpService.get("Server/skf_count.php?d=" + Date.now()).done(function (data) { skfcount(data); }).error(utilities.handleError);
     }
     
 

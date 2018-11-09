@@ -4,7 +4,7 @@
     var items = ko.observableArray();
 
     var getItems = function () {
-        httpService.get("/ws/news.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+        httpService.get("Server/news.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
     }
 
     var vm = {

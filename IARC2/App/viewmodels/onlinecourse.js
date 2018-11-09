@@ -69,7 +69,7 @@
                                 'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': Date.now(), 'filename': ''
                             }
                         };
-                        httpService.post("/ws/register_online_course.php", info).done(function (data) { alert("OK! " + data); Clear(); complete(true); }).error(function () { alert("Oops, an error has occured"); utilities.handleError(); complete(true); });
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("OK! " + data); Clear(); complete(true); }).error(function () { alert("Oops, an error has occured"); utilities.handleError(); complete(true); });
                     }
                 }
             }
@@ -140,8 +140,8 @@
 
             uploader = new ss.SimpleUpload({
                 button: btn,
-                url: '/ws/uploadHandler.php?dir=img',
-                //progressUrl: '/ws/uploadProgress.php',
+                url: 'Server/uploadHandler.php?dir=img',
+                //progressUrl: 'Server/uploadProgress.php',
                 name: 'uploadfile',
                 multiple: false,
                 queue: false,
@@ -221,7 +221,7 @@
                                 'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
                             }
                         };
-                        httpService.post("/ws/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
                     }
                 }
             });
@@ -231,8 +231,8 @@
 
             uploader2 = new ss.SimpleUpload({
                 button: btn2,
-                url: '/ws/uploadHandler.php?dir=payment',
-                //progressUrl: '/ws/uploadProgress.php',
+                url: 'Server/uploadHandler.php?dir=payment',
+                //progressUrl: 'Server/uploadProgress.php',
                 name: 'uploadfile',
                 multiple: false,
                 queue: false,
@@ -312,7 +312,7 @@
                                 'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
                             }
                         };
-                        httpService.post("/ws/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
 
                     } else {
                         if (response.msg) {

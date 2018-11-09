@@ -6,13 +6,13 @@
     var finance = ko.observableArray();
 
     this.getAnnual = function () {
-        httpService.get("/ws/annual.php?d=" + Date.now()).done(function (data) { annual(data); }).error(utilities.handleError);
+        httpService.get("Server/annual.php?d=" + Date.now()).done(function (data) { annual(data); }).error(utilities.handleError);
     }
     this.getProtocol = function () {
-        httpService.get("/ws/protocol.php?d=" + Date.now()).done(function (data) { protocol(data); }).error(utilities.handleError);
+        httpService.get("Server/protocol.php?d=" + Date.now()).done(function (data) { protocol(data); }).error(utilities.handleError);
     }
     this.getFinance = function () {
-        httpService.get("/ws/finance.php?d=" + Date.now()).done(function (data) { finance(data); }).error(utilities.handleError);
+        httpService.get("Server/finance.php?d=" + Date.now()).done(function (data) { finance(data); }).error(utilities.handleError);
     }
 
     var vm = {

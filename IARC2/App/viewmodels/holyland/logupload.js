@@ -65,8 +65,8 @@
 
             uploader = new ss.SimpleUpload({
                 button: btn,
-                url: '/ws/uploadHandler.php?dir=log',
-                //progressUrl: '/ws/uploadProgress.php',
+                url: 'Server/uploadHandler.php?dir=log',
+                //progressUrl: 'Server/uploadProgress.php',
                 name: 'uploadfile',
                 multiple: false,
                 queue: false,
@@ -144,7 +144,7 @@
                                 'timestamp': response.timestamp, 'filename': response.file
                             }
                         };
-                        httpService.post("/ws/upload_log.php", info).done(function (data) {
+                        httpService.post("Server/upload_log.php", info).done(function (data) {
                             if (data.success === true) {
                                 displayService.display(data.msg);
                             }

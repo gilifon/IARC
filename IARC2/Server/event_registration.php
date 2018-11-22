@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 header('Content-type: application/json');
 $info = $_POST["info"];
-$sql="INSERT IGNORE INTO `event_registration` (`name`,`callsign`,`email`) VALUES ('$info[name]','$info[callsign]','$info[email]')";
+$sql="INSERT IGNORE INTO `event_registration` (`name`,`callsign`,`email`,`event_id`) VALUES ('$info[name]','$info[callsign]','$info[email]',1)";
 if (!mysqli_query($Link, $sql))
 {
 	echo json_encode('Error: Failed to register');

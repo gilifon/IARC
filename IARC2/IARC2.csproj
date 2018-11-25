@@ -697,6 +697,7 @@
     <Content Include="Server\uploadHandler.php" />
     <Content Include="Server\upload_log.php" />
     <Content Include="Server\upload_log_test.php" />
+    <Content Include="Server\get_videos.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

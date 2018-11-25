@@ -2,7 +2,25 @@
 
     var shell = require('viewmodels/shell');
 
+    //properties
+    this.list = ko.observableArray();
+
+    //methods
+    this.getData = function () {
+        $.ajax({
+            type: 'GET',
+            url: "./Server/get_videos.php?d=" + Date.now(),
+        }).done(function (data) {
+            list(data);
+        }).error(function (xhr, ajaxOptions, thrownError) {
+            alert(jQuery.parseJSON(xhr.responseText).error);
+        });
+    }
+
     var vm = {
+        compositionComplete: function (view) {
+            getData();
+        },
         activate: function () {
             shell.selectedSubMenu('videogallery');
             shell.selectedMainMenu('gallery');

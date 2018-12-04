@@ -19,6 +19,7 @@
             router.map([
                 { route: '', title: 'Dashboard', moduleId: 'viewmodels/dashboard', nav: true },
                 { route: 'Aguda', title: 'Aguda', moduleId: 'viewmodels/aguda', nav: true },
+                { route: 'Procedures', title: 'Procedures', moduleId: 'viewmodels/procedures', nav: true },
                 { route: 'HamInIsrael', title: 'Ham In Israel', moduleId: 'viewmodels/haminisrael', nav: true },
                 { route: 'HagalMain', title: 'Hagal', moduleId: 'viewmodels/hagalmain', nav: true },
                 { route: 'About', title: 'About', moduleId: 'viewmodels/about', nav: true },

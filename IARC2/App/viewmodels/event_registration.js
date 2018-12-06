@@ -5,8 +5,11 @@
     var name = ko.observable();
     var callsign = ko.observable();
     var email = ko.observable();
-    
+    var items = ko.observableArray();
 
+    var getItems = function () {
+        httpService.get("Server/get_events.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
     
     this.Send = ko.asyncCommand({
         execute: function (complete) {
@@ -25,15 +28,16 @@
                     {
                         'name': name(),
                         'callsign': callsign(),
-                        'email': email()
+                        'email': email(),
+                        'event_id': this.id
                     }
                 };
                 httpService.post("Server/event_registration.php", info).done(function (data) {
                     displayService.display(data);
                     complete(true);
-                    callsign('');
-                    name('');
-                    email('');
+                    //callsign('');
+                    //name('');
+                    //email('');
                 }).error(function () { displayService.display("Something went wrong..", "error"); utilities.handleError(); complete(true); });
             }
         },
@@ -47,12 +51,16 @@
         activate: function () {
             shell.selectedSubMenu('eventregistration');
             shell.selectedMainMenu('aguda');
+            getItems();
         },
         compositionComplete: function () {
+            
         },
         name: name,
         callsign: callsign,
         email: email,
+        getItems: getItems,
+        items: items
     };
 
 

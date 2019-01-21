@@ -1,5 +1,5 @@
 <?php 
-include ("db_web.inc");
+include ("db_logbook.inc");
 include('error.inc');
 ini_set('display_errors',1);
 error_reporting(E_ALL);
@@ -47,6 +47,7 @@ $today = strftime("%e %B %Y", strtotime($today));
 $ip = $_SERVER['REMOTE_ADDR'];
 $process = $_SERVER['HTTP_USER_AGENT'];
 $sendermail = "info@iarc.org";
+$uniq = $timestamp;
 
 if (!empty($filename))
 {
@@ -61,15 +62,6 @@ else
 	$imgData = null;
 }
 
-$uniq = $timestamp;
-if (!$isDebug)
-{
-	$sql = "INSERT INTO membership (timestamp, pic, name_heb, family_heb, name_eng, family_eng, `call`, moc_id, ID, dob, gender, city, address, apart, zipcode, tel, cel, email_fwd, date_added, reason, cv, ip, process)
-	VALUES ('$timestamp', '$imgData', '$firstname','$lastname', '$efirstname', '$elastname', '$callsign', '$licensenum', '$id', '$birthdate', '$gender', '$city', '$address', '$house', '$zip', '$phone', '$mobile', '$email', now(), '$reason', '$cv', '$ip', '$process')";
-	$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
-	if ($result){$insertdb = "OK";} else {$insertdb = "NOT OK ".mysqli_error($GLOBALS["___mysqli_ston"]);}
-}
-
 if (!empty($house))
 {
 	$apart_pdf = "דירה $house";
@@ -78,6 +70,18 @@ else
 {
 	$apart_pdf = "";
 }
+
+
+/************************* Save to DB ***************************************/
+
+if (!$isDebug)
+{
+	$sql = "INSERT INTO membership (timestamp, country, pic, pic_ext, pdf, name_heb, family_heb, name_eng, family_eng, `call`, moc_id, ID, dob, gender, city, address, apart, zipcode, tel, cel, email_fwd, date_added, reason, cv, ip, process) 
+	VALUES ('$timestamp', '$country', '$imgData', '$filename',' ', '$firstname','$lastname', '$efirstname', '$elastname', '$callsign', '$licensenum', '$id', '$birthdate', '$gender', '$city', '$address', '$house', '$zip', '$phone', '$mobile', '$email', now(), '$reason', '$cv', '$ip', '$process')";
+	$result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
+	if ($result){$insertdb = "OK";} else {$insertdb = "NOT OK ".mysqli_error($GLOBALS["___mysqli_ston"]);}
+}
+/**************************************************************************/
 
 /***************************** Generate PDF file ***************************************/
 include ("vendor/autoload.php");
@@ -149,6 +153,7 @@ fwrite ($csv_handler,$csvString);
 fclose ($csv_handler);
 /**************************************************************************/
 
+
 /*****************  New send mail with all attachments  *******************/
 $file_pdf = '../../members/applications/'.$ID_pdf;
 $file_csv = '../../members/csv/'.$timestamp.'.csv';
@@ -158,7 +163,7 @@ $file_rcp = '../../members/payments/'.$paymentfilename;
 //$file_img_ext = substr($file_img, -3);
 //$file_rcp_ext = substr($file_rcp, -3);
 
-$to = "gilifon@gmail.com;4z5sl@iarc.org;$email";
+$to = "gilifon@gmail.com,4z5sl@iarc.org,".$email;
 if ($isDebug) $to = "gilifon@gmail.com";
 
 $files = array();

@@ -1,0 +1,23 @@
+﻿<div class="container">
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-blue margin-bottom-40 text-right">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-right">גלרית וידאו</h4>
+                </div>
+                <table class="table table-striped table-condensed" style="direction: rtl">
+                   
+                    <tbody data-bind="foreach: list">
+                        <tr>
+                            <td>
+                                <label data-bind="text: ($index() + 1)" class="badge badge-primary"></label>
+                            </td>
+                            <td><a data-bind="attr: { 'href': url }" target="_blank"><span data-bind="html: title"></span></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

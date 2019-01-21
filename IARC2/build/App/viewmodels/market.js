@@ -1,0 +1,1 @@
+define(["services/utilities","services/httpService"],function(t,n){var e=require("viewmodels/shell"),a=ko.observableArray(),r=function(){n.get("Server/markolit.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},g={activate:function(){e.selectedSubMenu("market"),e.selectedMainMenu("aguda")},getItems:r,compositionComplete:function(){r()},items:a};return g});

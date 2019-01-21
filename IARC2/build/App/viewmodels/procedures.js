@@ -1,0 +1,1 @@
+define(function(){var e=require("viewmodels/shell"),t={activate:function(){e.selectedSubMenu("about"),e.selectedMainMenu("procedures")}};return t});

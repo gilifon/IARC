@@ -1,0 +1,187 @@
+﻿<div class="container">
+    <div class="row-fluid privacy text-left" style="direction: ltr">
+
+        <h2>Holyland Contest - Log Upload</h2>
+        <!--<h5>Please enter your email, select the category, add the log file and send</h5>-->
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Log files will be accepted until May 31st.
+        </div>
+        <hr />
+        <div id="registration-form" class="form-horizontal" data-parsley-validate style="visibility:hidden">
+
+            <!--<div class="form-group ">
+                <div class="col-md-2">
+                    <label for="email" class="col-md-2 control-label ">Email</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="email" class="form-control" id="email" placeholder="Email" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="category" class="col-md-2 control-label ">Category</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="selectpicker" id="category" data-bind="options: categories, value: category, optionsCaption: 'Category'" required></select>
+                </div>
+            </div>-->
+            <div>
+                <div class="col-md-1">
+                    <button id="ClearBtn" type="button" class="btn btn-default" data-bind="click: Clear">Clear</button>
+                </div>
+                <div class="col-md-2">
+                    <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="Select File">
+                </div>
+                <div class="col-md-8"><span data-bind="text: file"></span></div>
+                <div class="col-md-1">
+                    <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <div class="clear">
+                <!--<input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">-->
+                <!--<span style="padding-left: 5px; vertical-align: middle;"><i>PNG, JPG, or GIF (500K max file size)</i></span>-->
+                <div id="errormsg" class="clearfix redtext">
+                </div>
+                <div id="pic-progress-wrap" class="progress-wrap" style="margin-top: 10px; margin-bottom: 10px;">
+                </div>
+
+                <div id="picbox" class="clear" style="padding-top: 0px; padding-bottom: 10px;">
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <h2>Holyland Cabrillo Format</h2>
+        <br />
+        <h4>START-OF-LOG: version-number X.X</h4>
+        Must be the first line of the log submission.<br />
+        Must be version 3.0<br />
+        <br />
+        <h4>CALLSIGN: callsign</h4>
+        The callsign used during the contest.<br />
+        <br />
+        <h4>
+            CONTEST: contest-name
+        </h4>
+        The contest-name must be HOLYLAND<br />
+        <br />
+        <h4>
+            CATEGORY-OPERATOR: text
+        </h4>
+        The category-operator must be one of the following:<br />
+        SINGLE-OP<br />
+        MULTI-OP<br />
+        SWL<br />
+        CHECKLOG<br />
+        <br />
+        <h4>
+            CATEGORY-MODE: text
+        </h4>
+        The category-mode must be one of the following:<br />
+        SSB<br />
+        CW<br />
+        DIGI<br />
+        MIXED<br />
+        <br />
+        <h4>
+            CATEGORY-POWER: text
+        </h4>
+        The category-power must be one of the following:<br />
+        HIGH<br />
+        QRP<br />
+        <br />
+        <h4>
+            CREATED-BY: text 
+        </h4>
+        Name and version of the logging program used to create the Cabrillo file. (This field is optional)<br />
+        <br />
+        <h4>
+            EMAIL: text
+        </h4>
+        A place to put an email address where we can contact you if there is a question about your log. (This field is optional)<br />
+        <br />
+        <h4>
+            NAME: text 
+        </h4>
+        Your name.<br />
+        <br />
+        <h4>
+            OPERATORS: callsign1, [callsign2, callsign3...]
+        </h4>
+        A space-delimited list of operator callsigns for multi operator stations<br />
+        NOTE: If you select a multi-operator category and do not enter operator callsigns in this field, the robot will reject your log. Please use a comma between the operator calls.<br />
+        <br />
+        <h4>QSO: qso-data</h4>
+        The qso-data format is shown below.<br />
+        <table cellpadding="5" cellspacing="3">
+            <tr>
+                <td colspan="5">&nbsp;</td>
+                <td colspan="3">-----Data Sent-----</td>
+                <td colspan="3">-----Data Rcvd-----</td>
+            </tr>
+            <tr>
+                <td>QSO:</td>
+                <td>freq</td>
+                <td>mo</td>
+                <td>date</td>
+                <td>time</td>
+                <td>my call</td>
+                <td>rst</td>
+                <td>exch</td>
+                <td>dx call</td>
+                <td>rst</td>
+                <td>exch</td>
+            </tr>
+            <tr>
+                <td>QSO:</td>
+                <td>14240</td>
+                <td>PH</td>
+                <td>2000-11-26</td>
+                <td>0711</td>
+                <td>N6TW</td>
+                <td>59</td>
+                <td>03</td>
+                <td>4Z5SL</td>
+                <td>59</td>
+                <td>K01YZ</td>
+            </tr>
+        </table>
+        <br />
+        <h4>END-OF-LOG:</h4>
+        Must be the last line of the log submission.<br />
+        <br />
+        
+        <p>
+            <h4>EXAMPLE:</h4>
+            START-OF-LOG: 3.0<br />
+            CALLSIGN: 4Z5SL<br />
+            CONTEST: HOLYLAND<br />
+            CATEGORY-OPERATOR: SINGLE-OP<br />
+            CATEGORY-MODE: SSB<br />
+            CATEGORY-POWER: HIGH<br />
+            CREATED-BY: Exported by LOGic version 9.0.72. LOGic Cabrillo Export version 1.2.<br />
+            E-MAIL: 4Z5SL@IARC.ORG<br />
+            NAME: Dan Katzman<br />
+            OPERATORS: 4Z5SL<br />
+            QSO:  7162	PH	2015-04-17	2203	4Z5SL	59	K01YZ	UW1GR	     59     1<br />
+            QSO:  7162	PH	2015-04-17	2204	4Z5SL	59	K01YZ	RK4HYT	     59     7<br />
+            QSO:  7162	PH	2015-04-17	2204	4Z5SL	59	K01YZ	IK6XEJ	     59     11<br />
+            QSO:  7162	PH	2015-04-17	2205	4Z5SL	59	K01YZ	HG7T	     59     6<br />
+            QSO:  7162	PH	2015-04-17	2206	4Z5SL	59	K01YZ	SM7DQV   59     14<br />
+            QSO:  7162	PH	2015-04-17	2208	4Z5SL	59	K01YZ	YL2BR	     59     11<br />
+            QSO:  7162	PH	2015-04-17	2210	4Z5SL	59	K01YZ	OK2FI	     59     15<br />
+            QSO:  7162	PH	2015-04-17	2211	4Z5SL	59	K01YZ	DM5AT	     59     8<br />
+            QSO:  7162	PH	2015-04-17	2211	4Z5SL	59	K01YZ	OM7AB	     59     19<br />
+            QSO:  7162	PH	2015-04-17	2212	4Z5SL	59	K01YZ	LY9Y	     59     2<br />
+            QSO:  7162	PH	2015-04-17	2213	4Z5SL	59	K01YZ	SV2KLJ 	     59     1<br />
+            QSO:  7162	PH	2015-04-17	2215	4Z5SL	59	K01YZ	4Z1KD	     59     N02ZF<br />
+            QSO:  7162	PH	2015-04-17	2218	4Z5SL	59	K01YZ	SP5IVC	     59     18<br />
+            QSO:  7162	PH	2015-04-17	2218	4Z5SL	59	K01YZ	RZ3Z	     59     12<br />
+            END-OF-LOG:<br />
+        </p>
+    </div>
+</div>

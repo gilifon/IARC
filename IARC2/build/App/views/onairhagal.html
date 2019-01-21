@@ -1,0 +1,54 @@
+﻿<div class="container">
+
+    <div class="row-fluid privacy margin-bottom-20">
+
+        <h4>הגל המשודר</h4>
+        <p>
+            כל חובב ומאזין מוזמנים בזאת להאזין (ולהשתתף במידת האפשר) בגל המשודר.<br />
+            הגל המשודר הינה "תוכנית" רדיו המשודרת מדי יום שלישי בשעה 19:30 על ממסר ת"א (R7), ע"י חובבי רדיו ובשביל חובבי הרדיו.
+        </p>
+        <hr />
+        <p>בגל המשודר מופיעות הפינות הבאות:</p>
+        <ul>
+            <li>עורך הגל המשודר, רמי, 4X6HU, מציג את עצמו, את הגל ומציין את התאריך</li>
+            <li>החובבים המאזינים מציגים עצמם ע"י הודאת אותות הקריאה</li>
+            <li>הודעות חדשות כלליות מאת עורך הגל המשודר, או מטעם נציג האגודה</li>
+            <li>הודעות, ברכות ואיחולים מטעם החובבים המאזינים</li>
+            <li>מרכולית - קונים, מוכרים</li>
+        </ul>
+        <p>
+            לאחר כניסת החובבים, ולאורך כל התוכנית, עורך הגל המשודר שוזר הודעות נוספות המעניינות חובבים בארץ.
+        </p>
+        <hr />
+        <h4>ארכיון הגל המשודר</h4>
+        ארכיון הגל המשודר מכיל הקלטות של התוכנית לאורך השנים והן מובאות כאן כקבצי MP3 להאזנה ישירה<br />
+        תודה לריץ' 4X1DA ולאבינועם 4X6HF על ההקלטות
+    </div>
+    <!--/row-fluid-->
+    <div class="row">
+         <div class="col-md-12">
+        <div class="panel panel-grey margin-bottom-40">
+            <div class="panel-heading">
+                <h4 class="panel-title">ארכיון הגל המשודר</h4>
+            </div>
+           <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-right" style="width: 30px">#</th>
+                        <th class="text-right">תאריך</th>
+                        <th class="text-right"></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: files">
+                    <tr>
+                        <td data-bind="text: $index() + 1"></td>
+                        <td data-bind="text: date"></td>
+                        <td><a data-bind="attr: { 'href': url }" target="_blank"><i class="glyphicon glyphicon-headphones"></i> לחץ להאזנה</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+

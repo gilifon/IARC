@@ -1,0 +1,1 @@
+define(function(){var t=function(t,n){amplify.store(t,n)},n=function(t){return amplify.store(t)},e={add:t,get:n};return e});

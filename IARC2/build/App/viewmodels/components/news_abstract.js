@@ -1,0 +1,1 @@
+define(["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/news_abstract.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});

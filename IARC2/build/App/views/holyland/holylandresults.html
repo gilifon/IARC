@@ -1,0 +1,70 @@
+﻿<div class="container">
+
+    <div class="row-fluid privacy text-left" style="direction: ltr">
+        <h2 class="text-center">THE HOLYLAND CONTEST RESULTS</h2>
+        <hr />
+        <div class="tab-v2">
+            <ul class="nav nav-tabs" data-bind="foreach: years">
+                <li data-bind="css: { 'active': $index() == 0 }"><a data-toggle="tab" data-bind="    text: $data, attr: { href: '#T' + $data }"></a></li>
+            </ul>
+            <div class="tab-content" data-bind="foreach: years">
+                <div class="tab-pane" data-bind="attr: { Id: 'T' + $data }, css: { 'active': $index() == 0 }">
+
+                    <div class="row">
+                        <div class="col-md-8">
+                        </div>
+                        <div class="col-md-4 pull-right" style="max-width: 350px;">
+                            <div id="custom-search-input">
+                                <div class="input-group col-md-12">
+                                    <input type="text" class="  search-query form-control" placeholder="Search" data-bind="value: $parent.searchInput, valueUpdate: 'afterkeydown'" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="button">
+                                            <span class="icon icon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-v2">
+                        <ul class="nav nav-tabs" data-bind="foreach: categories">
+                            <li data-bind="css: { 'active': $index() == 0 }"><a data-toggle="tab" data-bind="    text: $data, attr: { href: '#C' + $parent + $data.replace(' ', '_') }"></a></li>
+                        </ul>
+                        <div class="tab-content" data-bind="foreach: categories">
+                            <div class="tab-pane" data-bind="attr: { Id: 'C' + $parent + $data.replace(' ', '_') }, css: { 'active': $index() == 0 }">
+                                <!--<h4>Contest Results for year: <span data-bind="text: $parent"></span> mode: <span data-bind="    text: $data"></span></h4>-->
+                                <table class="table table-striped table-hover" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Call</th>
+                                            <th>Continent</th>
+                                            <th>Category</th>
+                                            <th>QSO</th>
+                                            <th>Points</th>
+                                            <th>Mults</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-bind="foreach: Enumerable.From(this.results()).Where(function (x) { return x.year == $parent && x.category == $data }).OrderBy(function (x) { return parseInt(x.score) }).Reverse().ToArray()">
+                                        <tr data-bind="style: { 'font-weight': $index() < 3 ? 'bold' : 'normal' }">
+                                            <td data-bind="text: $index()+1"></td>
+                                            <td data-bind="text: call"></td>
+                                            <td data-bind="text: continent"></td>
+                                            <td data-bind="text: category"></td>
+                                            <td data-bind="text: qso"></td>
+                                            <td data-bind="text: points"></td>
+                                            <td data-bind="text: mults"></td>
+                                            <td data-bind="text: score"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

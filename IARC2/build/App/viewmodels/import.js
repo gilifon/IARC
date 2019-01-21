@@ -1,0 +1,1 @@
+define(function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("import"),t.selectedMainMenu("israelham")}};return n});

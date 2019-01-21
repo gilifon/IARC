@@ -1,0 +1,50 @@
+﻿<div class="container">
+    <div class="row-fluid privacy">
+        <input type="text" class="form-control" placeholder="שם" data-bind="value: name" tabindex="1" width="120"><br />
+        <input type="text" class="form-control" placeholder="אות קריאה" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="120"><br />
+        <input type="text" class="form-control" placeholder="אימייל" data-bind="value: email" tabindex="1" width="120"><br />
+
+        <div class="panel-group acc-v1 margin-bottom-40" id="accordion">
+            <div data-bind="foreach: items">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a class="accordion-toggle" data-bind="text: title, attr: {href: '#x'+id}" data-toggle="collapse" data-parent="#accordion"></a>
+                        </h3>
+                    </div>
+                    <div data-bind="attr: {'id': 'x'+id}" class="panel-collapse collapse">
+                        <div class="panel-body" data-bind="html: description"></div>
+                        
+                                <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הרשם</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<h2>טיול להרודיון</h2>
+        <p>
+            בתאריך 7 לדצמבר (יום שישי) ייערך טיול אגודה להרודיון, שנמצא כ-12 ק"מ דרומית לירושלים.<br />
+            הטיול מלווה במדריך, מיועד לציבור חובבי הרדיו ולמשפחותיהם, וייערך ברכבים פרטיים.<br />
+            מנהלה:<br />
+            חובבי  המרכז נפגשים בתחנת דלק לטרון בשעה 09:00.<br />
+            חובבי אזור ירושלים נפגשים בגילו בשעה 10:00, ומשם נסיעה להרודיון.<br />
+            ערוץ S10 ישמש לצרכי תקשורת והדרכה.<br />
+            כניסה לאתר הרודיון ומדריך תמומן ע"י האגודה לחובבי הרדיו משלמי המיסים ולמשפחותיהם.<br />
+            תהיה גם אפשרות להפעלת HF במקום.<br />
+            פרטים מנהלה נוספים יפורסמו בהמשך.<br />
+            <br />
+            בשאלות בנושא יש לפנות ב-EMAIL ל:<br />
+            דב גביש 4Z1DX  ב: dov4z4dx@gmail.com<br />
+            אלי שחף 4Z1NB ב:  elikon@012.net.il<br />
+            בברכה. ועד האגודה.
+        </p>
+        <hr />
+        <p>
+            <input type="text" class="form-control" id="personalname" placeholder="שם" data-bind="value: name" tabindex="1" width="120"><br />
+            <input type="text" class="form-control" id="callsign" placeholder="אות קריאה" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="120"><br />
+            <input type="text" class="form-control" id="email" placeholder="אימייל" data-bind="value: email" tabindex="1" width="120"><br />
+            <button id="SendBtn" type="button" class="btn btn-success" data-bind="click: Send">הרשם</button>
+        </p>-->
+    </div>
+</div>
+

@@ -1,0 +1,1 @@
+define(["services/utilities","services/httpService"],function(t){var n=require("viewmodels/shell"),e=ko.observable(),a={activate:function(){n.selectedSubMenu("holylandsquares"),n.selectedMainMenu("holyland"),e.subscribe(function(n){void 0!==n&&t.applyRowSearch("#dataTable tbody tr",n)})},compositionComplete:function(){e("")},searchInput:e};return a});

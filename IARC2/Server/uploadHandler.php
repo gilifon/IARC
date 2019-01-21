@@ -17,7 +17,12 @@ else if ($dir === "log")
 // img
 else if ($dir === "img")
 {
-	$upload_dir = './img_uploads/';
+	$upload_dir = '../../members/images/';
+	$valid_extensions = array('gif', 'png', 'jpeg', 'jpg');
+}
+else if ($dir === "payment")
+{
+	$upload_dir = '../../members/payments/';
 	$valid_extensions = array('gif', 'png', 'jpeg', 'jpg');
 }
 // not log or img -> error

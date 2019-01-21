@@ -1,0 +1,21 @@
+﻿<div data-bind="foreach: items">
+    <div class="blog margin-bottom-40">
+        <div class="blog-img" data-bind="visible: image != ''">
+            <img alt="" data-bind="attr: { 'src': image }" class="img-responsive">
+        </div>
+        <h2><span data-bind="html: title"></span></h2>
+        <div class="blog-post-tags">
+            <ul class="list-unstyled list-inline blog-info">
+                <li><i class="icon-calendar"></i><span data-bind="html: date"></span></li>
+                <li><i class="icon-pencil"></i><span data-bind="html: author"></span></li>
+                <li><i class="icon-tags"></i><span data-bind="html: tags"></span></li>
+            </ul>
+        </div>
+        <div data-bind="html: content">
+        </div>
+    </div>
+    <hr>
+</div>
+
+
+

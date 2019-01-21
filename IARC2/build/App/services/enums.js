@@ -1,0 +1,1 @@
+define(function(){var t={Status:{OK:"0",INFO:"1",ERROR:"2"}};return t});

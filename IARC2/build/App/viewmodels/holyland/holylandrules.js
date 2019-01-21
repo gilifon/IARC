@@ -1,0 +1,1 @@
+define(function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("holylandrules"),t.selectedMainMenu("holyland")}};return n});

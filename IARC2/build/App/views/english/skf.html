@@ -1,0 +1,73 @@
+﻿<div class="container">
+    <div class="row-fluid text-left" style="direction: ltr">
+        <h2>The Silent Key's Forest...how it all began</h2>
+
+        <div class="row">
+            <div class="col-md-9">
+                <p>It all began in the mind of the late Ozzie (Tzvi) Osrin 4X4CW who wanted to establish a memorial forest of trees for all the radio amateurs of the world. He had been a radio man, a captain in the South African airforce and later served with the Israel Defence Forces. He was also the first officially licensed radio amateur in Israel.</p>
+                <p>As the years when by, the late Shimshon "Sammy" Lotan 4X4GF joined him in developing and implementing this idea, accompanied by Tuvia Greengross 4X4GT, Shlomo Menuhin 4X1AS, Ahron Kirschner 4X1AT and Arieh Sourkiss 4X6UO. In 1983-4, 4X4CW, 4X4GF, 4X1AS, 4X4GT, 4X1AT and 4Z4ZB met in Shoresh with the IARC executive, each one of the aforementioned pledging 100 trees, and the project began to take shape.</p>
+                <p>4X4GF, a real steam-roller, who was known for his monthly motor tours of the country for hams, got things into the implementation stage. Along with 4X1AT he arranged a meeting in Jerusalem with the head of the J.N.F. forestation department, and after a few more meetings, a site was found on the hills between Modi'in and the Hadid ridge in the Ben Shemen forests.</p>
+            </div>
+            <div class="col-md-3">
+                <img class="img-responsive" src="assets/img/skf/stone2.jpg" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <p>A ham will always look for a great QTH from which signals will "get out" in the best possible manner, and here it was. On October 22 1985, with the presence of dignitaries from the government and the J.N.F., the first cairn was erected for the first thousand trees. The second two cairns were erected later in memory of 4X4CW and 4X4GF respectively.</p>
+                <p>The purpose of the forest is to be a place to plant trees in memory of radio amateurs who have passed away and in honour of living amateurs. It is a place for festive events, for get-togethers of hams and field-days. It may be used for camping.</p>
+                <p>We are hopeful that each ham in Israel and the world will have at least one tree there. Please help us plant additional trees there. It is relatively easy to get to the site which is blessed with a beautiful view. For every thousand trees we plant, a cairn is erected with a plaque on it or alternately, a picnic table with a barbecue.</p>
+                <p>More field-days and operations are planned from the Silent Keys' Forest with operations using the special call 4X4SKF. Please don't forget that in addition to the special 4X4SKF QSL card, a certificate is awarded for every donation of trees in the name of the person honoured.</p>
+                <p>We shall remember our fellow amateurs who are no longer with us; their memory will be alive with us.</p>
+            </div>
+            <div class="col-md-3">
+                <img class="img-responsive" src="assets/img/skf/skf_flag.jpg" alt="">
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2><span data-bind="html: skfcount"></span> Trees in the "Silent Key Forest"</h2>
+            </div>
+            <div class="col-md-4 pull-right" style="max-width: 350px; margin-top:8px;">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="  search-query form-control" placeholder="Search" data-bind="value: searchInput, valueUpdate: 'afterkeydown'" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button">
+                                <span class="icon icon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Striped Rows-->
+        <div class="panel panel-green margin-bottom-40">
+            <div class="panel-heading">
+                <h4 class="panel-title">Silent Key Forest</h4>
+            </div>
+            <table class="table table-striped table-hover" id="dataTable">
+                <thead>
+                    <tr>
+                        <th># of Trees</th>
+                        <th>Donated by</th>
+                        <th>In Memory of</th>
+                        <th>Callsign</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: skf">
+                    <tr>
+                        <td data-bind="text: amount"></td>
+                        <td data-bind="text: don"></td>
+                        <td data-bind="text: mem"></td>
+                        <td data-bind="text: call"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -23,6 +23,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -530,6 +531,7 @@
     <Content Include="favicon.ico" />
     <Content Include="getmysquare.html" />
     <Content Include="Server\css_teuda.css" />
+    <Content Include="Server\register_online_course.php" />
     <Content Include="__index.html" />
     <Content Include="old_index.html" />
     <Content Include="assets\js\shamir-sortable.js" />
@@ -687,7 +689,6 @@
     <Content Include="Server\hl_cert.pdf" />
     <Content Include="Server\markolit.php" />
     <Content Include="Server\pa.php" />
-    <Content Include="Server\register_new.php" />
     <Content Include="Server\shop.php" />
     <Content Include="Server\sqs.php" />
     <Content Include="Server\template.pdf" />

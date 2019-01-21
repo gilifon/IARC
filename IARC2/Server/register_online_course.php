@@ -169,7 +169,7 @@ $files[3]= $file_rcp;
 
 // email fields: to, from, subject, and so on
 $from = "IARC <".$sendermail.">"; 
-$subject = "טפסי בקשה עבור: $id"; 
+$subject = "טופס הרשמה לקורס המתוקשב: $id"; 
 	
 $message = date("Y.m.d H:i:s")."\n".count($files)." בתהליך";
 $headers = "From: $from";

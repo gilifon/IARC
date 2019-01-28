@@ -148,6 +148,7 @@
     <Content Include="App\services\httpService.js" />
     <Content Include="App\services\themeManager.js" />
     <Content Include="App\services\utilities.js" />
+    <Content Include="App\viewmodels\components\posts.js" />
     <Content Include="App\viewmodels\procedures.js" />
     <Content Include="App\viewmodels\gallery.js" />
     <Content Include="App\viewmodels\components\features.js" />
@@ -209,6 +210,7 @@
     <Content Include="App\viewmodels\shell.js" />
     <Content Include="App\viewmodels\dashboard.js" />
     <Content Include="App\viewmodels\components\events.js" />
+    <Content Include="App\views\components\posts.html" />
     <Content Include="App\views\procedures.html" />
     <Content Include="App\views\event_registration.html" />
     <Content Include="App\views\about.html" />
@@ -531,6 +533,7 @@
     <Content Include="favicon.ico" />
     <Content Include="getmysquare.html" />
     <Content Include="Server\css_teuda.css" />
+    <Content Include="Server\posts.php" />
     <Content Include="Server\register_online_course.php" />
     <Content Include="__index.html" />
     <Content Include="old_index.html" />

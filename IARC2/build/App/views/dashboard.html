@@ -10,35 +10,22 @@
     </div>
 
     <!--Features News-->
-    <div class="magazine-news">
-        <div class="row">
-            <div data-bind="compose: 'viewmodels/components/features'"></div>
-        </div>
+    <div class="row">
+        <div data-bind="compose: 'viewmodels/components/posts'"></div>
     </div>
     <!--End Features News-->
-
     <!--News Abstract & Events-->
     <div class="row">
         <div class="col-md-4">
-            <!--Magazine News-->
-            <!--<div class="magazine-news">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>חלוקת תפקידי אנשי הועד</h4>
-                        <div class="by-author">
-                            <strong>6 ביוני 2014 \ צורי 4Z1RZ</strong>
-                        </div>
-                        <a href="http://iarc.org/site/Content/docs/Committee.pdf" target="_blank"> קובץ בעלי תפקידים באגודה</a>
-                    </div>
-                </div>
-            </div>
-            <hr />-->
-            <!--End Magazine News-->
             <div data-bind="compose: 'viewmodels/components/news_abstract'"></div>
-
         </div>
-        <div data-bind="compose: 'viewmodels/components/events'"></div>
-        <div>
+        <div class="col-md-8">
+            <div data-bind="compose: 'viewmodels/components/events'"></div>
+            <br /><br />
+            <div data-bind="compose: 'viewmodels/components/features'"></div>
+        </div>
+
+        <!--<div>
             <div class="search-blocks search-blocks-top-orange">
                 <div class="row">
                     <div class="col-md-12">
@@ -49,13 +36,10 @@
                         <p>
                             <iframe width="100%" height="320px" src="//www.youtube.com/embed/tTqJT1dXYeU" frameborder="0" allowfullscreen></iframe>
                         </p>
-                        <!--<p>
-                            <iframe width="100%" height="320px" src="//www.youtube.com/embed/QxhKdN30feE" frameborder="0" allowfullscreen></iframe>
-                        </p>-->
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 

@@ -9,7 +9,7 @@ $res = array();
 
 foreach (glob("C:\wamp64\www\iarc\Content\hagal\*.pdf") as $filename) {	
 	$shortname = basename($filename);
-	$url = 'http://iarc.org/site/Content/hagal/' . $shortname;
+	$url = 'http://iarc.org/iarc/Content/hagal/' . $shortname;
 	$filename = basename($filename,".pdf");
 	$y = substr($filename, 5, 4);
 	$m = substr($filename, 9, 2);

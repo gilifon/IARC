@@ -52,6 +52,7 @@
                 { route: 'HolylandResults', title: 'Holyland Contest Results', moduleId: 'viewmodels/holyland/holylandresults', nav: true },
                 { route: 'HolylandResultsISR', title: 'Holyland Contest Results - Israeli Stations', moduleId: 'viewmodels/holyland/holylandresults_isr', nav: true },
                 { route: 'LogUpload', title: 'Log Upload', moduleId: 'viewmodels/holyland/logupload', nav: true },
+                { route: 'LogUpload2', title: 'Log Upload', moduleId: 'viewmodels/holyland/logupload2', nav: true },
                 { route: 'SilentKeyForest', title: 'Silent Key Forest', moduleId: 'viewmodels/english/skf', nav: true },
                 { route: 'Meetings', title: 'Meetings', moduleId: 'viewmodels/english/meetings', nav: true },
                 { route: 'EN_Membership', title: 'Membership', moduleId: 'viewmodels/english/membership', nav: true },

@@ -12,7 +12,7 @@ if($dir === null || $dir==="")
 else if ($dir === "log")
 {
 	$upload_dir = './log_uploads/';
-	$valid_extensions = array('adi', 'adif', 'cab', 'xls', 'xlsx');
+	$valid_extensions = array('txt', 'cabrillo.txt', 'log', 'cbr');
 }
 // img
 else if ($dir === "img")

@@ -42,7 +42,8 @@
                  .replace(/'/g, '&#39;')
                  .replace(/</g, '&lt;')
                  .replace(/>/g, '&gt;');
-    }
+    }
+
     var SetTooltips = function () {
         //$('#mobile').tooltip();
         //$('#phone').tooltip();
@@ -61,7 +62,8 @@
             var btn = document.getElementById('upload-btn'),
        wrap = document.getElementById('pic-progress-wrap'),
        picBox = document.getElementById('picbox'),
-       errBox = document.getElementById('errormsg');
+       errBox = document.getElementById('errormsg');
+
 
             uploader = new ss.SimpleUpload({
                 button: btn,

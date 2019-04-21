@@ -23,9 +23,9 @@ if (include '../isauthorized.php')
     mysqli_query($link, $sql);
     mysqli_close($link);
 
-    $to = $newuser[em];
+    $to = $newuser['em'];
     $subject = "קורס רדיו מקוון - אישור הרשמה";
-    //$message = "שם המשתמש שלך הוא:$newuser[un] והסיסמה היא: $newuser[pw]";
+    //$message = "שם המשתמש שלך הוא:$newuser['un'] והסיסמה היא: $newuser['pw']";
 
 
 
@@ -42,10 +42,10 @@ if (include '../isauthorized.php')
 
     $message .= "<tr>";
     $message .= "<td style='-webkit-border-top-left-radius: 4px; border-top-left-radius: 4px; -moz-border-radius-topleft: 4px;'><strong>שם משתמש</strong> </td>";
-    $message .= "<td style='-webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; -moz-border-radius-topright: 4px; text-align:left; direction:ltr'>" . iconv('utf-8', 'windows-1255', $newuser[un]) . "</td>";
+    $message .= "<td style='-webkit-border-top-right-radius: 4px; border-top-right-radius: 4px; -moz-border-radius-topright: 4px; text-align:left; direction:ltr'>" . iconv('utf-8', 'windows-1255', $newuser['un']) . "</td>";
     $message .= "</tr>";
 
-    $message .= "<tr><td><strong>סיסמה:</strong> </td><td style='text-align:left; direction:ltr'>" . $newuser[pw] . "</td></tr>";
+    $message .= "<tr><td><strong>סיסמה:</strong> </td><td style='text-align:left; direction:ltr'>" . $newuser['pw'] . "</td></tr>";
 
     $message .= "<tr>";
     $message .= "<td style='-webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomleft: 4px;'><strong>כתובת:</strong> </td>";
@@ -58,13 +58,13 @@ if (include '../isauthorized.php')
 
     $from = "admin@iarc.org";
     $headers = "From:" . $from . "\r\n";
-    $headers .= "Reply-To: admin@iarc.org\r\n"; 
+    $headers .= "Reply-To: dankatzman1954@gmail.com\r\n"; 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=windows-1255\r\n";
-    $headers .= 'Bcc: gilifon@gmail.com' . "\r\n";
+    $headers .= 'Bcc: gilifon@gmail.com, dankatzman1954@gmail.com' . "\r\n";
 
     echo json_encode(array('status' => 0, 'msg' => 'The user has been added'));
-    //mail($to,$subject,$message,$headers);
+    mail($to,$subject,$message,$headers);
     return;
 
 }

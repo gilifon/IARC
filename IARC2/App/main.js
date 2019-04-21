@@ -1,5 +1,5 @@
 ﻿requirejs.config({
-    urlArgs: "version=2018.11",
+    urlArgs: "version=2019.02",
     paths: {
         'text': '../Scripts/text',
         'durandal': '../Scripts/durandal',
@@ -17,7 +17,7 @@ define(['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (s
     //>>excludeEnd("build");
 
     app.title = 'IARC - New';
-    app.version = "2018.11";
+    app.version = "2019.02";
 
     app.configurePlugins({
         router: true,

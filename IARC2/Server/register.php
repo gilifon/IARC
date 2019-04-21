@@ -89,7 +89,14 @@ include ("vendor/autoload.php");
 $html ='
 <html>
 <body>
-<p align="center" style="margin-top:150px">
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <b>בקשה להתקבל כחבר</b><br>
 (שאלון למועמד)
 </p>
@@ -176,7 +183,7 @@ $files[3]= $file_rcp;
 $from = "IARC <".$sendermail.">"; 
 $subject = "טפסי בקשה עבור: $id"; 
 	
-$message = date("Y.m.d H:i:s")."\n".count($files)." בתהליך";
+//$message = date("Y.m.d H:i:s")."\n".count($files)." בתהליך\n";
 $headers = "From: $from";
 
 // boundary 
@@ -189,7 +196,7 @@ $headers .= "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " bou
 
 // multipart boundary 
 $message = "--{$mime_boundary}\n" . "Content-Type: text/; charset=\"UTF-8\"\n" .
-"Content-Transfer-Encoding: 7bit\n\n" . $message . "\n\n"; 
+"Content-Transfer-Encoding: 8bit\n" . $csvString . "\n\n"; 
 	
 // preparing attachments
 for($i=0;$i<count($files);$i++)

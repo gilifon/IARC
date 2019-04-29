@@ -1,5 +1,5 @@
 ﻿<div data-bind="foreach: items">
-    <div class="col-md-6x" data-bind="style: { textAlign: is_ltr == 0 ? 'right' : 'left' }">
+    <div class="col-md-6" data-bind="style: { textAlign: is_ltr == 0 ? 'right' : 'left' ,direction: is_ltr == 0 ? 'rtl' : 'ltr' }">
         <div class="magazine-news-imgx">
             <a data-bind="attr: { 'href': url }" target="_blank">
                 <img alt="" data-bind="attr: { 'src': image }" class="img-responsive">

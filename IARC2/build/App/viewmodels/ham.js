@@ -1,1 +1,1 @@
-define(function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("ham"),t.selectedMainMenu("israelham")}};return n});
+define(function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("ham"),t.selectedMainMenu("israelham")}};return e});

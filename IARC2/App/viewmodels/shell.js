@@ -42,6 +42,7 @@
                 { route: 'Bandplan', title: 'Bandplan', moduleId: 'viewmodels/english/freq', nav: true },
                 { route: 'Onairhagal', title: 'Onairhagal', moduleId: 'viewmodels/onairhagal', nav: true },
                 { route: 'Holyland', title: 'Holyland', moduleId: 'viewmodels/holyland', nav: true },
+                { route: 'SukotResults', title: 'SukotResults', moduleId: 'viewmodels/sukotresults', nav: true },
                 { route: 'News', title: 'News', moduleId: 'viewmodels/news', nav: true },
                 { route: 'Emergency', title: 'Emergency', moduleId: 'viewmodels/emergency', nav: true },
                 { route: 'CEPT', title: 'CEPT', moduleId: 'viewmodels/english/cept', nav: true },

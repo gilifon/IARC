@@ -1,1 +1,1 @@
-define(function(){var e=require("viewmodels/shell"),t={activate:function(){e.selectedSubMenu("qsl"),e.selectedMainMenu("aguda")}};return t});
+define(function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("qsl"),t.selectedMainMenu("aguda")}};return e});

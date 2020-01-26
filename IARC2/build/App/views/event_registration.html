@@ -8,15 +8,20 @@
             <div data-bind="foreach: items">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <a class="accordion-toggle" data-bind="text: title, attr: {href: '#x'+id}" data-toggle="collapse" data-parent="#accordion"></a>
-                        </h3>
+                        <p class="panel-title">
+                            <div class="row">
+                                <div class="col-md-2 text-left" style="padding:10px 0 0 30px;">
+                                    <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הרשם</button>
+                                </div>
+                                <div class="col-md-10">
+                                    <a class="accordion-toggle" data-bind="text: title, attr: {href: '#x'+id}" data-toggle="collapse" data-parent="#accordion"></a>
+                                </div>
+                                
+                            </div>
+                        </p>
                     </div>
                     <div data-bind="attr: {'id': 'x'+id}" class="panel-collapse collapse">
                         <div class="panel-body" data-bind="html: description"></div>
-                        
-                                <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הרשם</button>
-                        
                     </div>
                 </div>
             </div>

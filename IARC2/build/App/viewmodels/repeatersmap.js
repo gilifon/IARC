@@ -1,1 +1,1 @@
-define(function(){var e=require("viewmodels/shell"),t={activate:function(){e.selectedSubMenu("repeatersmap"),e.selectedMainMenu("israelham")},compositionComplete:function(){}};return t});
+define(function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("repeatersmap"),t.selectedMainMenu("israelham")},compositionComplete:function(){}};return e});

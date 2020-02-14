@@ -9,9 +9,10 @@
 
     <div class="row-fluid text-left" style="direction: ltr">
         <div class="col-md-12">
+            <span>Multi site repeater is a connection of several repeaters to cover a large geographical area</span>
             <div class="panel panel-red margin-bottom-40">
                 <div class="panel-heading">
-                    <h4 class="panel-title">VHF Repeaters</h4>
+                    <h4 class="panel-title">Analog VHF Repeaters</h4>
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -19,7 +20,8 @@
                             <th style="text-align: left">Repeater</th>
                             <th style="text-align: left">Frequency</th>
                             <th style="text-align: left">Shift</th>
-                            <th style="text-align: left">PL</th>
+                            <th style="text-align: right">PL(tx)</th>
+                            <th style="text-align: right">PL(rx)</th>
                             <th style="text-align: left">Location</th>
                             <th style="text-align: left">Comments</th>
                         </tr>
@@ -30,79 +32,71 @@
                             <td>145.600</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Mitzpe Ramon</td>
-                            <td></td>
+                            <td>Digital repeater on demand</td>
                         </tr>
                         <tr>
                             <td>R-1</td>
                             <td>145.625</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Jerusalem</td>
-                            <td>sends PL 71.9</td>
+                            <td>Connected to multi-site repeater</td>
                         </tr>
                         <tr>
                             <td>R-3</td>
                             <td>145.675</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
-                            <td>Megido</td>
-                            <td></td>
-                        </tr>
-                        <!--<tr>
-                            <td>R-4.5</td>
-                            <td>145.7125</td>
-                            <td>600Khz -</td>
                             <td>91.5</td>
-                            <td>Bental</td>
-                            <td>sends PL 91.5</td>
-                        </tr>-->
+                            <td>Megido</td>
+                            <td>Connected to multi-site repeater</td>
+                        </tr>
                         <tr>
                             <td>R-7</td>
                             <td>145.775</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Tel Aviv</td>
-                            <td>sends PL 91.5</td>
+                            <td>Connected to multi-site repeater</td>
                         </tr>
                         <tr>
                             <td>R-12A</td>
                             <td>144.700</td>
                             <td>+ 600Khz</td>
                             <td>91.5</td>
-                            <td>Haifa</td>
-                            <td>sends PL 91.5</td>
-                        </tr>
-                        <tr>
-                            <td>R-12B</td>
-                            <td>145.300</td>
-                            <td>- 600Khz</td>
                             <td>91.5</td>
-                            <td>Eilat</td>
-                            <td>Temporarily out of service</td>
+                            <td>Haifa</td>
+                            <td>Connected to multi-site repeater</td>
                         </tr>
                         <tr>
                             <td>R-12C</td>
                             <td>145.3125</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Be'er Sheva</td>
-                            <td>sends PL 91.5</td>
+                            <td>Temporarily unavailable</td>
                         </tr>
                         <tr>
                             <td>R-13</td>
                             <td>145.325</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Yatir</td>
-                            <td>sends PL 91.5</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>R-14</td>
                             <td>145.350</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
-                            <td>Mevo-Hama</td>
+                            <td>91.5</td>
+                            <td>Hermon (Future repeater)</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -110,14 +104,16 @@
                             <td>144.775</td>
                             <td>+ 600Khz</td>
                             <td>91.5</td>
+                            <td>114.8</td>
                             <td>Giva'taim</td>
-                            <td>sends PL 114.8</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>R-16</td>
                             <td>145.400</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td></td>
                             <td>Netania</td>
                             <td></td>
                         </tr>
@@ -126,6 +122,7 @@
                             <td>145.450</td>
                             <td>- 600Khz</td>
                             <td>91.5</td>
+                            <td></td>
                             <td>Kiryat Uno</td>
                             <td></td>
                         </tr>
@@ -142,7 +139,8 @@
                             <th style="text-align: left">Repeater</th>
                             <th style="text-align: left">Frequency</th>
                             <th style="text-align: left">Shift</th>
-                            <th style="text-align: left">PL</th>
+                            <th style="text-align: right">PL(tx)</th>
+                            <th style="text-align: right">PL(rx)</th>
                             <th style="text-align: left">Location</th>
                             <th style="text-align: left">Comments</th>
                         </tr>
@@ -153,33 +151,79 @@
                             <td>438.650</td>
                             <td>7.6Mhz -</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Tel Aviv</td>
-                            <td></td>
+                            <td>Digital repeater by default</td>
                         </tr>
                         <tr>
                             <td>R-71</td>
                             <td>438.675</td>
                             <td>7.6Mhz -</td>
                             <td>91.5</td>
+                            <td>91.5</td>
                             <td>Rosh HaAyin</td>
-                            <td></td>
+                            <td>Digital repeater by default</td>
                         </tr>
                         <tr>
                             <td>R-73</td>
                             <td>438.725</td>
                             <td>7.6Mhz -</td>
                             <td>91.5</td>
-                            <td>Haifa</td>
-                            <td></td>
-                        </tr>
-                        <!--<tr>
-                            <td>R-78</td>
-                            <td>438.850</td>
-                            <td>7.6Mhz -</td>
                             <td>91.5</td>
-                            <td>Ma'ale Gilboa</td>
-                            <td></td>
-                        </tr>-->
+                            <td>Haifa</td>
+                            <td>Digital repeater by default</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel panel-black margin-bottom-40">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Digital VHF Repeaters</h4>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left">Repeater</th>
+                            <th style="text-align: left">Rx</th>
+                            <th style="text-align: left">Tx</th>
+                            <th style="text-align: left">Color Code</th>
+                            <th style="text-align: left">QTH</th>
+                            <th style="text-align: left">Default TG on TS1</th>
+                            <th style="text-align: left">Connectivity</th>
+                            <th style="text-align: left">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>R-0</td>
+                            <td>145.600</td>
+                            <td>145.000</td>
+                            <td>1</td>
+                            <td>Mitzpe Ramon</td>
+                            <td>Dynamic</td>
+                            <td>BrandMeister</td>
+                            <td>Analog repeater by default</td>
+                        </tr>
+                        <tr>
+                            <td>R-12B</td>
+                            <td>145.300</td>
+                            <td>144.700</td>
+                            <td>1</td>
+                            <td>Eilat (future repeater)</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
+                        </tr>
+                        <tr>
+                            <td>R-14</td>
+                            <td>145.350</td>
+                            <td>144.750</td>
+                            <td>1</td>
+                            <td>Hermon (Future repeater)</td>
+                            <td>Dynamic</td>
+                            <td>BrandMeister</td>
+                            <td>Analog repeater by default</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -195,7 +239,9 @@
                             <th style="text-align: left">Tx</th>
                             <th style="text-align: left">Color Code</th>
                             <th style="text-align: left">QTH</th>
-                            <th style="text-align: left">Talk Group</th>
+                            <th style="text-align: left">Default TG on TS1</th>
+                            <th style="text-align: left">Connectivity</th>
+                            <th style="text-align: left">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,7 +251,9 @@
                             <td>431.000</td>
                             <td>1</td>
                             <td>Jerusalem</td>
-                            <td>Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
                             <td>R-68 (425902) </td>
@@ -213,7 +261,9 @@
                             <td>431.000</td>
                             <td>1</td>
                             <td>Eilat</td>
-                            <td>MMDVM - Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
                             <td>R-70 (425201) </td>
@@ -221,7 +271,9 @@
                             <td>431.050</td>
                             <td>1</td>
                             <td>Tel Aviv</td>
-                            <td>Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
                             <td>R-71 (425202) </td>
@@ -229,7 +281,9 @@
                             <td>431.075</td>
                             <td>1</td>
                             <td>Rosh Ha'ayin</td>
-                            <td>Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
                             <td>R-73 (425301) </td>
@@ -237,7 +291,9 @@
                             <td>431.125</td>
                             <td>1</td>
                             <td>Haifa</td>
-                            <td>Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
                             <td>R-75 (425401) </td>
@@ -245,48 +301,44 @@
                             <td>431.175</td>
                             <td>1</td>
                             <td>Be'er Sheva</td>
-                            <td>MMDVM - Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                         <tr>
-                            <td>R-76 (425901)</td>
-                            <td>438.800</td>
-                            <td>431.200</td>
-                            <td>1</td>
-                            <td>Modi'in</td>
-                            <td>MMDVM - Connceted to BrandMeister Network</td>
-                        </tr>
-                        <tr>
-                            <td style="direction:ltr; text-align:right">R-78 (425701)</td>
+                            <td>R-78 (425701)</td>
                             <td>438.850</td>
                             <td>431.250</td>
                             <td>1</td>
                             <td>Ma'ale Gilboa</td>
-                            <td>MMDVM - Connceted to BrandMeister Network</td>
+                            <td>425</td>
+                            <td>BrandMeister</td>
+                            <td>TS2 is available for any talk group</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <!--<div class="panel panel-black margin-bottom-40">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Links</h4>
-                </div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="text-align: left">Frequency</th>
-                            <th style="text-align: left">Location</th>
-                            <th style="text-align: left">Links to</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>439.950</td>
-                            <td>Belvoir Fortress</td>
-                            <td>Haifa Repeater</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>-->
+        <div class="panel-heading">
+            <h4 class="panel-title">Links</h4>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align: left">Frequency</th>
+                    <th style="text-align: left">Location</th>
+                    <th style="text-align: left">Links to</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>439.950</td>
+                    <td>Belvoir Fortress</td>
+                    <td>Haifa Repeater</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>-->
 
         </div>
     </div>

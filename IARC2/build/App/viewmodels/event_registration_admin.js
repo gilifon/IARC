@@ -1,1 +1,35 @@
-define(["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=ko.observableArray(),r=function(){n.get("Server/get_event_registrants.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},g=function(){n.get("Server/get_events.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},o=function(t){return ko.utils.arrayFilter(e(),function(n){return n.event_id===t})},l={activate:function(){r(),g()},compositionComplete:function(){},list:e,events:a,getEventRegistrants:o};return l});
+﻿define(['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var list = ko.observableArray();
+    var events = ko.observableArray();
+
+    var getList = function () {
+        httpService.get("Server/get_event_registrants.php?d=" + Date.now()).done(function (result) { list(result); }).error(utilities.handleError);
+    }
+    var getEvents= function () {
+        httpService.get("Server/get_events.php?d=" + Date.now()).done(function (data) { events(data); }).error(utilities.handleError);
+    }
+
+    var getEventRegistrants = function (eventid) {
+        return ko.utils.arrayFilter(list(), function (registrant) {
+            return (registrant.event_id === eventid);
+        });
+    }
+    
+    
+    var vm = {
+        activate: function () {
+            getList();
+            getEvents();
+        },
+        compositionComplete: function () {
+            
+        },
+        list: list,
+        events: events,
+        getEventRegistrants: getEventRegistrants
+    };
+
+    return vm;
+});

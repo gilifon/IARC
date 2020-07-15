@@ -1,1 +1,941 @@
-define(["durandal/system","durandal/app","durandal/activator","durandal/events","durandal/composition","plugins/history","knockout","jquery"],function(e,t,n,a,r,o,l,g){function i(e){return e=e.replace(v,"\\$&").replace(h,"(?:$1)?").replace(u,function(e,t){return t?e:"([^/]+)"}).replace(w,"(.*?)"),new RegExp("^"+e+"$")}function s(e){var t=e.indexOf(":"),n=t>0?t-1:e.length;return e.substring(0,n)}function d(e){return e.router&&e.router.loadUrl}function p(e,t){return-1!==e.indexOf(t,e.length-t.length)}function c(e,t){if(!e||!t)return!1;if(e.length!=t.length)return!1;for(var n=0,a=e.length;a>n;n++)if(e[n]!=t[n])return!1;return!0}var m,L,h=/\((.*?)\)/g,u=/(\(\?)?:\w+/g,w=/\*\w+/g,v=/[\-{}\[\]+?.,\\\^$|#\s]/g,f=/\/$/,b=function(){function r(t,n){e.log("Navigation Complete",t,n);var a=e.getModuleId(B);a&&j.trigger("router:navigation:from:"+a),B=t,M=n;var r=e.getModuleId(B);r&&j.trigger("router:navigation:to:"+r),d(t)||j.updateDocumentTitle(t,n),L.explicitNavigation=!1,L.navigatingBack=!1,j.trigger("router:navigation:complete",t,n,j)}function g(t,n){e.log("Navigation Cancelled"),j.activeInstruction(M),M&&j.navigate(M.fragment,!1),H(!1),L.explicitNavigation=!1,L.navigatingBack=!1,j.trigger("router:navigation:cancelled",t,n,j)}function h(t){e.log("Navigation Redirecting"),H(!1),L.explicitNavigation=!1,L.navigatingBack=!1,j.navigate(t,{trigger:!0,replace:!0})}function u(e,t,n){L.navigatingBack=!L.explicitNavigation&&B!=n.fragment,j.trigger("router:route:activating",t,n,j),e.activateItem(t,n.params).then(function(a){if(a){var o=B;r(t,n),d(t)&&x({router:t.router,fragment:n.fragment,queryString:n.queryString}),o==t&&j.attached()}else e.settings.lifecycleData&&e.settings.lifecycleData.redirect?h(e.settings.lifecycleData.redirect):g(t,n);m&&(m.resolve(),m=null)})}function w(t,n,a){var r=j.guardRoute(n,a);r?r.then?r.then(function(r){r?e.isString(r)?h(r):u(t,n,a):g(n,a)}):e.isString(r)?h(r):u(t,n,a):g(n,a)}function v(e,t,n){j.guardRoute?w(e,t,n):u(e,t,n)}function y(e){return M&&M.config.moduleId==e.config.moduleId&&B&&(B.canReuseForRoute&&B.canReuseForRoute.apply(B,e.params)||B.router&&B.router.loadUrl)}function _(){if(!H()){var t=R.shift();if(R=[],t){if(t.router){var a=t.fragment;return t.queryString&&(a+="?"+t.queryString),t.router.loadUrl(a),void 0}H(!0),j.activeInstruction(t),y(t)?v(n.create(),B,t):e.acquire(t.config.moduleId).then(function(n){var a=e.resolveObject(n);v(T,a,t)}).fail(function(n){e.error("Failed to load routed module ("+t.config.moduleId+"). Details: "+n.message)})}}}function x(e){R.unshift(e),_()}function S(e,t,n){for(var a=e.exec(t).slice(1),r=0;r<a.length;r++){var o=a[r];a[r]=o?decodeURIComponent(o):null}var l=j.parseQueryString(n);return l&&a.push(l),{params:a,queryParams:l}}function k(t){j.trigger("router:route:before-config",t,j),e.isRegExp(t)?t.routePattern=t.route:(t.title=t.title||j.convertRouteToTitle(t.route),t.moduleId=t.moduleId||j.convertRouteToModuleId(t.route),t.hash=t.hash||j.convertRouteToHash(t.route),t.routePattern=i(t.route)),j.trigger("router:route:after-config",t,j),j.routes.push(t),j.route(t.routePattern,function(e,n){var a=S(t.routePattern,e,n);x({fragment:e,queryString:n,config:t,params:a.params,queryParams:a.queryParams})})}function C(t){if(e.isArray(t.route))for(var n=0,a=t.route.length;a>n;n++){var r=e.extend({},t);r.route=t.route[n],n>0&&delete r.nav,k(r)}else k(t);return j}function A(e){e.isActive||(e.isActive=l.computed(function(){var t=T();return t&&t.__moduleId__==e.moduleId}))}var B,M,R=[],H=l.observable(!1),T=n.create(),j={handlers:[],routes:[],navigationModel:l.observableArray([]),activeItem:T,isNavigating:l.computed(function(){var e=T(),t=H(),n=e&&e.router&&e.router!=j&&e.router.isNavigating()?!0:!1;return t||n}),activeInstruction:l.observable(null),__router__:!0};return a.includeIn(j),T.settings.areSameItem=function(e,t,n,a){return e==t?c(n,a):!1},j.parseQueryString=function(e){var t,n;if(!e)return null;if(n=e.split("&"),0==n.length)return null;t={};for(var a=0;a<n.length;a++){var r=n[a];if(""!==r){var o=r.split("=");t[o[0]]=o[1]&&decodeURIComponent(o[1].replace(/\+/g," "))}}return t},j.route=function(e,t){j.handlers.push({routePattern:e,callback:t})},j.loadUrl=function(t){var n=j.handlers,a=null,r=t,l=t.indexOf("?");if(-1!=l&&(r=t.substring(0,l),a=t.substr(l+1)),j.relativeToParentRouter){var g=this.parent.activeInstruction();r=g.params.join("/"),r&&"/"==r[0]&&(r=r.substr(1)),r||(r=""),r=r.replace("//","/").replace("//","/")}r=r.replace(f,"");for(var i=0;i<n.length;i++){var s=n[i];if(s.routePattern.test(r))return s.callback(r,a),!0}return e.log("Route Not Found"),j.trigger("router:route:not-found",t,j),M&&o.navigate(M.fragment,{trigger:!1,replace:!0}),L.explicitNavigation=!1,L.navigatingBack=!1,!1},j.updateDocumentTitle=function(e,n){n.config.title?document.title=t.title?n.config.title+" | "+t.title:n.config.title:t.title&&(document.title=t.title)},j.navigate=function(e,t){return e&&-1!=e.indexOf("://")?(window.location.href=e,!0):(L.explicitNavigation=!0,o.navigate(e,t))},j.navigateBack=function(){o.navigateBack()},j.attached=function(){setTimeout(function(){H(!1),j.trigger("router:navigation:attached",B,M,j),_()},10)},j.compositionComplete=function(){j.trigger("router:navigation:composition-complete",B,M,j)},j.convertRouteToHash=function(e){if(j.relativeToParentRouter){var t=j.parent.activeInstruction(),n=t.config.hash+"/"+e;return o._hasPushState&&(n="/"+n),n=n.replace("//","/").replace("//","/")}return o._hasPushState?e:"#"+e},j.convertRouteToModuleId=function(e){return s(e)},j.convertRouteToTitle=function(e){var t=s(e);return t.substring(0,1).toUpperCase()+t.substring(1)},j.map=function(t,n){if(e.isArray(t)){for(var a=0;a<t.length;a++)j.map(t[a]);return j}return e.isString(t)||e.isRegExp(t)?(n?e.isString(n)&&(n={moduleId:n}):n={},n.route=t):n=t,C(n)},j.buildNavigationModel=function(t){var n=[],a=j.routes;t=t||100;for(var r=0;r<a.length;r++){var o=a[r];o.nav&&(e.isNumber(o.nav)||(o.nav=t),A(o),n.push(o))}return n.sort(function(e,t){return e.nav-t.nav}),j.navigationModel(n),j},j.mapUnknownRoutes=function(t,n){var a="*catchall",r=i(a);return j.route(r,function(l,g){var i=S(r,l,g),s={fragment:l,queryString:g,config:{route:a,routePattern:r},params:i.params,queryParams:i.queryParams};if(t)if(e.isString(t))s.config.moduleId=t,n&&o.navigate(n,{trigger:!1,replace:!0});else if(e.isFunction(t)){var d=t(s);if(d&&d.then)return d.then(function(){j.trigger("router:route:before-config",s.config,j),j.trigger("router:route:after-config",s.config,j),x(s)}),void 0}else s.config=t,s.config.route=a,s.config.routePattern=r;else s.config.moduleId=l;j.trigger("router:route:before-config",s.config,j),j.trigger("router:route:after-config",s.config,j),x(s)}),j},j.reset=function(){return M=B=void 0,j.handlers=[],j.routes=[],j.off(),delete j.options,j},j.makeRelative=function(t){return e.isString(t)&&(t={moduleId:t,route:t}),t.moduleId&&!p(t.moduleId,"/")&&(t.moduleId+="/"),t.route&&!p(t.route,"/")&&(t.route+="/"),t.fromParent&&(j.relativeToParentRouter=!0),j.on("router:route:before-config").then(function(e){t.moduleId&&(e.moduleId=t.moduleId+e.moduleId),t.route&&(e.route=""===e.route?t.route.substring(0,t.route.length-1):t.route+e.route)}),j},j.createChildRouter=function(){var e=b();return e.parent=j,e},j};return L=b(),L.explicitNavigation=!1,L.navigatingBack=!1,L.activate=function(t){return e.defer(function(n){if(m=n,L.options=e.extend({routeHandler:L.loadUrl},L.options,t),o.activate(L.options),o._hasPushState)for(var a=L.routes,r=a.length;r--;){var l=a[r];l.hash=l.hash.replace("#","")}g(document).delegate("a","click",function(e){if(L.explicitNavigation=!0,o._hasPushState&&!(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)){var t=g(this).attr("href"),n=this.protocol+"//";(!t||"#"!==t.charAt(0)&&t.slice(n.length)!==n)&&(e.preventDefault(),o.navigate(t))}})}).promise()},L.deactivate=function(){o.deactivate()},L.install=function(){l.bindingHandlers.router={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t,n,a,o){var g=l.utils.unwrapObservable(t())||{};if(g.__router__)g={model:g.activeItem(),attached:g.attached,compositionComplete:g.compositionComplete,activate:!1};else{var i=l.utils.unwrapObservable(g.router||a.router)||L;g.model=i.activeItem(),g.attached=i.attached,g.compositionComplete=i.compositionComplete,g.activate=!1}r.compose(e,g,o)}},l.virtualElements.allowedBindings.router=!0},L});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Connects the history module's url and history tracking support to Durandal's activation and composition engine allowing you to easily build navigation-style applications.
+ * @module router
+ * @requires system
+ * @requires app
+ * @requires activator
+ * @requires events
+ * @requires composition
+ * @requires history
+ * @requires knockout
+ * @requires jquery
+ */
+define(['durandal/system', 'durandal/app', 'durandal/activator', 'durandal/events', 'durandal/composition', 'plugins/history', 'knockout', 'jquery'], function(system, app, activator, events, composition, history, ko, $) {
+    var optionalParam = /\((.*?)\)/g;
+    var namedParam = /(\(\?)?:\w+/g;
+    var splatParam = /\*\w+/g;
+    var escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+    var startDeferred, rootRouter;
+    var trailingSlash = /\/$/;
+
+    function routeStringToRegExp(routeString) {
+        routeString = routeString.replace(escapeRegExp, '\\$&')
+            .replace(optionalParam, '(?:$1)?')
+            .replace(namedParam, function(match, optional) {
+                return optional ? match : '([^\/]+)';
+            })
+            .replace(splatParam, '(.*?)');
+
+        return new RegExp('^' + routeString + '$');
+    }
+
+    function stripParametersFromRoute(route) {
+        var colonIndex = route.indexOf(':');
+        var length = colonIndex > 0 ? colonIndex - 1 : route.length;
+        return route.substring(0, length);
+    }
+
+    function hasChildRouter(instance) {
+        return instance.router && instance.router.loadUrl;
+    }
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
+    function compareArrays(first, second) {
+        if (!first || !second){
+            return false;
+        }
+
+        if (first.length != second.length) {
+            return false;
+        }
+
+        for (var i = 0, len = first.length; i < len; i++) {
+            if (first[i] != second[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @class Router
+     * @uses Events
+     */
+
+    /**
+     * Triggered when the navigation logic has completed.
+     * @event router:navigation:complete
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the navigation has been cancelled.
+     * @event router:navigation:cancelled
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered right before a route is activated.
+     * @event router:route:activating
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered right before a route is configured.
+     * @event router:route:before-config
+     * @param {object} config The route config.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered just after a route is configured.
+     * @event router:route:after-config
+     * @param {object} config The route config.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the view for the activated instance is attached.
+     * @event router:navigation:attached
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the composition that the activated instance participates in is complete.
+     * @event router:navigation:composition-complete
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the router does not find a matching route.
+     * @event router:route:not-found
+     * @param {string} fragment The url fragment.
+     * @param {Router} router The router.
+     */
+
+    var createRouter = function() {
+        var queue = [],
+            isProcessing = ko.observable(false),
+            currentActivation,
+            currentInstruction,
+            activeItem = activator.create();
+
+        var router = {
+            /**
+             * The route handlers that are registered. Each handler consists of a `routePattern` and a `callback`.
+             * @property {object[]} handlers
+             */
+            handlers: [],
+            /**
+             * The route configs that are registered.
+             * @property {object[]} routes
+             */
+            routes: [],
+            /**
+             * The route configurations that have been designated as displayable in a nav ui (nav:true).
+             * @property {KnockoutObservableArray} navigationModel
+             */
+            navigationModel: ko.observableArray([]),
+            /**
+             * The active item/screen based on the current navigation state.
+             * @property {Activator} activeItem
+             */
+            activeItem: activeItem,
+            /**
+             * Indicates that the router (or a child router) is currently in the process of navigating.
+             * @property {KnockoutComputed} isNavigating
+             */
+            isNavigating: ko.computed(function() {
+                var current = activeItem();
+                var processing = isProcessing();
+                var currentRouterIsProcesing = current
+                    && current.router
+                    && current.router != router
+                    && current.router.isNavigating() ? true : false;
+                return  processing || currentRouterIsProcesing;
+            }),
+            /**
+             * An observable surfacing the active routing instruction that is currently being processed or has recently finished processing.
+             * The instruction object has `config`, `fragment`, `queryString`, `params` and `queryParams` properties.
+             * @property {KnockoutObservable} activeInstruction
+             */
+            activeInstruction:ko.observable(null),
+            __router__:true
+        };
+
+        events.includeIn(router);
+
+        activeItem.settings.areSameItem = function (currentItem, newItem, currentActivationData, newActivationData) {
+            if (currentItem == newItem) {
+                return compareArrays(currentActivationData, newActivationData);
+            }
+
+            return false;
+        };
+
+        function completeNavigation(instance, instruction) {
+            system.log('Navigation Complete', instance, instruction);
+
+            var fromModuleId = system.getModuleId(currentActivation);
+            if (fromModuleId) {
+                router.trigger('router:navigation:from:' + fromModuleId);
+            }
+
+            currentActivation = instance;
+            currentInstruction = instruction;
+
+            var toModuleId = system.getModuleId(currentActivation);
+            if (toModuleId) {
+                router.trigger('router:navigation:to:' + toModuleId);
+            }
+
+            if (!hasChildRouter(instance)) {
+                router.updateDocumentTitle(instance, instruction);
+            }
+
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.trigger('router:navigation:complete', instance, instruction, router);
+        }
+
+        function cancelNavigation(instance, instruction) {
+            system.log('Navigation Cancelled');
+
+            router.activeInstruction(currentInstruction);
+
+            if (currentInstruction) {
+                router.navigate(currentInstruction.fragment, false);
+            }
+
+            isProcessing(false);
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.trigger('router:navigation:cancelled', instance, instruction, router);
+        }
+
+        function redirect(url) {
+            system.log('Navigation Redirecting');
+
+            isProcessing(false);
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.navigate(url, { trigger: true, replace: true });
+        }
+
+        function activateRoute(activator, instance, instruction) {
+            rootRouter.navigatingBack = !rootRouter.explicitNavigation && currentActivation != instruction.fragment;
+            router.trigger('router:route:activating', instance, instruction, router);
+
+            activator.activateItem(instance, instruction.params).then(function(succeeded) {
+                if (succeeded) {
+                    var previousActivation = currentActivation;
+                    completeNavigation(instance, instruction);
+
+                    if (hasChildRouter(instance)) {
+                        queueInstruction({
+                            router: instance.router,
+                            fragment: instruction.fragment,
+                            queryString: instruction.queryString
+                        });
+                    }
+
+                    if (previousActivation == instance) {
+                        router.attached();
+                    }
+                } else if(activator.settings.lifecycleData && activator.settings.lifecycleData.redirect){
+                    redirect(activator.settings.lifecycleData.redirect);
+                }else{
+                    cancelNavigation(instance, instruction);
+                }
+
+                if (startDeferred) {
+                    startDeferred.resolve();
+                    startDeferred = null;
+                }
+            });
+        }
+
+        /**
+         * Inspects routes and modules before activation. Can be used to protect access by cancelling navigation or redirecting.
+         * @method guardRoute
+         * @param {object} instance The module instance that is about to be activated by the router.
+         * @param {object} instruction The route instruction. The instruction object has config, fragment, queryString, params and queryParams properties.
+         * @return {Promise|Boolean|String} If a boolean, determines whether or not the route should activate or be cancelled. If a string, causes a redirect to the specified route. Can also be a promise for either of these value types.
+         */
+        function handleGuardedRoute(activator, instance, instruction) {
+            var resultOrPromise = router.guardRoute(instance, instruction);
+            if (resultOrPromise) {
+                if (resultOrPromise.then) {
+                    resultOrPromise.then(function(result) {
+                        if (result) {
+                            if (system.isString(result)) {
+                                redirect(result);
+                            } else {
+                                activateRoute(activator, instance, instruction);
+                            }
+                        } else {
+                            cancelNavigation(instance, instruction);
+                        }
+                    });
+                } else {
+                    if (system.isString(resultOrPromise)) {
+                        redirect(resultOrPromise);
+                    } else {
+                        activateRoute(activator, instance, instruction);
+                    }
+                }
+            } else {
+                cancelNavigation(instance, instruction);
+            }
+        }
+
+        function ensureActivation(activator, instance, instruction) {
+            if (router.guardRoute) {
+                handleGuardedRoute(activator, instance, instruction);
+            } else {
+                activateRoute(activator, instance, instruction);
+            }
+        }
+
+        function canReuseCurrentActivation(instruction) {
+            return currentInstruction
+                && currentInstruction.config.moduleId == instruction.config.moduleId
+                && currentActivation
+                && ((currentActivation.canReuseForRoute && currentActivation.canReuseForRoute.apply(currentActivation, instruction.params))
+                || (currentActivation.router && currentActivation.router.loadUrl));
+        }
+
+        function dequeueInstruction() {
+            if (isProcessing()) {
+                return;
+            }
+
+            var instruction = queue.shift();
+            queue = [];
+
+            if (!instruction) {
+                return;
+            }
+
+            if (instruction.router) {
+                var fullFragment = instruction.fragment;
+                if (instruction.queryString) {
+                    fullFragment += "?" + instruction.queryString;
+                }
+
+                instruction.router.loadUrl(fullFragment);
+                return;
+            }
+
+            isProcessing(true);
+            router.activeInstruction(instruction);
+
+            if (canReuseCurrentActivation(instruction)) {
+                ensureActivation(activator.create(), currentActivation, instruction);
+            } else {
+                system.acquire(instruction.config.moduleId).then(function(module) {
+                    var instance = system.resolveObject(module);
+                    ensureActivation(activeItem, instance, instruction);
+                }).fail(function(err){
+                        system.error('Failed to load routed module (' + instruction.config.moduleId + '). Details: ' + err.message);
+                    });
+            }
+        }
+
+        function queueInstruction(instruction) {
+            queue.unshift(instruction);
+            dequeueInstruction();
+        }
+
+        // Given a route, and a URL fragment that it matches, return the array of
+        // extracted decoded parameters. Empty or unmatched parameters will be
+        // treated as `null` to normalize cross-browser behavior.
+        function createParams(routePattern, fragment, queryString) {
+            var params = routePattern.exec(fragment).slice(1);
+
+            for (var i = 0; i < params.length; i++) {
+                var current = params[i];
+                params[i] = current ? decodeURIComponent(current) : null;
+            }
+
+            var queryParams = router.parseQueryString(queryString);
+            if (queryParams) {
+                params.push(queryParams);
+            }
+
+            return {
+                params:params,
+                queryParams:queryParams
+            };
+        }
+
+        function configureRoute(config){
+            router.trigger('router:route:before-config', config, router);
+
+            if (!system.isRegExp(config)) {
+                config.title = config.title || router.convertRouteToTitle(config.route);
+                config.moduleId = config.moduleId || router.convertRouteToModuleId(config.route);
+                config.hash = config.hash || router.convertRouteToHash(config.route);
+                config.routePattern = routeStringToRegExp(config.route);
+            }else{
+                config.routePattern = config.route;
+            }
+
+            router.trigger('router:route:after-config', config, router);
+
+            router.routes.push(config);
+
+            router.route(config.routePattern, function(fragment, queryString) {
+                var paramInfo = createParams(config.routePattern, fragment, queryString);
+                queueInstruction({
+                    fragment: fragment,
+                    queryString:queryString,
+                    config: config,
+                    params: paramInfo.params,
+                    queryParams:paramInfo.queryParams
+                });
+            });
+        };
+
+        function mapRoute(config) {
+            if(system.isArray(config.route)){
+                for(var i = 0, length = config.route.length; i < length; i++){
+                    var current = system.extend({}, config);
+                    current.route = config.route[i];
+                    if(i > 0){
+                        delete current.nav;
+                    }
+                    configureRoute(current);
+                }
+            }else{
+                configureRoute(config);
+            }
+
+            return router;
+        }
+
+        function addActiveFlag(config) {
+            if(config.isActive){
+                return;
+            }
+
+            config.isActive = ko.computed(function() {
+                var theItem = activeItem();
+                return theItem && theItem.__moduleId__ == config.moduleId;
+            });
+        }
+
+        /**
+         * Parses a query string into an object.
+         * @method parseQueryString
+         * @param {string} queryString The query string to parse.
+         * @return {object} An object keyed according to the query string parameters.
+         */
+        router.parseQueryString = function (queryString) {
+            var queryObject, pairs;
+
+            if (!queryString) {
+                return null;
+            }
+
+            pairs = queryString.split('&');
+
+            if (pairs.length == 0) {
+                return null;
+            }
+
+            queryObject = {};
+
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i];
+                if (pair === '') {
+                    continue;
+                }
+
+                var parts = pair.split('=');
+                queryObject[parts[0]] = parts[1] && decodeURIComponent(parts[1].replace(/\+/g, ' '));
+            }
+
+            return queryObject;
+        };
+
+        /**
+         * Add a route to be tested when the url fragment changes.
+         * @method route
+         * @param {RegEx} routePattern The route pattern to test against.
+         * @param {function} callback The callback to execute when the route pattern is matched.
+         */
+        router.route = function(routePattern, callback) {
+            router.handlers.push({ routePattern: routePattern, callback: callback });
+        };
+
+        /**
+         * Attempt to load the specified URL fragment. If a route succeeds with a match, returns `true`. If no defined routes matches the fragment, returns `false`.
+         * @method loadUrl
+         * @param {string} fragment The URL fragment to find a match for.
+         * @return {boolean} True if a match was found, false otherwise.
+         */
+        router.loadUrl = function(fragment) {
+            var handlers = router.handlers,
+                queryString = null,
+                coreFragment = fragment,
+                queryIndex = fragment.indexOf('?');
+
+            if (queryIndex != -1) {
+                coreFragment = fragment.substring(0, queryIndex);
+                queryString = fragment.substr(queryIndex + 1);
+            }
+
+            if(router.relativeToParentRouter){
+                var instruction = this.parent.activeInstruction();
+                coreFragment = instruction.params.join('/');
+
+                if(coreFragment && coreFragment[0] == '/'){
+                    coreFragment = coreFragment.substr(1);
+                }
+
+                if(!coreFragment){
+                    coreFragment = '';
+                }
+
+                coreFragment = coreFragment.replace('//', '/').replace('//', '/');
+            }
+
+            coreFragment = coreFragment.replace(trailingSlash, '');
+
+            for (var i = 0; i < handlers.length; i++) {
+                var current = handlers[i];
+                if (current.routePattern.test(coreFragment)) {
+                    current.callback(coreFragment, queryString);
+                    return true;
+                }
+            }
+
+            system.log('Route Not Found');
+            router.trigger('router:route:not-found', fragment, router);
+
+            if (currentInstruction) {
+                history.navigate(currentInstruction.fragment, { trigger:false, replace:true });
+            }
+
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+
+            return false;
+        };
+
+        /**
+         * Updates the document title based on the activated module instance, the routing instruction and the app.title.
+         * @method updateDocumentTitle
+         * @param {object} instance The activated module.
+         * @param {object} instruction The routing instruction associated with the action. It has a `config` property that references the original route mapping config.
+         */
+        router.updateDocumentTitle = function(instance, instruction) {
+            if (instruction.config.title) {
+                if (app.title) {
+                    document.title = instruction.config.title + " | " + app.title;
+                } else {
+                    document.title = instruction.config.title;
+                }
+            } else if (app.title) {
+                document.title = app.title;
+            }
+        };
+
+        /**
+         * Save a fragment into the hash history, or replace the URL state if the
+         * 'replace' option is passed. You are responsible for properly URL-encoding
+         * the fragment in advance.
+         * The options object can contain `trigger: false` if you wish to not have the
+         * route callback be fired, or `replace: true`, if
+         * you wish to modify the current URL without adding an entry to the history.
+         * @method navigate
+         * @param {string} fragment The url fragment to navigate to.
+         * @param {object|boolean} options An options object with optional trigger and replace flags. You can also pass a boolean directly to set the trigger option. Trigger is `true` by default.
+         * @return {boolean} Returns true/false from loading the url.
+         */
+        router.navigate = function(fragment, options) {
+            if(fragment && fragment.indexOf('://') != -1){
+                window.location.href = fragment;
+                return true;
+            }
+
+            rootRouter.explicitNavigation = true;
+            return history.navigate(fragment, options);
+        };
+
+        /**
+         * Navigates back in the browser history.
+         * @method navigateBack
+         */
+        router.navigateBack = function() {
+            history.navigateBack();
+        };
+
+        router.attached = function() {
+            setTimeout(function() {
+                isProcessing(false);
+                router.trigger('router:navigation:attached', currentActivation, currentInstruction, router);
+                dequeueInstruction();
+            }, 10);
+        };
+
+        router.compositionComplete = function(){
+            router.trigger('router:navigation:composition-complete', currentActivation, currentInstruction, router);
+        };
+
+        /**
+         * Converts a route to a hash suitable for binding to a link's href.
+         * @method convertRouteToHash
+         * @param {string} route
+         * @return {string} The hash.
+         */
+        router.convertRouteToHash = function(route) {
+            if(router.relativeToParentRouter){
+                var instruction = router.parent.activeInstruction(),
+                    hash = instruction.config.hash + '/' + route;
+
+                if(history._hasPushState){
+                    hash = '/' + hash;
+                }
+
+                hash = hash.replace('//', '/').replace('//', '/');
+                return hash;
+            }
+
+            if(history._hasPushState){
+                return route;
+            }
+
+            return "#" + route;
+        };
+
+        /**
+         * Converts a route to a module id. This is only called if no module id is supplied as part of the route mapping.
+         * @method convertRouteToModuleId
+         * @param {string} route
+         * @return {string} The module id.
+         */
+        router.convertRouteToModuleId = function(route) {
+            return stripParametersFromRoute(route);
+        };
+
+        /**
+         * Converts a route to a displayable title. This is only called if no title is specified as part of the route mapping.
+         * @method convertRouteToTitle
+         * @param {string} route
+         * @return {string} The title.
+         */
+        router.convertRouteToTitle = function(route) {
+            var value = stripParametersFromRoute(route);
+            return value.substring(0, 1).toUpperCase() + value.substring(1);
+        };
+
+        /**
+         * Maps route patterns to modules.
+         * @method map
+         * @param {string|object|object[]} route A route, config or array of configs.
+         * @param {object} [config] The config for the specified route.
+         * @chainable
+         * @example
+ router.map([
+    { route: '', title:'Home', moduleId: 'homeScreen', nav: true },
+    { route: 'customer/:id', moduleId: 'customerDetails'}
+ ]);
+         */
+        router.map = function(route, config) {
+            if (system.isArray(route)) {
+                for (var i = 0; i < route.length; i++) {
+                    router.map(route[i]);
+                }
+
+                return router;
+            }
+
+            if (system.isString(route) || system.isRegExp(route)) {
+                if (!config) {
+                    config = {};
+                } else if (system.isString(config)) {
+                    config = { moduleId: config };
+                }
+
+                config.route = route;
+            } else {
+                config = route;
+            }
+
+            return mapRoute(config);
+        };
+
+        /**
+         * Builds an observable array designed to bind a navigation UI to. The model will exist in the `navigationModel` property.
+         * @method buildNavigationModel
+         * @param {number} defaultOrder The default order to use for navigation visible routes that don't specify an order. The defualt is 100.
+         * @chainable
+         */
+        router.buildNavigationModel = function(defaultOrder) {
+            var nav = [], routes = router.routes;
+            defaultOrder = defaultOrder || 100;
+
+            for (var i = 0; i < routes.length; i++) {
+                var current = routes[i];
+
+                if (current.nav) {
+                    if (!system.isNumber(current.nav)) {
+                        current.nav = defaultOrder;
+                    }
+
+                    addActiveFlag(current);
+                    nav.push(current);
+                }
+            }
+
+            nav.sort(function(a, b) { return a.nav - b.nav; });
+            router.navigationModel(nav);
+
+            return router;
+        };
+
+        /**
+         * Configures how the router will handle unknown routes.
+         * @method mapUnknownRoutes
+         * @param {string|function} [config] If not supplied, then the router will map routes to modules with the same name.
+         * If a string is supplied, it represents the module id to route all unknown routes to.
+         * Finally, if config is a function, it will be called back with the route instruction containing the route info. The function can then modify the instruction by adding a moduleId and the router will take over from there.
+         * @param {string} [replaceRoute] If config is a module id, then you can optionally provide a route to replace the url with.
+         * @chainable
+         */
+        router.mapUnknownRoutes = function(config, replaceRoute) {
+            var catchAllRoute = "*catchall";
+            var catchAllPattern = routeStringToRegExp(catchAllRoute);
+
+            router.route(catchAllPattern, function (fragment, queryString) {
+                var paramInfo = createParams(catchAllPattern, fragment, queryString);
+                var instruction = {
+                    fragment: fragment,
+                    queryString: queryString,
+                    config: {
+                        route: catchAllRoute,
+                        routePattern: catchAllPattern
+                    },
+                    params: paramInfo.params,
+                    queryParams: paramInfo.queryParams
+                };
+
+                if (!config) {
+                    instruction.config.moduleId = fragment;
+                } else if (system.isString(config)) {
+                    instruction.config.moduleId = config;
+                    if(replaceRoute){
+                        history.navigate(replaceRoute, { trigger:false, replace:true });
+                    }
+                } else if (system.isFunction(config)) {
+                    var result = config(instruction);
+                    if (result && result.then) {
+                        result.then(function() {
+                            router.trigger('router:route:before-config', instruction.config, router);
+                            router.trigger('router:route:after-config', instruction.config, router);
+                            queueInstruction(instruction);
+                        });
+                        return;
+                    }
+                } else {
+                    instruction.config = config;
+                    instruction.config.route = catchAllRoute;
+                    instruction.config.routePattern = catchAllPattern;
+                }
+
+                router.trigger('router:route:before-config', instruction.config, router);
+                router.trigger('router:route:after-config', instruction.config, router);
+                queueInstruction(instruction);
+            });
+
+            return router;
+        };
+
+        /**
+         * Resets the router by removing handlers, routes, event handlers and previously configured options.
+         * @method reset
+         * @chainable
+         */
+        router.reset = function() {
+            currentInstruction = currentActivation = undefined;
+            router.handlers = [];
+            router.routes = [];
+            router.off();
+            delete router.options;
+            return router;
+        };
+
+        /**
+         * Makes all configured routes and/or module ids relative to a certain base url.
+         * @method makeRelative
+         * @param {string|object} settings If string, the value is used as the base for routes and module ids. If an object, you can specify `route` and `moduleId` separately. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
+         * @chainable
+         */
+        router.makeRelative = function(settings){
+            if(system.isString(settings)){
+                settings = {
+                    moduleId:settings,
+                    route:settings
+                };
+            }
+
+            if(settings.moduleId && !endsWith(settings.moduleId, '/')){
+                settings.moduleId += '/';
+            }
+
+            if(settings.route && !endsWith(settings.route, '/')){
+                settings.route += '/';
+            }
+
+            if(settings.fromParent){
+                router.relativeToParentRouter = true;
+            }
+
+            router.on('router:route:before-config').then(function(config){
+                if(settings.moduleId){
+                    config.moduleId = settings.moduleId + config.moduleId;
+                }
+
+                if(settings.route){
+                    if(config.route === ''){
+                        config.route = settings.route.substring(0, settings.route.length - 1);
+                    }else{
+                        config.route = settings.route + config.route;
+                    }
+                }
+            });
+
+            return router;
+        };
+
+        /**
+         * Creates a child router.
+         * @method createChildRouter
+         * @return {Router} The child router.
+         */
+        router.createChildRouter = function() {
+            var childRouter = createRouter();
+            childRouter.parent = router;
+            return childRouter;
+        };
+
+        return router;
+    };
+
+    /**
+     * @class RouterModule
+     * @extends Router
+     * @static
+     */
+    rootRouter = createRouter();
+    rootRouter.explicitNavigation = false;
+    rootRouter.navigatingBack = false;
+
+    /**
+     * Activates the router and the underlying history tracking mechanism.
+     * @method activate
+     * @return {Promise} A promise that resolves when the router is ready.
+     */
+    rootRouter.activate = function(options) {
+        return system.defer(function(dfd) {
+            startDeferred = dfd;
+            rootRouter.options = system.extend({ routeHandler: rootRouter.loadUrl }, rootRouter.options, options);
+
+            history.activate(rootRouter.options);
+
+            if(history._hasPushState){
+                var routes = rootRouter.routes,
+                    i = routes.length;
+
+                while(i--){
+                    var current = routes[i];
+                    current.hash = current.hash.replace('#', '');
+                }
+            }
+
+            $(document).delegate("a", 'click', function(evt){
+                rootRouter.explicitNavigation = true;
+
+                if(history._hasPushState){
+                    if(!evt.altKey && !evt.ctrlKey && !evt.metaKey && !evt.shiftKey){
+                        // Get the anchor href and protcol
+                        var href = $(this).attr("href");
+                        var protocol = this.protocol + "//";
+
+                        // Ensure the protocol is not part of URL, meaning its relative.
+                        // Stop the event bubbling to ensure the link will not cause a page refresh.
+                        if (!href || (href.charAt(0) !== "#" && href.slice(protocol.length) !== protocol)) {
+                            evt.preventDefault();
+                            history.navigate(href);
+                        }
+                    }
+                }
+            });
+        }).promise();
+    };
+
+    /**
+     * Disable history, perhaps temporarily. Not useful in a real app, but possibly useful for unit testing Routers.
+     * @method deactivate
+     */
+    rootRouter.deactivate = function() {
+        history.deactivate();
+    };
+
+    /**
+     * Installs the router's custom ko binding handler.
+     * @method install
+     */
+    rootRouter.install = function(){
+        ko.bindingHandlers.router = {
+            init: function() {
+                return { controlsDescendantBindings: true };
+            },
+            update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                var settings = ko.utils.unwrapObservable(valueAccessor()) || {};
+
+                if (settings.__router__) {
+                    settings = {
+                        model:settings.activeItem(),
+                        attached:settings.attached,
+                        compositionComplete:settings.compositionComplete,
+                        activate: false
+                    };
+                } else {
+                    var theRouter = ko.utils.unwrapObservable(settings.router || viewModel.router) || rootRouter;
+                    settings.model = theRouter.activeItem();
+                    settings.attached = theRouter.attached;
+                    settings.compositionComplete = theRouter.compositionComplete;
+                    settings.activate = false;
+                }
+
+                composition.compose(element, settings, bindingContext);
+            }
+        };
+
+        ko.virtualElements.allowedBindings.router = true;
+    };
+
+    return rootRouter;
+});

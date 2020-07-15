@@ -1,1 +1,365 @@
-define(["services/utilities","services/httpService","services/displayService"],function(t,e){var n,a,r=require("viewmodels/shell"),o=ko.observable(),g=ko.observable(),l=ko.observable(),i=ko.observable(),s=ko.observable(),d=ko.observable(),p=ko.observable(),m=ko.observable(),c=ko.observable(),L=ko.observable(),h=ko.observable("m"),w=ko.observable(),u=ko.observable(),v=ko.observable(),b=ko.observable(),f=ko.observable(),y=ko.observable(),_=ko.observable(),x=ko.observable(),S=ko.observable(),k=ko.observable(),C=function(){$("#registration-form").parsley().reset(),o(""),g(""),l(""),i(""),s(""),d(""),p(""),m(""),c(""),L(""),h("m"),w(""),u(""),v(""),b(""),f(""),y(""),_(""),x(""),S(""),n.removeCurrent()},A=ko.asyncCommand({execute:function(r){if($("#registration-form").parsley().validate(),$("#registration-form").parsley().isValid())if(n.getQueueSize()>0)n.submit();else if(a.getQueueSize()>0)a.submit();else{var S={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:Date.now(),filename:""}};e.post("Server/register.php",S).done(function(t){alert("OK! "+t),C(),r(!0)}).error(function(){alert("Oops, an error has occured"),t.handleError(),r(!0)})}else r(!0)},canExecute:function(){return!0}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var B=function(){$("#mobile").tooltip(),$("#phone").tooltip(),$("#id").tooltip(),$("#licensenum").tooltip()},M={activate:function(){r.selectedSubMenu("register"),r.selectedMainMenu("aguda"),ko.bindingHandlers.datetimepicker={init:function(t,e){$(t).datetimepicker({format:"dd/MM/yyyy HH:mm:ss PP",language:"en",pick12HourFormat:!0}).on("changeDate",function(t){var n=e();n(t.date)})},update:function(t,e){var n=ko.utils.unwrapObservable(e());$(t).datetimepicker("setValue",n)}}},compositionComplete:function(){B(),$("#birthdate").datetimepicker({pickTime:!1}),$("#birthdate").on("dp.change",function(t){m(moment(t.date).format("DD-MM-YYYY"))}),$("#firstname").focus();var r=document.getElementById("upload-btn"),A=document.getElementById("payment-btn"),M=document.getElementById("pic-progress-wrap"),H=(document.getElementById("picbox"),document.getElementById("errormsg"));n=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=img",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){S(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),M.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),H.innerHTML=""},startXHR:function(){var t=document.createElement("button");M.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,r){if(S(r.file),a.getQueueSize()>0)a.submit();else{var A={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:r.timestamp,filename:S,paymentfilename:k}};e.post("Server/register.php",A).done(function(t){alert("Very well! "+t),C()}).error(function(){t.handleError()})}}}),a=new ss.SimpleUpload({button:A,url:"Server/uploadHandler.php?dir=payment",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){k(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),M.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),H.innerHTML=""},startXHR:function(){var t=document.createElement("button");M.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,a){if(!a)return H.innerHTML="Unable to upload file",void 0;if(a.success===!0){k(a.file);var r={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:a.timestamp,filename:S,paymentfilename:k}};e.post("Server/register.php",r).done(function(t){alert("Very well! "+t),C()}).error(function(){t.handleError()})}else H.innerHTML=a.msg?a.msg:"Unable to upload file"}})},firstname:o,lastname:g,efirstname:l,elastname:i,email:s,licensenum:d,callsign:p,birthdate:m,id:c,country:L,gender:h,city:w,address:u,house:v,zip:b,phone:f,mobile:y,reason:_,cv:x,file:S,paymentfile:k,Clear:C,Send:A,uploader:n,uploader2:a};return M});
+﻿define(['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {    
+
+    var shell = require('viewmodels/shell');
+
+    var firstname = ko.observable();
+    var lastname = ko.observable();
+    var efirstname = ko.observable();
+    var elastname = ko.observable();
+    var email = ko.observable();
+    var licensenum = ko.observable();
+    var callsign = ko.observable();
+    var birthdate = ko.observable();
+    var id = ko.observable();
+    var country = ko.observable();
+    var gender = ko.observable('m');
+    var city = ko.observable();
+    var address = ko.observable();
+    var house = ko.observable();
+    var zip = ko.observable();
+    var phone = ko.observable();
+    var mobile = ko.observable();
+    var reason = ko.observable();
+    var cv = ko.observable();
+    var file = ko.observable();
+    var paymentfile = ko.observable();
+    var uploader;
+    var uploader2;
+
+    var Clear = function () {
+        $('#registration-form').parsley().reset();
+        firstname("");
+        lastname("");
+        efirstname("");
+        elastname("");
+        email("");
+        licensenum("");
+        callsign("");
+        birthdate("");
+        id("");
+        country("");
+        gender('m');
+        city("");
+        address("");
+        house("");
+        zip("");
+        phone("");
+        mobile("");
+        reason("");
+        cv("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            $('#registration-form').parsley().validate();
+            if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': Date.now(), 'filename': ''
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("OK! " + data); Clear(); complete(true); }).error(function () { alert("Oops, an error has occured"); utilities.handleError(); complete(true); });
+                    }
+                }
+            }
+            else {
+                complete(true);
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function ()
+    {
+        $('#mobile').tooltip();
+        $('#phone').tooltip();
+        $('#id').tooltip();
+        $('#licensenum').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('register');
+            shell.selectedMainMenu('aguda');
+            ko.bindingHandlers.datetimepicker = {
+                init: function (element, valueAccessor, allBindingsAccessor) {
+                    $(element).datetimepicker({
+                        format: 'dd/MM/yyyy HH:mm:ss PP',
+                        language: 'en',
+                        pick12HourFormat: true
+                    }).on("changeDate", function (ev) {
+                        var observable = valueAccessor();
+                        observable(ev.date);
+                    });
+                },
+                update: function (element, valueAccessor) {
+                    var value = ko.utils.unwrapObservable(valueAccessor());
+                    $(element).datetimepicker("setValue", value);
+                }
+            };
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('#birthdate').datetimepicker({
+                pickTime: false
+            });
+            $("#birthdate").on("dp.change", function (e) {
+                birthdate(moment(e.date).format('DD-MM-YYYY'));
+            });
+            $('#firstname').focus();
+
+            var btn = document.getElementById('upload-btn'),
+            btn2 = document.getElementById('payment-btn'),
+                
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=img',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    file(response.file);
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else 
+                    {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+                    }
+                }
+            });
+
+            
+
+
+            uploader2 = new ss.SimpleUpload({
+                button: btn2,
+                url: 'Server/uploadHandler.php?dir=payment',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    paymentfile(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        paymentfile(response.file);
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+
+                    }
+                }
+            });
+            
+
+
+        },
+        firstname: firstname,
+        lastname: lastname,
+        efirstname: efirstname,
+        elastname: elastname,
+        email: email,
+        licensenum: licensenum,
+        callsign: callsign,
+        birthdate: birthdate,
+        id: id,
+        country: country,
+        gender: gender,
+        city: city,
+        address: address,
+        house: house,
+        zip: zip,
+        phone: phone,
+        mobile: mobile,
+        reason: reason,
+        cv: cv,
+        file: file,
+        paymentfile: paymentfile,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader,
+        uploader2: uploader2
+    };
+
+
+    return vm;
+});

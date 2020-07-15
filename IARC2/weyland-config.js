@@ -3,9 +3,9 @@ exports.config = function(weyland) {
         .task.jshint({
             include: 'App/**/*.js'
         })
-        .task.uglifyjs({
-            include: ['App/**/*.js', 'Scripts/durandal/**/*.js']
-        })
+        //.task.uglifyjs({
+        //    include: ['App/**/*.js', 'Scripts/durandal/**/*.js']
+        //})
         .task.rjs({
             include: ['App/**/*.{js,html}', 'Scripts/durandal/**/*.js'],
             loaderPluginExtensionMaps: {

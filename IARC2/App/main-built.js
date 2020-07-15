@@ -394,89 +394,8944 @@ var requirejs, require, define;
 
 define("../Scripts/almond-custom", function(){});
 
-define('durandal/system',["require","jquery"],function(e,t){function n(e){var t="[object "+e+"]";a["is"+e]=function(e){return g.call(e)==t}}var a,r=!1,o=Object.keys,l=Object.prototype.hasOwnProperty,g=Object.prototype.toString,i=!1,s=Array.isArray,d=Array.prototype.slice;if(Function.prototype.bind&&("object"==typeof console||"function"==typeof console)&&"object"==typeof console.log)try{["log","info","warn","error","assert","dir","clear","profile","profileEnd"].forEach(function(e){console[e]=this.call(console[e],console)},Function.prototype.bind)}catch(p){i=!0}e.on&&e.on("moduleLoaded",function(e,t){a.setModuleId(e,t)}),"undefined"!=typeof requirejs&&(requirejs.onResourceLoad=function(e,t){a.setModuleId(e.defined[t.id],t.id)});var c=function(){},m=function(){try{if("undefined"!=typeof console&&"function"==typeof console.log)if(window.opera)for(var e=0;e<arguments.length;)console.log("Item "+(e+1)+": "+arguments[e]),e++;else 1==d.call(arguments).length&&"string"==typeof d.call(arguments)[0]?console.log(d.call(arguments).toString()):console.log.apply(console,d.call(arguments));else Function.prototype.bind&&!i||"undefined"==typeof console||"object"!=typeof console.log||Function.prototype.call.call(console.log,console,d.call(arguments))}catch(t){}},L=function(e){if(e instanceof Error)throw e;throw new Error(e)};a={version:"2.0.0",noop:c,getModuleId:function(e){return e?"function"==typeof e?e.prototype.__moduleId__:"string"==typeof e?null:e.__moduleId__:null},setModuleId:function(e,t){return e?"function"==typeof e?(e.prototype.__moduleId__=t,void 0):("string"!=typeof e&&(e.__moduleId__=t),void 0):void 0},resolveObject:function(e){return a.isFunction(e)?new e:e},debug:function(e){return 1==arguments.length&&(r=e,r?(this.log=m,this.error=L,this.log("Debug:Enabled")):(this.log("Debug:Disabled"),this.log=c,this.error=c)),r},log:c,error:c,assert:function(e,t){e||a.error(new Error(t||"Assert:Failed"))},defer:function(e){return t.Deferred(e)},guid:function(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(e){var t=0|16*Math.random(),n="x"==e?t:8|3&t;return n.toString(16)})},acquire:function(){var t,n=arguments[0],r=!1;return a.isArray(n)?(t=n,r=!0):t=d.call(arguments,0),this.defer(function(n){e(t,function(){var e=arguments;setTimeout(function(){e.length>1||r?n.resolve(d.call(e,0)):n.resolve(e[0])},1)},function(e){n.reject(e)})}).promise()},extend:function(e){for(var t=d.call(arguments,1),n=0;n<t.length;n++){var a=t[n];if(a)for(var r in a)e[r]=a[r]}return e},wait:function(e){return a.defer(function(t){setTimeout(t.resolve,e)}).promise()}},a.keys=o||function(e){if(e!==Object(e))throw new TypeError("Invalid object");var t=[];for(var n in e)l.call(e,n)&&(t[t.length]=n);return t},a.isElement=function(e){return!(!e||1!==e.nodeType)},a.isArray=s||function(e){return"[object Array]"==g.call(e)},a.isObject=function(e){return e===Object(e)},a.isBoolean=function(e){return"boolean"==typeof e},a.isPromise=function(e){return e&&a.isFunction(e.then)};for(var h=["Arguments","Function","String","Number","Date","RegExp"],u=0;u<h.length;u++)n(h[u]);return a});
-define('durandal/viewEngine',["durandal/system","jquery"],function(e,t){var n;return n=t.parseHTML?function(e){return t.parseHTML(e)}:function(e){return t(e).get()},{viewExtension:".html",viewPlugin:"text",isViewUrl:function(e){return-1!==e.indexOf(this.viewExtension,e.length-this.viewExtension.length)},convertViewUrlToViewId:function(e){return e.substring(0,e.length-this.viewExtension.length)},convertViewIdToRequirePath:function(e){return this.viewPlugin+"!"+e+this.viewExtension},parseMarkup:n,processMarkup:function(e){var t=this.parseMarkup(e);return this.ensureSingleElement(t)},ensureSingleElement:function(e){if(1==e.length)return e[0];for(var n=[],a=0;a<e.length;a++){var r=e[a];if(8!=r.nodeType){if(3==r.nodeType){var o=/\S/.test(r.nodeValue);if(!o)continue}n.push(r)}}return n.length>1?t(n).wrapAll('<div class="durandal-wrapper"></div>').parent().get(0):n[0]},createView:function(t){var n=this,a=this.convertViewIdToRequirePath(t);return e.defer(function(r){e.acquire(a).then(function(e){var a=n.processMarkup(e);a.setAttribute("data-view",t),r.resolve(a)}).fail(function(e){n.createFallbackView(t,a,e).then(function(e){e.setAttribute("data-view",t),r.resolve(e)})})}).promise()},createFallbackView:function(t,n){var a=this,r='View Not Found. Searched for "'+t+'" via path "'+n+'".';return e.defer(function(e){e.resolve(a.processMarkup('<div class="durandal-view-404">'+r+"</div>"))}).promise()}}});
-define('durandal/viewLocator',["durandal/system","durandal/viewEngine"],function(e,t){function n(e,t){for(var n=0;n<e.length;n++){var a=e[n],r=a.getAttribute("data-view");if(r==t)return a}}function a(e){return(e+"").replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g,"\\$1")}return{useConvention:function(e,t,n){e=e||"viewmodels",t=t||"views",n=n||t;var r=new RegExp(a(e),"gi");this.convertModuleIdToViewId=function(e){return e.replace(r,t)},this.translateViewIdToArea=function(e,t){return t&&"partial"!=t?n+"/"+t+"/"+e:n+"/"+e}},locateViewForObject:function(t,n,a){var r;if(t.getView&&(r=t.getView()))return this.locateView(r,n,a);if(t.viewUrl)return this.locateView(t.viewUrl,n,a);var o=e.getModuleId(t);return o?this.locateView(this.convertModuleIdToViewId(o),n,a):this.locateView(this.determineFallbackViewId(t),n,a)},convertModuleIdToViewId:function(e){return e},determineFallbackViewId:function(e){var t=/function (.{1,})\(/,n=t.exec(e.constructor.toString()),a=n&&n.length>1?n[1]:"";return"views/"+a},translateViewIdToArea:function(e){return e},locateView:function(a,r,o){if("string"==typeof a){var l;if(l=t.isViewUrl(a)?t.convertViewUrlToViewId(a):a,r&&(l=this.translateViewIdToArea(l,r)),o){var g=n(o,l);if(g)return e.defer(function(e){e.resolve(g)}).promise()}return t.createView(l)}return e.defer(function(e){e.resolve(a)}).promise()}}});
-define('durandal/binder',["durandal/system","knockout"],function(e,t){function n(t){return void 0===t?{applyBindings:!0}:e.isBoolean(t)?{applyBindings:t}:(void 0===t.applyBindings&&(t.applyBindings=!0),t)}function a(a,s,d,p){if(!s||!d)return r.throwOnErrors?e.error(o):e.log(o,s,p),void 0;if(!s.getAttribute)return r.throwOnErrors?e.error(l):e.log(l,s,p),void 0;var m=s.getAttribute("data-view");try{var c;return a&&a.binding&&(c=a.binding(s)),c=n(c),r.binding(p,s,c),c.applyBindings?(e.log("Binding",m,p),t.applyBindings(d,s)):a&&t.utils.domData.set(s,i,{$data:a}),r.bindingComplete(p,s,c),a&&a.bindingComplete&&a.bindingComplete(s),t.utils.domData.set(s,g,c),c}catch(L){L.message=L.message+";\nView: "+m+";\nModuleId: "+e.getModuleId(p),r.throwOnErrors?e.error(L):e.log(L.message)}}var r,o="Insufficient Information to Bind",l="Unexpected View Type",g="durandal-binding-instruction",i="__ko_bindingContext__";return r={binding:e.noop,bindingComplete:e.noop,throwOnErrors:!1,getBindingInstruction:function(e){return t.utils.domData.get(e,g)},bindContext:function(e,t,n){return n&&e&&(e=e.createChildContext(n)),a(n,t,e,n||(e?e.$data:null))},bind:function(e,t){return a(e,t,e,e)}}});
-define('durandal/activator',["durandal/system","knockout"],function(e,t){function n(e){return void 0==e&&(e={}),e.closeOnDeactivate||(e.closeOnDeactivate=s.defaults.closeOnDeactivate),e.beforeActivate||(e.beforeActivate=s.defaults.beforeActivate),e.afterDeactivate||(e.afterDeactivate=s.defaults.afterDeactivate),e.affirmations||(e.affirmations=s.defaults.affirmations),e.interpretResponse||(e.interpretResponse=s.defaults.interpretResponse),e.areSameItem||(e.areSameItem=s.defaults.areSameItem),e}function a(t,n,a){return e.isArray(a)?t[n].apply(t,a):t[n](a)}function r(t,n,a,r,o){if(t&&t.deactivate){e.log("Deactivating",t);var l;try{l=t.deactivate(n)}catch(g){return e.error(g),r.resolve(!1),void 0}l&&l.then?l.then(function(){a.afterDeactivate(t,n,o),r.resolve(!0)},function(t){e.log(t),r.resolve(!1)}):(a.afterDeactivate(t,n,o),r.resolve(!0))}else t&&a.afterDeactivate(t,n,o),r.resolve(!0)}function o(t,n,r,o){if(t)if(t.activate){e.log("Activating",t);var l;try{l=a(t,"activate",o)}catch(g){return e.error(g),r(!1),void 0}l&&l.then?l.then(function(){n(t),r(!0)},function(t){e.log(t),r(!1)}):(n(t),r(!0))}else n(t),r(!0);else r(!0)}function l(t,n,a){return a.lifecycleData=null,e.defer(function(r){if(t&&t.canDeactivate){var o;try{o=t.canDeactivate(n)}catch(l){return e.error(l),r.resolve(!1),void 0}o.then?o.then(function(e){a.lifecycleData=e,r.resolve(a.interpretResponse(e))},function(t){e.error(t),r.resolve(!1)}):(a.lifecycleData=o,r.resolve(a.interpretResponse(o)))}else r.resolve(!0)}).promise()}function g(t,n,r,o){return r.lifecycleData=null,e.defer(function(l){if(t==n())return l.resolve(!0),void 0;if(t&&t.canActivate){var g;try{g=a(t,"canActivate",o)}catch(i){return e.error(i),l.resolve(!1),void 0}g.then?g.then(function(e){r.lifecycleData=e,l.resolve(r.interpretResponse(e))},function(t){e.error(t),l.resolve(!1)}):(r.lifecycleData=g,l.resolve(r.interpretResponse(g)))}else l.resolve(!0)}).promise()}function i(a,i){var s,d=t.observable(null);i=n(i);var p=t.computed({read:function(){return d()},write:function(e){p.viaSetter=!0,p.activateItem(e)}});return p.__activator__=!0,p.settings=i,i.activator=p,p.isActivating=t.observable(!1),p.canDeactivateItem=function(e,t){return l(e,t,i)},p.deactivateItem=function(t,n){return e.defer(function(e){p.canDeactivateItem(t,n).then(function(a){a?r(t,n,i,e,d):(p.notifySubscribers(),e.resolve(!1))})}).promise()},p.canActivateItem=function(e,t){return g(e,d,i,t)},p.activateItem=function(t,n){var a=p.viaSetter;return p.viaSetter=!1,e.defer(function(l){if(p.isActivating())return l.resolve(!1),void 0;p.isActivating(!0);var g=d();return i.areSameItem(g,t,s,n)?(p.isActivating(!1),l.resolve(!0),void 0):(p.canDeactivateItem(g,i.closeOnDeactivate).then(function(m){m?p.canActivateItem(t,n).then(function(m){m?e.defer(function(e){r(g,i.closeOnDeactivate,i,e)}).promise().then(function(){t=i.beforeActivate(t,n),o(t,d,function(e){s=n,p.isActivating(!1),l.resolve(e)},n)}):(a&&p.notifySubscribers(),p.isActivating(!1),l.resolve(!1))}):(a&&p.notifySubscribers(),p.isActivating(!1),l.resolve(!1))}),void 0)}).promise()},p.canActivate=function(){var e;return a?(e=a,a=!1):e=p(),p.canActivateItem(e)},p.activate=function(){var e;return a?(e=a,a=!1):e=p(),p.activateItem(e)},p.canDeactivate=function(e){return p.canDeactivateItem(p(),e)},p.deactivate=function(e){return p.deactivateItem(p(),e)},p.includeIn=function(e){e.canActivate=function(){return p.canActivate()},e.activate=function(){return p.activate()},e.canDeactivate=function(e){return p.canDeactivate(e)},e.deactivate=function(e){return p.deactivate(e)}},i.includeIn?p.includeIn(i.includeIn):a&&p.activate(),p.forItems=function(t){i.closeOnDeactivate=!1,i.determineNextItemToActivate=function(e,t){var n=t-1;return-1==n&&e.length>1?e[1]:n>-1&&n<e.length-1?e[n]:null},i.beforeActivate=function(e){var n=p();if(e){var a=t.indexOf(e);-1==a?t.push(e):e=t()[a]}else e=i.determineNextItemToActivate(t,n?t.indexOf(n):0);return e},i.afterDeactivate=function(e,n){n&&t.remove(e)};var n=p.canDeactivate;p.canDeactivate=function(a){return a?e.defer(function(e){function n(){for(var t=0;t<o.length;t++)if(!o[t])return e.resolve(!1),void 0;e.resolve(!0)}for(var r=t(),o=[],l=0;l<r.length;l++)p.canDeactivateItem(r[l],a).then(function(e){o.push(e),o.length==r.length&&n()})}).promise():n()};var a=p.deactivate;return p.deactivate=function(n){return n?e.defer(function(e){function a(a){p.deactivateItem(a,n).then(function(){o++,t.remove(a),o==l&&e.resolve()})}for(var r=t(),o=0,l=r.length,g=0;l>g;g++)a(r[g])}).promise():a()},p},p}var s,d={closeOnDeactivate:!0,affirmations:["yes","ok","true"],interpretResponse:function(n){return e.isObject(n)&&(n=n.can||!1),e.isString(n)?-1!==t.utils.arrayIndexOf(this.affirmations,n.toLowerCase()):n},areSameItem:function(e,t){return e==t},beforeActivate:function(e){return e},afterDeactivate:function(e,t,n){t&&n&&n(null)}};return s={defaults:d,create:i,isActivator:function(e){return e&&e.__activator__}}});
-define('durandal/composition',["durandal/system","durandal/viewLocator","durandal/binder","durandal/viewEngine","durandal/activator","jquery","knockout"],function(e,t,n,a,r,o,l){function g(e){for(var t=[],n={childElements:t,activeView:null},a=l.virtualElements.firstChild(e);a;)1==a.nodeType&&(t.push(a),a.getAttribute(w)&&(n.activeView=a)),a=l.virtualElements.nextSibling(a);return n.activeView||(n.activeView=t[0]),n}function i(){f--,0===f&&setTimeout(function(){for(var e=v.length;e--;)v[e]();v=[]},1)}function s(t,n,a){if(a)n();else if(t.activate&&t.model&&t.model.activate){var r;r=e.isArray(t.activationData)?t.model.activate.apply(t.model,t.activationData):t.model.activate(t.activationData),r&&r.then?r.then(n):r||void 0===r?n():i()}else n()}function d(){var t=this;t.activeView&&t.activeView.removeAttribute(w),t.child&&(t.model&&t.model.attached&&(t.composingNewView||t.alwaysTriggerAttach)&&t.model.attached(t.child,t.parent,t),t.attached&&t.attached(t.child,t.parent,t),t.child.setAttribute(w,!0),t.composingNewView&&t.model&&(t.model.compositionComplete&&h.current.complete(function(){t.model.compositionComplete(t.child,t.parent,t)}),t.model.detached&&l.utils.domNodeDisposal.addDisposeCallback(t.child,function(){t.model.detached(t.child,t.parent,t)})),t.compositionComplete&&h.current.complete(function(){t.compositionComplete(t.child,t.parent,t)})),i(),t.triggerAttach=e.noop}function p(t){if(e.isString(t.transition)){if(t.activeView){if(t.activeView==t.child)return!1;if(!t.child)return!0;if(t.skipTransitionOnSameViewId){var n=t.activeView.getAttribute("data-view"),a=t.child.getAttribute("data-view");return n!=a}}return!0}return!1}function m(e){for(var t=0,n=e.length,a=[];n>t;t++){var r=e[t].cloneNode(!0);a.push(r)}return a}function c(e){var t=m(e.parts),n=h.getParts(t),a=h.getParts(e.child);for(var r in n)o(a[r]).replaceWith(n[r])}function L(t){var n,a,r=l.virtualElements.childNodes(t);if(!e.isArray(r)){var o=[];for(n=0,a=r.length;a>n;n++)o[n]=r[n];r=o}for(n=1,a=r.length;a>n;n++)l.removeNode(r[n])}var h,u={},w="data-active-view",v=[],f=0,b="durandal-composition-data",y="data-part",_="["+y+"]",x=["model","view","transition","area","strategy","activationData"],S={complete:function(e){v.push(e)}};return h={convertTransitionToModuleId:function(e){return"transitions/"+e},defaultTransitionName:null,current:S,addBindingHandler:function(e,t,n){var a,r,o="composition-handler-"+e;t=t||l.bindingHandlers[e],n=n||function(){return void 0},r=l.bindingHandlers[e]={init:function(e,a,r,g,i){var s={trigger:l.observable(null)};return h.current.complete(function(){t.init&&t.init(e,a,r,g,i),t.update&&(l.utils.domData.set(e,o,t),s.trigger("trigger"))}),l.utils.domData.set(e,o,s),n(e,a,r,g,i)},update:function(e,t,n,a,r){var g=l.utils.domData.get(e,o);return g.update?g.update(e,t,n,a,r):(g.trigger(),void 0)}};for(a in t)"init"!==a&&"update"!==a&&(r[a]=t[a])},getParts:function(t){var n={};e.isArray(t)||(t=[t]);for(var a=0;a<t.length;a++){var r=t[a];if(r.getAttribute){var l=r.getAttribute(y);l&&(n[l]=r);for(var g=o(_,r).not(o("[data-bind] "+_,r)),i=0;i<g.length;i++){var s=g.get(i);n[s.getAttribute(y)]=s}}}return n},cloneNodes:m,finalize:function(t){if(t.transition=t.transition||this.defaultTransitionName,t.child||t.activeView)if(p(t)){var a=this.convertTransitionToModuleId(t.transition);e.acquire(a).then(function(e){t.transition=e,e(t).then(function(){if(t.cacheViews){if(t.activeView){var e=n.getBindingInstruction(t.activeView);void 0==e.cacheViews||e.cacheViews||l.removeNode(t.activeView)}}else t.child?L(t.parent):l.virtualElements.emptyNode(t.parent);t.triggerAttach()})}).fail(function(t){e.error("Failed to load transition ("+a+"). Details: "+t.message)})}else{if(t.child!=t.activeView){if(t.cacheViews&&t.activeView){var r=n.getBindingInstruction(t.activeView);void 0==r.cacheViews||r.cacheViews?o(t.activeView).hide():l.removeNode(t.activeView)}t.child?(t.cacheViews||L(t.parent),o(t.child).show()):t.cacheViews||l.virtualElements.emptyNode(t.parent)}t.triggerAttach()}else t.cacheViews||l.virtualElements.emptyNode(t.parent),t.triggerAttach()},bindAndShow:function(e,t,r){t.child=e,t.composingNewView=t.cacheViews?-1==l.utils.arrayIndexOf(t.viewElements,e):!0,s(t,function(){if(t.binding&&t.binding(t.child,t.parent,t),t.preserveContext&&t.bindingContext)t.composingNewView&&(t.parts&&c(t),o(e).hide(),l.virtualElements.prepend(t.parent,e),n.bindContext(t.bindingContext,e,t.model));else if(e){var r=t.model||u,g=l.dataFor(e);if(g!=r){if(!t.composingNewView)return o(e).remove(),a.createView(e.getAttribute("data-view")).then(function(e){h.bindAndShow(e,t,!0)}),void 0;t.parts&&c(t),o(e).hide(),l.virtualElements.prepend(t.parent,e),n.bind(r,e)}}h.finalize(t)},r)},defaultStrategy:function(e){return t.locateViewForObject(e.model,e.area,e.viewElements)},getSettings:function(t){var n,o=t(),g=l.utils.unwrapObservable(o)||{},i=r.isActivator(o);if(e.isString(g))return g=a.isViewUrl(g)?{view:g}:{model:g,activate:!0};if(n=e.getModuleId(g))return g={model:g,activate:!0};!i&&g.model&&(i=r.isActivator(g.model));for(var s in g)g[s]=-1!=l.utils.arrayIndexOf(x,s)?l.utils.unwrapObservable(g[s]):g[s];return i?g.activate=!1:void 0===g.activate&&(g.activate=!0),g},executeStrategy:function(e){e.strategy(e).then(function(t){h.bindAndShow(t,e)})},inject:function(n){return n.model?n.view?(t.locateView(n.view,n.area,n.viewElements).then(function(e){h.bindAndShow(e,n)}),void 0):(n.strategy||(n.strategy=this.defaultStrategy),e.isString(n.strategy)?e.acquire(n.strategy).then(function(e){n.strategy=e,h.executeStrategy(n)}).fail(function(t){e.error("Failed to load view strategy ("+n.strategy+"). Details: "+t.message)}):this.executeStrategy(n),void 0):(this.bindAndShow(null,n),void 0)},compose:function(n,a,r,o){f++,o||(a=h.getSettings(function(){return a},n));var l=g(n);a.activeView=l.activeView,a.parent=n,a.triggerAttach=d,a.bindingContext=r,a.cacheViews&&!a.viewElements&&(a.viewElements=l.childElements),a.model?e.isString(a.model)?e.acquire(a.model).then(function(t){a.model=e.resolveObject(t),h.inject(a)}).fail(function(t){e.error("Failed to load composed module ("+a.model+"). Details: "+t.message)}):h.inject(a):a.view?(a.area=a.area||"partial",a.preserveContext=!0,t.locateView(a.view,a.area,a.viewElements).then(function(e){h.bindAndShow(e,a)})):this.bindAndShow(null,a)}},l.bindingHandlers.compose={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t,n,r,o){var g=h.getSettings(t,e);if(g.mode){var i=l.utils.domData.get(e,b);if(!i){var s=l.virtualElements.childNodes(e);i={},"inline"===g.mode?i.view=a.ensureSingleElement(s):"templated"===g.mode&&(i.parts=m(s)),l.virtualElements.emptyNode(e),l.utils.domData.set(e,b,i)}"inline"===g.mode?g.view=i.view.cloneNode(!0):"templated"===g.mode&&(g.parts=i.parts),g.preserveContext=!0}h.compose(e,g,o,!0)}},l.virtualElements.allowedBindings.compose=!0,h});
-define('durandal/events',["durandal/system"],function(e){var t=/\s+/,n=function(){},a=function(e,t){this.owner=e,this.events=t};return a.prototype.then=function(e,t){return this.callback=e||this.callback,this.context=t||this.context,this.callback?(this.owner.on(this.events,this.callback,this.context),this):this},a.prototype.on=a.prototype.then,a.prototype.off=function(){return this.owner.off(this.events,this.callback,this.context),this},n.prototype.on=function(e,n,r){var o,l,g;if(n){for(o=this.callbacks||(this.callbacks={}),e=e.split(t);l=e.shift();)g=o[l]||(o[l]=[]),g.push(n,r);return this}return new a(this,e)},n.prototype.off=function(n,a,r){var o,l,g,i;if(!(l=this.callbacks))return this;if(!(n||a||r))return delete this.callbacks,this;for(n=n?n.split(t):e.keys(l);o=n.shift();)if((g=l[o])&&(a||r))for(i=g.length-2;i>=0;i-=2)a&&g[i]!==a||r&&g[i+1]!==r||g.splice(i,2);else delete l[o];return this},n.prototype.trigger=function(e){var n,a,r,o,l,g,i,s;if(!(a=this.callbacks))return this;for(s=[],e=e.split(t),o=1,l=arguments.length;l>o;o++)s[o-1]=arguments[o];for(;n=e.shift();){if((i=a.all)&&(i=i.slice()),(r=a[n])&&(r=r.slice()),r)for(o=0,l=r.length;l>o;o+=2)r[o].apply(r[o+1]||this,s);if(i)for(g=[n].concat(s),o=0,l=i.length;l>o;o+=2)i[o].apply(i[o+1]||this,g)}return this},n.prototype.proxy=function(e){var t=this;return function(n){t.trigger(e,n)}},n.includeIn=function(e){e.on=n.prototype.on,e.off=n.prototype.off,e.trigger=n.prototype.trigger,e.proxy=n.prototype.proxy},n});
-define('durandal/app',["durandal/system","durandal/viewEngine","durandal/composition","durandal/events","jquery"],function(e,t,n,a,r){function o(){return e.defer(function(t){return 0==g.length?(t.resolve(),void 0):(e.acquire(g).then(function(n){for(var a=0;a<n.length;a++){var r=n[a];if(r.install){var o=i[a];e.isObject(o)||(o={}),r.install(o),e.log("Plugin:Installed "+g[a])}else e.log("Plugin:Loaded "+g[a])}t.resolve()}).fail(function(t){e.error("Failed to load plugin(s). Details: "+t.message)}),void 0)}).promise()}var l,g=[],i=[];return l={title:"Application",configurePlugins:function(t,n){var a=e.keys(t);n=n||"plugins/",-1===n.indexOf("/",n.length-1)&&(n+="/");for(var r=0;r<a.length;r++){var o=a[r];g.push(n+o),i.push(t[o])}},start:function(){return e.log("Application:Starting"),this.title&&(document.title=this.title),e.defer(function(t){r(function(){o().then(function(){t.resolve(),e.log("Application:Started")})})}).promise()},setRoot:function(a,r,o){var l,g={activate:!0,transition:r};l=!o||e.isString(o)?document.getElementById(o||"applicationHost"):o,e.isString(a)?t.isViewUrl(a)?g.view=a:g.model=a:g.model=a,n.compose(l,g)}},a.includeIn(l),l});
-requirejs.config({urlArgs:"version=2019.02",paths:{text:"../Scripts/text",durandal:"../Scripts/durandal",plugins:"../Scripts/durandal/plugins",transitions:"../Scripts/durandal/transitions"}}),define("jquery",[],function(){return jQuery}),define("knockout",ko),define('main',["durandal/system","durandal/app","durandal/viewLocator"],function(t,n,e){t.debug(!0),n.title="IARC - New",n.version="2019.02",n.configurePlugins({router:!0,dialog:!0,widget:!0}),n.start().then(function(){e.useConvention(),n.setRoot("viewmodels/shell","entrance")})});
-define('services/cachingService',[],function(){var t=function(t,n){amplify.store(t,n)},n=function(t){return amplify.store(t)},e={add:t,get:n};return e});
-define('services/displayService',[],function(){var t=function(t,n){switch(toastr.options={positionClass:"toast-top-full-width",fadeIn:300,fadeOut:1e3,timeOut:0,extendedTimeOut:0},n){case"error":toastr.error(t,"Error!");break;case"info":toastr.info(t,"Info!");break;case"warning":toastr.warning(t,"Warning!");break;case"Success":toastr.warning(t,"O.K.!");break;default:toastr.success(t,"O.K.!")}};return{display:t}});
-define('services/enums',[],function(){var t={Status:{OK:"0",INFO:"1",ERROR:"2"}};return t});
-define('services/holylandUtility',[],function(){var t=function(t,n){this.name=t,this.poly=n},n=[new google.maps.LatLng(32.88391197291899,35.37494659423828),new google.maps.LatLng(32.88448859695396,35.385589599609375),new google.maps.LatLng(32.887948262371275,35.390052795410156),new google.maps.LatLng(32.88881315761995,35.39623260498047),new google.maps.LatLng(32.88737166084861,35.39966583251953),new google.maps.LatLng(32.88564183376796,35.4034423828125),new google.maps.LatLng(32.88708335868024,35.408935546875),new google.maps.LatLng(32.89140779271051,35.41374206542969),new google.maps.LatLng(32.89342578969234,35.42163848876953),new google.maps.LatLng(32.894578910186176,35.42987823486328),new google.maps.LatLng(32.89947950482381,35.43434143066406),new google.maps.LatLng(32.901209061725034,35.443267822265625),new google.maps.LatLng(32.90265033334125,35.44841766357422),new google.maps.LatLng(32.90092080458707,35.45459747314453),new google.maps.LatLng(32.89803818160524,35.46455383300781),new google.maps.LatLng(32.90005602754379,35.472450256347656),new google.maps.LatLng(32.90178557318625,35.47760009765625),new google.maps.LatLng(32.901497317924765,35.48412322998047),new google.maps.LatLng(32.89890297835096,35.49201965332031),new google.maps.LatLng(32.896308562782686,35.49510955810547),new google.maps.LatLng(32.89429063146993,35.499229431152344),new google.maps.LatLng(32.894002351815516,35.50334930419922),new google.maps.LatLng(32.893714071222995,35.507469177246094),new google.maps.LatLng(32.89227265418851,35.51158905029297),new google.maps.LatLng(32.89083121370136,35.518798828125),new google.maps.LatLng(32.89025463093989,35.522918701171875),new google.maps.LatLng(32.887659962078956,35.52806854248047),new google.maps.LatLng(32.887659962078956,35.53974151611328),new google.maps.LatLng(32.891119503674965,35.54248809814453),new google.maps.LatLng(32.891119503674965,35.54729461669922),new google.maps.LatLng(32.892560939471615,35.550384521484375),new google.maps.LatLng(32.895732015669786,35.54695129394531),new google.maps.LatLng(32.89919124205649,35.543174743652344),new google.maps.LatLng(32.901497317924765,35.540428161621094),new google.maps.LatLng(32.904091581501,35.540428161621094),new google.maps.LatLng(32.904091581501,35.54523468017578),new google.maps.LatLng(32.90582104832939,35.54798126220703),new google.maps.LatLng(32.91158569379286,35.56171417236328),new google.maps.LatLng(32.91677355378147,35.56549072265625),new google.maps.LatLng(32.918502772875975,35.57750701904297),new google.maps.LatLng(32.91821457203976,35.587806701660156),new google.maps.LatLng(32.91965556683586,35.596046447753906),new google.maps.LatLng(32.92282567279776,35.60222625732422),new google.maps.LatLng(32.927148361544575,35.60565948486328),new google.maps.LatLng(32.92801287395171,35.610809326171875),new google.maps.LatLng(32.92945370919086,35.61561584472656),new google.maps.LatLng(32.931758996763335,35.62419891357422),new google.maps.LatLng(32.95106342152381,35.62591552734375),new google.maps.LatLng(32.960570021811456,35.62488555908203),new google.maps.LatLng(32.978428141403825,35.626258850097656),new google.maps.LatLng(32.99513085525829,35.62694549560547),new google.maps.LatLng(33.01384565773913,35.629005432128906),new google.maps.LatLng(33.05212664605825,35.64067840576172),new google.maps.LatLng(33.07226785340662,35.64308166503906),new google.maps.LatLng(33.090390998837975,35.646514892578125),new google.maps.LatLng(33.120875481115334,35.652008056640625),new google.maps.LatLng(33.16284622181141,35.64960479736328),new google.maps.LatLng(33.173192085918075,35.64891815185547),new google.maps.LatLng(33.19905140349983,35.655269622802734),new google.maps.LatLng(33.21226543987183,35.65595626831055),new google.maps.LatLng(33.22533388294235,35.65286636352539),new google.maps.LatLng(33.23567236670223,35.652523040771484),new google.maps.LatLng(33.24213329838942,35.624027252197266),new google.maps.LatLng(33.25002934422699,35.61115264892578),new google.maps.LatLng(33.25447952844022,35.59896469116211),new google.maps.LatLng(33.26208738291049,35.59398651123047),new google.maps.LatLng(33.267254604316584,35.58488845825195),new google.maps.LatLng(33.27213447716171,35.58694839477539),new google.maps.LatLng(33.28275443418201,35.58523178100586),new google.maps.LatLng(33.284189464417864,35.582313537597656),new google.maps.LatLng(33.287059454104856,35.57870864868164),new google.maps.LatLng(33.288063928197495,35.571842193603516),new google.maps.LatLng(33.29165124128551,35.568580627441406),new google.maps.LatLng(33.288063928197495,35.564117431640625),new google.maps.LatLng(33.283184945730184,35.562400817871094),new google.maps.LatLng(33.274861346151496,35.56428909301758),new google.maps.LatLng(33.2694075230104,35.55948257446289),new google.maps.LatLng(33.266680483701144,35.55845260620117),new google.maps.LatLng(33.265101632548216,35.55622100830078),new google.maps.LatLng(33.258642398812924,35.55570602416992),new google.maps.LatLng(33.25476662931657,35.54557800292969),new google.maps.LatLng(33.23811321923412,35.54574966430664),new google.maps.LatLng(33.2335186167059,35.537166595458984),new google.maps.LatLng(33.20853124049305,35.536651611328125),new google.maps.LatLng(33.19847683493303,35.54180145263672),new google.maps.LatLng(33.13927608513229,35.52583694458008),new google.maps.LatLng(33.13510753620141,35.52824020385742),new google.maps.LatLng(33.133813808346105,35.53150177001953),new google.maps.LatLng(33.11641850474211,35.51931381225586),new google.maps.LatLng(33.11613095011279,35.503692626953125),new google.maps.LatLng(33.11383047918907,35.50180435180664),new google.maps.LatLng(33.0905348183885,35.50334930419922),new google.maps.LatLng(33.09297971475382,35.49013137817383),new google.maps.LatLng(33.09369878898088,35.46335220336914),new google.maps.LatLng(33.0909662756286,35.44532775878906),new google.maps.LatLng(33.06651369304211,35.43073654174805),new google.maps.LatLng(33.0614784940697,35.396575927734375),new google.maps.LatLng(33.06277328703267,35.382328033447266),new google.maps.LatLng(33.06234169149467,35.380096435546875),new google.maps.LatLng(33.05759400090168,35.37443161010742),new google.maps.LatLng(33.04320549616557,35.37614822387695),new google.maps.LatLng(33.03572254463766,35.36481857299805),new google.maps.LatLng(33.02867072021502,35.3730583190918),new google.maps.LatLng(33.00117761021751,35.36619186401367),new google.maps.LatLng(33.01312593106509,35.41837692260742),new google.maps.LatLng(33.00405687168937,35.430049896240234),new google.maps.LatLng(32.98044415387331,35.43296813964844),new google.maps.LatLng(32.95826548534384,35.442237854003906),new google.maps.LatLng(32.947894327523066,35.438804626464844),new google.maps.LatLng(32.93896263320926,35.412025451660156),new google.maps.LatLng(32.934784595531966,35.40464401245117),new google.maps.LatLng(32.941699861217685,35.3924560546875),new google.maps.LatLng(32.936513462647135,35.38644790649414),new google.maps.LatLng(32.917205861722465,35.40447235107422),new google.maps.LatLng(32.91691765666308,35.36773681640625)],e=new google.maps.Polygon({paths:n}),a=[new google.maps.LatLng(32.229356720329406,35.423526763916016),new google.maps.LatLng(32.20641036078661,35.42472839355469),new google.maps.LatLng(32.19275598198777,35.42095184326172),new google.maps.LatLng(32.17706544297099,35.4144287109375),new google.maps.LatLng(32.1605002739009,35.403785705566406),new google.maps.LatLng(32.14480417752976,35.40069580078125),new google.maps.LatLng(32.12590714393767,35.40412902832031),new google.maps.LatLng(32.11311308402619,35.407562255859375),new google.maps.LatLng(32.099735558532124,35.408935546875),new google.maps.LatLng(32.081701880269065,35.407562255859375),new google.maps.LatLng(32.07035629148888,35.40515899658203),new google.maps.LatLng(32.06133699866369,35.404815673828125),new google.maps.LatLng(32.057263478112894,35.410308837890625),new google.maps.LatLng(32.050570872022476,35.408592224121094),new google.maps.LatLng(32.04213167101658,35.39417266845703),new google.maps.LatLng(32.03863936024243,35.38078308105469),new google.maps.LatLng(32.03994899239455,35.34421920776367),new google.maps.LatLng(32.04416879077791,35.32310485839844),new google.maps.LatLng(32.04576935307221,35.305423736572266),new google.maps.LatLng(32.046060361391454,35.28791427612305),new google.maps.LatLng(32.04402328372697,35.27109146118164),new google.maps.LatLng(32.04635136878548,35.25632858276367),new google.maps.LatLng(32.05086186507475,35.217018127441406),new google.maps.LatLng(32.0520258280307,35.19847869873047),new google.maps.LatLng(32.053626252920814,35.18577575683594),new google.maps.LatLng(32.05915477806914,35.20362854003906),new google.maps.LatLng(32.06526486454641,35.21615982055664),new google.maps.LatLng(32.075447434961156,35.229549407958984),new google.maps.LatLng(32.092609772316635,35.23263931274414),new google.maps.LatLng(32.10497047581683,35.23143768310547),new google.maps.LatLng(32.131140560580995,35.2166748046875),new google.maps.LatLng(32.16515045002057,35.18817901611328),new google.maps.LatLng(32.23197049507261,35.165863037109375),new google.maps.LatLng(32.25026481308558,35.16242980957031),new google.maps.LatLng(32.25491040237429,35.16345977783203),new google.maps.LatLng(32.28190818349018,35.17547607421875),new google.maps.LatLng(32.29061543148475,35.17993927001953),new google.maps.LatLng(32.299031643087915,35.17890930175781),new google.maps.LatLng(32.30222379480205,35.17444610595703),new google.maps.LatLng(32.31063892854106,35.179595947265625),new google.maps.LatLng(32.30541583408083,35.31898498535156)],r=new google.maps.Polygon({paths:a}),g=[new google.maps.LatLng(32.04213167101658,35.39348602294922),new google.maps.LatLng(32.03456482930134,35.39039611816406),new google.maps.LatLng(32.01651829873178,35.375633239746094),new google.maps.LatLng(32.004291209867134,35.36327362060547),new google.maps.LatLng(31.983326691811396,35.352630615234375),new google.maps.LatLng(31.971386422339652,35.34645080566406),new google.maps.LatLng(31.94691858024963,35.34507751464844),new google.maps.LatLng(31.928854801809585,35.336151123046875),new google.maps.LatLng(31.92098720813286,35.34198760986328),new google.maps.LatLng(31.916907450132463,35.34954071044922),new google.maps.LatLng(31.913993226490213,35.35606384277344),new google.maps.LatLng(31.91195321501266,35.372886657714844),new google.maps.LatLng(31.91574177175371,35.38249969482422),new google.maps.LatLng(31.919821581454634,35.392799377441406),new google.maps.LatLng(31.922152820038836,35.401039123535156),new google.maps.LatLng(31.92098720813286,35.40790557861328),new google.maps.LatLng(31.917490283782648,35.409278869628906),new google.maps.LatLng(31.91195321501266,35.407562255859375),new google.maps.LatLng(31.876391466606282,35.400352478027344),new google.maps.LatLng(31.86443730407827,35.39451599121094),new google.maps.LatLng(31.84664897336452,35.385589599609375),new google.maps.LatLng(31.8311907528247,35.380096435546875),new google.maps.LatLng(31.822439668935843,35.37666320800781),new google.maps.LatLng(31.812520771059095,35.37769317626953),new google.maps.LatLng(31.798807599289702,35.391082763671875),new google.maps.LatLng(31.785384226419538,35.41271209716797),new google.maps.LatLng(31.775753214756303,35.43983459472656),new google.maps.LatLng(31.766413094137064,35.447044372558594),new google.maps.LatLng(31.739554995617915,35.447731018066406),new google.maps.LatLng(31.715901742760696,35.44670104980469),new google.maps.LatLng(31.692534580591307,35.443267822265625),new google.maps.LatLng(31.68084879226893,35.43571472167969),new google.maps.LatLng(31.662148471209694,35.42335510253906),new google.maps.LatLng(31.646367146916386,35.41099548339844),new google.maps.LatLng(31.625905886872008,35.40550231933594),new google.maps.LatLng(31.60310089533651,35.40000915527344),new google.maps.LatLng(31.58964917898045,35.39726257324219),new google.maps.LatLng(31.574440551990754,35.388336181640625),new google.maps.LatLng(31.5668353078939,35.39176940917969),new google.maps.LatLng(31.553378356555264,35.38421630859375),new google.maps.LatLng(31.535822894163246,35.382843017578125),new google.maps.LatLng(31.503043865128223,35.37322998046875),new google.maps.LatLng(31.478452047933082,35.37803649902344),new google.maps.LatLng(31.49191979634118,35.39863586425781),new google.maps.LatLng(31.49777473435026,35.429534912109375),new google.maps.LatLng(31.49660377607412,35.45768737792969),new google.maps.LatLng(31.492505306637387,35.47966003417969),new google.maps.LatLng(31.568590419282312,35.484466552734375),new google.maps.LatLng(31.638767775839142,35.50163269042969),new google.maps.LatLng(31.71940630930742,35.533905029296875),new google.maps.LatLng(31.758531633937167,35.56068420410156),new google.maps.LatLng(31.82273138509748,35.5572509765625),new google.maps.LatLng(31.878723805312543,35.553131103515625),new google.maps.LatLng(31.89854630009035,35.5352783203125),new google.maps.LatLng(31.918947351751875,35.53459167480469),new google.maps.LatLng(31.93235129404254,35.544891357421875),new google.maps.LatLng(31.94575328232356,35.550384521484375),new google.maps.LatLng(31.96090100253141,35.55107116699219),new google.maps.LatLng(31.976046224524243,35.55244445800781),new google.maps.LatLng(31.984782715952374,35.54695129394531),new google.maps.LatLng(32.0074937003197,35.539398193359375),new google.maps.LatLng(32.02088472086091,35.5352783203125),new google.maps.LatLng(32.043004727893994,35.533905029296875),new google.maps.LatLng(32.06744693937369,35.54557800292969),new google.maps.LatLng(32.086646952664736,35.55381774902344),new google.maps.LatLng(32.10351636222566,35.5462646484375),new google.maps.LatLng(32.12445336381827,35.55656433105469),new google.maps.LatLng(32.1407343780354,35.56068420410156),new google.maps.LatLng(32.15468722002481,35.5682373046875),new google.maps.LatLng(32.16863792635911,35.5682373046875),new google.maps.LatLng(32.18084304210396,35.57029724121094),new google.maps.LatLng(32.198276083995,35.5792236328125),new google.maps.LatLng(32.224419385153006,35.57853698730469),new google.maps.LatLng(32.24707083257868,35.57853698730469),new google.maps.LatLng(32.2720389584545,35.57098388671875),new google.maps.LatLng(32.29061543148475,35.572357177734375),new google.maps.LatLng(32.2999022410693,35.56549072265625),new google.maps.LatLng(32.314991277245554,35.57029724121094),new google.maps.LatLng(32.3271767410611,35.562744140625),new google.maps.LatLng(32.3434214752644,35.564117431640625),new google.maps.LatLng(32.358503260304744,35.562744140625),new google.maps.LatLng(32.365463235972015,35.57029724121094),new google.maps.LatLng(32.38576010445448,35.56343078613281),new google.maps.LatLng(32.39213817866891,35.55107116699219),new google.maps.LatLng(32.390978562311886,35.54283142089844),new google.maps.LatLng(32.3973562680131,35.531158447265625),new google.maps.LatLng(32.40547269651596,35.49201965332031),new google.maps.LatLng(32.4153273786237,35.48240661621094),new google.maps.LatLng(32.41706632846282,35.46112060546875),new google.maps.LatLng(32.41358839527031,35.446014404296875),new google.maps.LatLng(32.407211836256685,35.4364013671875),new google.maps.LatLng(32.346322013829464,35.410308837890625),new google.maps.LatLng(32.33413912701808,35.40962219238281),new google.maps.LatLng(32.31789272687268,35.41511535644531),new google.maps.LatLng(32.28887404877279,35.429534912109375),new google.maps.LatLng(32.27378066442218,35.43365478515625),new google.maps.LatLng(32.25055516937943,35.43296813964844),new google.maps.LatLng(32.23197049507261,35.42266845703125),new google.maps.LatLng(32.20757234095538,35.42198181152344),new google.maps.LatLng(32.18432991758738,35.41648864746094),new google.maps.LatLng(32.15584986046307,35.40069580078125),new google.maps.LatLng(32.13666439690465,35.399322509765625),new google.maps.LatLng(32.12038265626624,35.404815673828125),new google.maps.LatLng(32.10235305468224,35.40687561035156),new google.maps.LatLng(32.083156341101464,35.40687561035156),new google.maps.LatLng(32.06570128367684,35.4034423828125),new google.maps.LatLng(32.0598821907181,35.40412902832031)],o=new google.maps.Polygon({paths:g}),l=[new google.maps.LatLng(32.76880048488168,35.168609619140625),new google.maps.LatLng(32.76360396952606,35.16105651855469),new google.maps.LatLng(32.7537875018279,35.157623291015625),new google.maps.LatLng(32.74570253945518,35.15419006347656),new google.maps.LatLng(32.73819441736631,35.15556335449219),new google.maps.LatLng(32.73126328163474,35.15144348144531),new google.maps.LatLng(32.72490926707168,35.14457702636719),new google.maps.LatLng(32.71913249723242,35.135650634765625),new google.maps.LatLng(32.713355353177555,35.13427734375),new google.maps.LatLng(32.701222132744036,35.130157470703125),new google.maps.LatLng(32.70468893551646,35.119171142578125),new google.maps.LatLng(32.70815560360234,35.11024475097656),new google.maps.LatLng(32.704111144407406,35.108184814453125),new google.maps.LatLng(32.69891085607356,35.1068115234375),new google.maps.LatLng(32.69255453660822,35.110931396484375),new google.maps.LatLng(32.68677567160618,35.11299133300781),new google.maps.LatLng(32.679840539897484,35.123291015625),new google.maps.LatLng(32.657875736955305,35.10955810546875),new google.maps.LatLng(32.650938361757355,35.099945068359375),new google.maps.LatLng(32.64515680456839,35.08552551269531),new google.maps.LatLng(32.637061996573436,35.07591247558594),new google.maps.LatLng(32.63417081619418,35.0518798828125),new google.maps.LatLng(32.67752870965116,35.036773681640625),new google.maps.LatLng(32.699488680852674,35.04432678222656),new google.maps.LatLng(32.71046664083005,35.023040771484375),new google.maps.LatLng(32.7295304134847,35.01411437988281),new google.maps.LatLng(32.73588409867885,35.036773681640625),new google.maps.LatLng(32.751477587458865,35.01686096191406),new google.maps.LatLng(32.76244914714216,35.0079345703125),new google.maps.LatLng(32.760139457437795,34.995574951171875),new google.maps.LatLng(32.74859011025593,34.99351501464844),new google.maps.LatLng(32.743969952049575,34.98870849609375),new google.maps.LatLng(32.749745112369105,34.98252868652344),new google.maps.LatLng(32.74108223150125,34.9749755859375),new google.maps.LatLng(32.753643133934936,34.962615966796875),new google.maps.LatLng(32.75970638394809,34.95025634765625),new google.maps.LatLng(32.79405700144505,34.954891204833984),new google.maps.LatLng(32.803003304205006,34.95643615722656),new google.maps.LatLng(32.80603329943089,34.953861236572266),new google.maps.LatLng(32.807331837195626,34.9555778503418),new google.maps.LatLng(32.81454559041408,34.95351791381836),new google.maps.LatLng(32.82536512222338,34.95454788208008),new google.maps.LatLng(32.826951876079946,34.95626449584961),new google.maps.LatLng(32.82637487795752,34.95832443237305),new google.maps.LatLng(32.83156772610805,34.963645935058594),new google.maps.LatLng(32.83228893100241,34.969482421875),new google.maps.LatLng(32.83719296893632,34.98046875),new google.maps.LatLng(32.836471803875156,34.98647689819336),new google.maps.LatLng(32.83286589070039,34.9888801574707),new google.maps.LatLng(32.82752887045379,35.00141143798828),new google.maps.LatLng(32.8219030154127,35.01617431640625),new google.maps.LatLng(32.818296510663295,35.03265380859375),new google.maps.LatLng(32.821325984491764,35.03746032714844),new google.maps.LatLng(32.84079870636961,35.05582809448242),new google.maps.LatLng(32.86300681878146,35.06715774536133),new google.maps.LatLng(32.89227265418851,35.078487396240234),new google.maps.LatLng(32.88881315761995,35.090675354003906),new google.maps.LatLng(32.88492106251796,35.0984001159668),new google.maps.LatLng(32.8787221877715,35.10732650756836),new google.maps.LatLng(32.86156490232035,35.11127471923828),new google.maps.LatLng(32.8468560155417,35.10758399963379),new google.maps.LatLng(32.83445251053944,35.14698028564453),new google.maps.LatLng(32.82774524237756,35.15719413757324),new google.maps.LatLng(32.789727822117364,35.136680603027344),new google.maps.LatLng(32.78193476829083,35.15453338623047),new google.maps.LatLng(32.7702439075344,35.169124603271484)],i=new google.maps.Polygon({paths:l}),s=[new google.maps.LatLng(33.09326734515043,35.10337829589844),new google.maps.LatLng(33.096718836507335,35.110931396484375),new google.maps.LatLng(33.09326734515043,35.15556335449219),new google.maps.LatLng(33.086363955913264,35.15556335449219),new google.maps.LatLng(33.09614359735857,35.17616271972656),new google.maps.LatLng(33.0909662756286,35.18852233886719),new google.maps.LatLng(33.086939259051256,35.193328857421875),new google.maps.LatLng(33.090390998837975,35.20637512207031),new google.maps.LatLng(33.097294071891696,35.20500183105469),new google.maps.LatLng(33.10419660287101,35.21324157714844),new google.maps.LatLng(33.097294071891696,35.23384094238281),new google.maps.LatLng(33.09326734515043,35.23933410644531),new google.maps.LatLng(33.110523446688916,35.292205810546875),new google.maps.LatLng(33.10304621868762,35.3045654296875),new google.maps.LatLng(33.10764766506478,35.31898498535156),new google.maps.LatLng(33.0955683544455,35.327911376953125),new google.maps.LatLng(33.08808985403573,35.32447814941406),new google.maps.LatLng(33.063924198120645,35.349884033203125),new google.maps.LatLng(33.06162236089505,35.35675048828125),new google.maps.LatLng(33.05759400090168,35.374603271484375),new google.maps.LatLng(33.04320549616557,35.3759765625),new google.maps.LatLng(33.03572254463766,35.36430358886719),new google.maps.LatLng(33.02881464063999,35.37322998046875),new google.maps.LatLng(33.0178760185549,35.37117004394531),new google.maps.LatLng(33.00117761021751,35.366363525390625),new google.maps.LatLng(33.01326987686982,35.418548583984375),new google.maps.LatLng(33.00405687168937,35.43022155761719),new google.maps.LatLng(32.98044415387331,35.43296813964844),new google.maps.LatLng(32.95797741405952,35.44258117675781),new google.maps.LatLng(32.948182431672386,35.43914794921875),new google.maps.LatLng(32.93896263320926,35.41236877441406),new google.maps.LatLng(32.93492866908233,35.404815673828125),new google.maps.LatLng(32.941843923502645,35.39176940917969),new google.maps.LatLng(32.936657533381286,35.38627624511719),new google.maps.LatLng(32.91706175931007,35.404815673828125),new google.maps.LatLng(32.91706175931007,35.36773681640625),new google.maps.LatLng(32.88420028540548,35.374603271484375),new google.maps.LatLng(32.877280526855394,35.38352966308594),new google.maps.LatLng(32.872090353419075,35.38764953613281),new google.maps.LatLng(32.866323137679224,35.382843017578125),new google.maps.LatLng(32.86170909502134,35.377349853515625),new google.maps.LatLng(32.85767161078748,35.37803649902344),new google.maps.LatLng(32.85132662142229,35.38421630859375),new google.maps.LatLng(32.847865526878856,35.3924560546875),new google.maps.LatLng(32.84094293282064,35.393829345703125),new google.maps.LatLng(32.83286589070039,35.396575927734375),new google.maps.LatLng(32.821325984491764,35.3924560546875),new google.maps.LatLng(32.80689899338195,35.408935546875),new google.maps.LatLng(32.80401331408953,35.40138244628906),new google.maps.LatLng(32.80805323886752,35.386962890625),new google.maps.LatLng(32.809784578989934,35.369110107421875),new google.maps.LatLng(32.811515885384395,35.34233093261719),new google.maps.LatLng(32.80401331408953,35.32997131347656),new google.maps.LatLng(32.79708730158076,35.319671630859375),new google.maps.LatLng(32.79477851084408,35.29975891113281),new google.maps.LatLng(32.79304687845155,35.267486572265625),new google.maps.LatLng(32.79477851084408,35.24070739746094),new google.maps.LatLng(32.80574473290688,35.22216796875),new google.maps.LatLng(32.79477851084408,35.2166748046875),new google.maps.LatLng(32.783233658006516,35.21873474121094),new google.maps.LatLng(32.76418137510082,35.21461486816406),new google.maps.LatLng(32.758984590117905,35.2056884765625),new google.maps.LatLng(32.759562025650126,35.19401550292969),new google.maps.LatLng(32.76418137510082,35.176849365234375),new google.maps.LatLng(32.77399669688296,35.163116455078125),new google.maps.LatLng(32.7815018008381,35.15419006347656),new google.maps.LatLng(32.78958351251041,35.13633728027344),new google.maps.LatLng(32.82767311846154,35.15693664550781),new google.maps.LatLng(32.834019798849624,35.14732360839844),new google.maps.LatLng(32.84036602561058,35.127410888671875),new google.maps.LatLng(32.84671179869895,35.10749816894531),new google.maps.LatLng(32.8622858634811,35.110931396484375),new google.maps.LatLng(32.8788663525735,35.10698318481445),new google.maps.LatLng(32.88261455512238,35.10200500488281),new google.maps.LatLng(32.887659962078956,35.09359359741211),new google.maps.LatLng(32.88996633815205,35.08604049682617),new google.maps.LatLng(32.89184022450486,35.07831573486328),new google.maps.LatLng(32.90452395137483,35.08089065551758),new google.maps.LatLng(32.91187391621322,35.081748962402344),new google.maps.LatLng(32.91879097277371,35.07917404174805),new google.maps.LatLng(32.92037605543544,35.07453918457031),new google.maps.LatLng(32.92167292013293,35.071964263916016),new google.maps.LatLng(32.91907917173292,35.069732666015625),new google.maps.LatLng(32.91835867257519,35.065956115722656),new google.maps.LatLng(32.92052015245145,35.0657844543457),new google.maps.LatLng(32.93219123149512,35.070247650146484),new google.maps.LatLng(32.93536088832532,35.07179260253906),new google.maps.LatLng(32.95509664956795,35.073509216308594),new google.maps.LatLng(32.97986815500754,35.07865905761719),new google.maps.LatLng(33.005208549965474,35.08552551269531),new google.maps.LatLng(33.04435666306044,35.098228454589844),new google.maps.LatLng(33.0509755807245,35.10028839111328),new google.maps.LatLng(33.06219782584503,35.102691650390625),new google.maps.LatLng(33.08262439377602,35.105438232421875),new google.maps.LatLng(33.0909662756286,35.104408264160156)],d=new google.maps.Polygon({paths:s}),p=[new google.maps.LatLng(32.633881693017706,35.051536560058594),new google.maps.LatLng(32.62491841117469,35.060462951660156),new google.maps.LatLng(32.61855682784329,35.05359649658203),new google.maps.LatLng(32.617255539195966,35.05720138549805),new google.maps.LatLng(32.60106014282726,35.05084991455078),new google.maps.LatLng(32.59122579488824,35.05205154418945),new google.maps.LatLng(32.5851510996314,35.05754470825195),new google.maps.LatLng(32.579654592037826,35.0599479675293),new google.maps.LatLng(32.574013089115475,35.05891799926758),new google.maps.LatLng(32.569673229973986,35.05411148071289),new google.maps.LatLng(32.56735855256776,35.04415512084961),new google.maps.LatLng(32.56547783319517,35.034542083740234),new google.maps.LatLng(32.56084820214486,35.02870559692383),new google.maps.LatLng(32.55737582208488,35.030250549316406),new google.maps.LatLng(32.55390330765706,35.03643035888672),new google.maps.LatLng(32.553179850239374,35.041751861572266),new google.maps.LatLng(32.548260185149985,35.05033493041992),new google.maps.LatLng(32.54883898327313,35.0544548034668),new google.maps.LatLng(32.547247279454616,35.05943298339844),new google.maps.LatLng(32.544642612331046,35.06183624267578),new google.maps.LatLng(32.54088018196837,35.07213592529297),new google.maps.LatLng(32.538854192626104,35.08157730102539),new google.maps.LatLng(32.53682815757515,35.086727142333984),new google.maps.LatLng(32.532920675187846,35.09084701538086),new google.maps.LatLng(32.532341774450515,35.10183334350586),new google.maps.LatLng(32.53089450628447,35.109214782714844),new google.maps.LatLng(32.53089450628447,35.11556625366211),new google.maps.LatLng(32.52481572536378,35.11796951293945),new google.maps.LatLng(32.52163143788113,35.12105941772461),new google.maps.LatLng(32.52307885527122,35.124664306640625),new google.maps.LatLng(32.52467098747173,35.12775421142578),new google.maps.LatLng(32.527855167237206,35.13101577758789),new google.maps.LatLng(32.538709477352576,35.1397705078125),new google.maps.LatLng(32.545366138556574,35.147666931152344),new google.maps.LatLng(32.552022306241454,35.14749526977539),new google.maps.LatLng(32.55853329703501,35.14629364013672),new google.maps.LatLng(32.5611375610844,35.15625),new google.maps.LatLng(32.56880523294623,35.16294479370117),new google.maps.LatLng(32.5722771706588,35.17152786254883),new google.maps.LatLng(32.573868430527426,35.18028259277344),new google.maps.LatLng(32.57213250927074,35.18199920654297),new google.maps.LatLng(32.56952856438602,35.180625915527344),new google.maps.LatLng(32.56634586242051,35.184574127197266),new google.maps.LatLng(32.562150310024094,35.18989562988281),new google.maps.LatLng(32.556507706074605,35.19144058227539),new google.maps.LatLng(32.5529628118769,35.19444465637207),new google.maps.LatLng(32.54956247567908,35.199294090270996),new google.maps.LatLng(32.547319630240445,35.20066738128662),new google.maps.LatLng(32.544389376774575,35.19478797912598),new google.maps.LatLng(32.538130613926434,35.198307037353516),new google.maps.LatLng(32.52872356031481,35.19195556640625),new google.maps.LatLng(32.523657815699146,35.18697738647461),new google.maps.LatLng(32.52467098747173,35.1807975769043),new google.maps.LatLng(32.52148669485984,35.17822265625),new google.maps.LatLng(32.51888128060975,35.17753601074219),new google.maps.LatLng(32.50918268597245,35.16448974609375),new google.maps.LatLng(32.504115839852815,35.16105651855469),new google.maps.LatLng(32.502233795716045,35.15470504760742),new google.maps.LatLng(32.4967322100924,35.14148712158203),new google.maps.LatLng(32.49267819482123,35.138397216796875),new google.maps.LatLng(32.482831968568554,35.12432098388672),new google.maps.LatLng(32.477908451417896,35.11402130126953),new google.maps.LatLng(32.47732919639942,35.10509490966797),new google.maps.LatLng(32.47703956749234,35.09479522705078),new google.maps.LatLng(32.47182608781553,35.08689880371094),new google.maps.LatLng(32.46603297853121,35.07865905761719),new google.maps.LatLng(32.45966012786285,35.07110595703125),new google.maps.LatLng(32.45531474387748,35.07213592529297),new google.maps.LatLng(32.45299712004732,35.07041931152344),new google.maps.LatLng(32.45067943659943,35.06561279296875),new google.maps.LatLng(32.443726028572186,35.065956115722656),new google.maps.LatLng(32.43966962613718,35.063209533691406),new google.maps.LatLng(32.42807889910622,35.058746337890625),new google.maps.LatLng(32.42373199235633,35.05565643310547),new google.maps.LatLng(32.420254316120676,35.057373046875),new google.maps.LatLng(32.41706632846282,35.05359649658203),new google.maps.LatLng(32.409240790268115,35.054969787597656),new google.maps.LatLng(32.39880568376252,35.051536560058594),new google.maps.LatLng(32.385470181289065,35.04364013671875),new google.maps.LatLng(32.38025140520136,35.04020690917969),new google.maps.LatLng(32.377931852397595,35.041236877441406),new google.maps.LatLng(32.374307431937574,35.02235412597656),new google.maps.LatLng(32.37648210165771,35.01188278198242),new google.maps.LatLng(32.38054134511501,35.00415802001953),new google.maps.LatLng(32.3818460632124,34.99866485595703),new google.maps.LatLng(32.38576010445448,34.992828369140625),new google.maps.LatLng(32.38749962390624,34.9859619140625),new google.maps.LatLng(32.390108840272994,34.974117279052734),new google.maps.LatLng(32.3956169384015,34.95248794555664),new google.maps.LatLng(32.39996519960948,34.94373321533203),new google.maps.LatLng(32.40344365780038,34.93377685546875),new google.maps.LatLng(32.40996540564691,34.930686950683594),new google.maps.LatLng(32.410979857403035,34.923133850097656),new google.maps.LatLng(32.40909586649421,34.9171257019043),new google.maps.LatLng(32.40619734214692,34.913692474365234),new google.maps.LatLng(32.403588590649726,34.907684326171875),new google.maps.LatLng(32.40474804506751,34.90201950073242),new google.maps.LatLng(32.40634227057499,34.89309310913086),new google.maps.LatLng(32.40706690922483,34.88759994506836),new google.maps.LatLng(32.408371244133996,34.881591796875),new google.maps.LatLng(32.410400172081545,34.87833023071289),new google.maps.LatLng(32.41155953900097,34.873695373535156),new google.maps.LatLng(32.41170445881864,34.86957550048828),new google.maps.LatLng(32.41938487611333,34.87180709838867),new google.maps.LatLng(32.433005140150016,34.87489700317383),new google.maps.LatLng(32.43604768399796,34.876956939697266),new google.maps.LatLng(32.439959375222,34.877986907958984),new google.maps.LatLng(32.44227733437236,34.87678527832031),new google.maps.LatLng(32.44459523391549,34.878501892089844),new google.maps.LatLng(32.44647848340221,34.87730026245117),new google.maps.LatLng(32.447782248455646,34.87833023071289),new google.maps.LatLng(32.46313628412808,34.88330841064453),new google.maps.LatLng(32.47240537824467,34.879188537597656),new google.maps.LatLng(32.477618824374616,34.885711669921875),new google.maps.LatLng(32.48674162855308,34.88811492919922),new google.maps.LatLng(32.4932573510458,34.88759994506836),new google.maps.LatLng(32.49470522529474,34.88880157470703),new google.maps.LatLng(32.50194424696818,34.88880157470703),new google.maps.LatLng(32.507735044788404,34.89326477050781),new google.maps.LatLng(32.51135410404299,34.8951530456543),new google.maps.LatLng(32.51555203025782,34.89686965942383),new google.maps.LatLng(32.52467098747173,34.898414611816406),new google.maps.LatLng(32.53349957219424,34.9009895324707),new google.maps.LatLng(32.53928833704742,34.900474548339844),new google.maps.LatLng(32.54015661959339,34.90184783935547),new google.maps.LatLng(32.55028596225381,34.904422760009766),new google.maps.LatLng(32.55578426965102,34.90425109863281),new google.maps.LatLng(32.55911202891133,34.907169342041016),new google.maps.LatLng(32.60424161253153,34.916439056396484),new google.maps.LatLng(32.60988121294625,34.912147521972656),new google.maps.LatLng(32.63648376797194,34.920387268066406),new google.maps.LatLng(32.65007115200838,34.921417236328125),new google.maps.LatLng(32.657875736955305,34.926910400390625),new google.maps.LatLng(32.66018807572586,34.92347717285156),new google.maps.LatLng(32.66307841506968,34.925880432128906),new google.maps.LatLng(32.67550580910239,34.92897033691406),new google.maps.LatLng(32.68273024355948,34.925537109375),new google.maps.LatLng(32.69891085607356,34.92622375488281),new google.maps.LatLng(32.69891085607356,34.93171691894531),new google.maps.LatLng(32.702666650266885,34.93446350097656),new google.maps.LatLng(32.704977829668,34.9310302734375),new google.maps.LatLng(32.70815560360234,34.93206024169922),new google.maps.LatLng(32.70700006253934,34.93721008300781),new google.maps.LatLng(32.711333264356284,34.940643310546875),new google.maps.LatLng(32.73357372010094,34.94682312011719),new google.maps.LatLng(32.75985074201205,34.9500846862793),new google.maps.LatLng(32.7537875018279,34.96295928955078),new google.maps.LatLng(32.74108223150125,34.97480392456055),new google.maps.LatLng(32.750033860557416,34.982872009277344),new google.maps.LatLng(32.74425871895697,34.9885368347168),new google.maps.LatLng(32.74873448633905,34.99351501464844),new google.maps.LatLng(32.760139457437795,34.99540328979492),new google.maps.LatLng(32.76259350075932,35.008277893066406),new google.maps.LatLng(32.75191070096623,35.016517639160156),new google.maps.LatLng(32.73588409867885,35.036773681640625),new google.maps.LatLng(32.72938600628502,35.01445770263672),new google.maps.LatLng(32.71003332590989,35.02338409423828),new google.maps.LatLng(32.69977759183938,35.04518508911133),new google.maps.LatLng(32.67767320079454,35.03711700439453)],m=new google.maps.Polygon({paths:p}),c=[new google.maps.LatLng(32.803147592033966,35.401039123535156),new google.maps.LatLng(32.798530265348575,35.404815673828125),new google.maps.LatLng(32.78294501748632,35.40721893310547),new google.maps.LatLng(32.77313068261673,35.40687561035156),new google.maps.LatLng(32.765047476441374,35.39176940917969),new google.maps.LatLng(32.76244914714216,35.383872985839844),new google.maps.LatLng(32.75349876580794,35.37425994873047),new google.maps.LatLng(32.74281487506093,35.370140075683594),new google.maps.LatLng(32.73155208971808,35.370140075683594),new google.maps.LatLng(32.72433160692846,35.375633239746094),new google.maps.LatLng(32.71913249723242,35.37803649902344),new google.maps.LatLng(32.71306648615227,35.3759765625),new google.maps.LatLng(32.709022249578155,35.37254333496094),new google.maps.LatLng(32.70179994255902,35.37117004394531),new google.maps.LatLng(32.696599519547924,35.37494659423828),new google.maps.LatLng(32.6960216760644,35.38318634033203),new google.maps.LatLng(32.6960216760644,35.39314270019531),new google.maps.LatLng(32.69197666693998,35.402069091796875),new google.maps.LatLng(32.69631059827375,35.41339874267578),new google.maps.LatLng(32.69428812316933,35.417518615722656),new google.maps.LatLng(32.68966515086213,35.417518615722656),new google.maps.LatLng(32.68590880959562,35.41786193847656),new google.maps.LatLng(32.68157437331439,35.416831970214844),new google.maps.LatLng(32.677817691704206,35.41065216064453),new google.maps.LatLng(32.67521681957013,35.40687561035156),new google.maps.LatLng(32.67059285991286,35.41374206542969),new google.maps.LatLng(32.66828079034104,35.424041748046875),new google.maps.LatLng(32.66885881334276,35.429534912109375),new google.maps.LatLng(32.66510159699591,35.43296813964844),new google.maps.LatLng(32.65874287100405,35.43743133544922),new google.maps.LatLng(32.6541180588781,35.443267822265625),new google.maps.LatLng(32.655274284339875,35.44670104980469),new google.maps.LatLng(32.65758669040313,35.452537536621094),new google.maps.LatLng(32.65758669040313,35.458717346191406),new google.maps.LatLng(32.656430494848316,35.462493896484375),new google.maps.LatLng(32.65036022285923,35.46455383300781),new google.maps.LatLng(32.640820391386406,35.466957092285156),new google.maps.LatLng(32.63330344386202,35.470733642578125),new google.maps.LatLng(32.62723160211139,35.470733642578125),new google.maps.LatLng(32.62405094916023,35.474510192871094),new google.maps.LatLng(32.621159348395096,35.477943420410156),new google.maps.LatLng(32.62087018318113,35.48412322998047),new google.maps.LatLng(32.62260516045382,35.48961639404297),new google.maps.LatLng(32.621448512675016,35.494422912597656),new google.maps.LatLng(32.61826765422287,35.50128936767578),new google.maps.LatLng(32.61653259288591,35.50849914550781),new google.maps.LatLng(32.615665049608346,35.51227569580078),new google.maps.LatLng(32.613640749271326,35.51605224609375),new google.maps.LatLng(32.61306236934077,35.51982879638672),new google.maps.LatLng(32.61277317797456,35.52497863769531),new google.maps.LatLng(32.61161640317033,35.530128479003906),new google.maps.LatLng(32.60901360522645,35.533905029296875),new google.maps.LatLng(32.60583230501211,35.537681579589844),new google.maps.LatLng(32.60149398625833,35.54454803466797),new google.maps.LatLng(32.601783214045184,35.55381774902344),new google.maps.LatLng(32.60091552788334,35.56205749511719),new google.maps.LatLng(32.59802317998301,35.5682373046875),new google.maps.LatLng(32.60409700272347,35.567893981933594),new google.maps.LatLng(32.605253874651204,35.57201385498047),new google.maps.LatLng(32.60988121294625,35.57373046875),new google.maps.LatLng(32.61653259288591,35.572357177734375),new google.maps.LatLng(32.623472636479974,35.567893981933594),new google.maps.LatLng(32.62578586478203,35.56377410888672),new google.maps.LatLng(32.63243606312154,35.56995391845703),new google.maps.LatLng(32.6361946522697,35.565147399902344),new google.maps.LatLng(32.64110949213927,35.568580627441406),new google.maps.LatLng(32.64255498188792,35.572357177734375),new google.maps.LatLng(32.640820391386406,35.57853698730469),new google.maps.LatLng(32.64342226452444,35.58025360107422),new google.maps.LatLng(32.63937487360669,35.58643341064453),new google.maps.LatLng(32.6442895387513,35.59398651123047),new google.maps.LatLng(32.648625783736726,35.592613220214844),new google.maps.LatLng(32.65036022285923,35.596046447753906),new google.maps.LatLng(32.650649292775554,35.606689453125),new google.maps.LatLng(32.657875736955305,35.60943603515625),new google.maps.LatLng(32.66307841506968,35.606689453125),new google.maps.LatLng(32.66741374882766,35.599822998046875),new google.maps.LatLng(32.669436832605314,35.601539611816406),new google.maps.LatLng(32.669436832605314,35.604286193847656),new google.maps.LatLng(32.67319386666782,35.608062744140625),new google.maps.LatLng(32.67897361056713,35.61664581298828),new google.maps.LatLng(32.67752870965116,35.6231689453125),new google.maps.LatLng(32.67839565300552,35.63037872314453),new google.maps.LatLng(32.685041939169665,35.6341552734375),new google.maps.LatLng(32.68215231030691,35.641021728515625),new google.maps.LatLng(32.67752870965116,35.64308166503906),new google.maps.LatLng(32.67752870965116,35.64857482910156),new google.maps.LatLng(32.68301920878329,35.65235137939453),new google.maps.LatLng(32.68822042292262,35.65509796142578),new google.maps.LatLng(32.695443828840105,35.65509796142578),new google.maps.LatLng(32.70151103811915,35.65132141113281),new google.maps.LatLng(32.71624397197978,35.65784454345703),new google.maps.LatLng(32.72433160692846,35.65818786621094),new google.maps.LatLng(32.737616843309304,35.66333770751953),new google.maps.LatLng(32.752343812367535,35.666770935058594),new google.maps.LatLng(32.76158302052429,35.664710998535156),new google.maps.LatLng(32.77890395187418,35.668487548828125),new google.maps.LatLng(32.787851778963635,35.659217834472656),new google.maps.LatLng(32.79333548619193,35.650291442871094),new google.maps.LatLng(32.80257043931297,35.64857482910156),new google.maps.LatLng(32.815844003804756,35.65338134765625),new google.maps.LatLng(32.847865526878856,35.653038024902344),new google.maps.LatLng(32.86199747972006,35.64857482910156),new google.maps.LatLng(32.876703855923736,35.636558532714844),new google.maps.LatLng(32.88420028540548,35.62385559082031),new google.maps.LatLng(32.88650675152939,35.61767578125),new google.maps.LatLng(32.89169608080795,35.620079040527344),new google.maps.LatLng(32.894578910186176,35.61286926269531),new google.maps.LatLng(32.901497317924765,35.61389923095703),new google.maps.LatLng(32.90812695155533,35.62660217285156),new google.maps.LatLng(32.91446787576817,35.624542236328125),new google.maps.LatLng(32.93233530926969,35.62488555908203),new google.maps.LatLng(32.927724704087936,35.60462951660156),new google.maps.LatLng(32.921961109706956,35.601539611816406),new google.maps.LatLng(32.91907917173292,35.59123992919922),new google.maps.LatLng(32.917926370265064,35.565147399902344),new google.maps.LatLng(32.91273857784389,35.56205749511719),new google.maps.LatLng(32.90553280620375,35.54729461669922),new google.maps.LatLng(32.90553280620375,35.540428161621094),new google.maps.LatLng(32.901497317924765,35.53871154785156),new google.maps.LatLng(32.89227265418851,35.55072784423828),new google.maps.LatLng(32.89169608080795,35.541114807128906),new google.maps.LatLng(32.887948262371275,35.54008483886719),new google.maps.LatLng(32.888236561725535,35.52875518798828),new google.maps.LatLng(32.89140779271051,35.52223205566406),new google.maps.LatLng(32.894578910186176,35.50712585449219),new google.maps.LatLng(32.89486718796429,35.49888610839844),new google.maps.LatLng(32.89890297835096,35.49339294433594),new google.maps.LatLng(32.90207382750951,35.48377990722656),new google.maps.LatLng(32.901497317924765,35.47588348388672),new google.maps.LatLng(32.89832644812533,35.465240478515625),new google.maps.LatLng(32.90265033334125,35.448760986328125),new google.maps.LatLng(32.89976776665289,35.43365478515625),new google.maps.LatLng(32.894578910186176,35.430908203125),new google.maps.LatLng(32.89169608080795,35.4144287109375),new google.maps.LatLng(32.88708335868024,35.408935546875),new google.maps.LatLng(32.88621844654692,35.403785705566406),new google.maps.LatLng(32.88910145416005,35.39726257324219),new google.maps.LatLng(32.88881315761995,35.39039611816406),new google.maps.LatLng(32.88420028540548,35.38593292236328),new google.maps.LatLng(32.88420028540548,35.37528991699219),new google.maps.LatLng(32.87468547812003,35.385589599609375),new google.maps.LatLng(32.872090353419075,35.387306213378906),new google.maps.LatLng(32.86199747972006,35.37769317626953),new google.maps.LatLng(32.857094812323695,35.378379821777344),new google.maps.LatLng(32.85103820203316,35.38421630859375),new google.maps.LatLng(32.848442385344136,35.3924560546875),new google.maps.LatLng(32.83286589070039,35.39588928222656),new google.maps.LatLng(32.82103746762573,35.392799377441406),new google.maps.LatLng(32.80689899338195,35.408592224121094),new google.maps.LatLng(32.805167597048346,35.401039123535156)],L=new google.maps.Polygon({paths:c}),h=[new google.maps.LatLng(32.931470839102126,35.6231689453125),new google.maps.LatLng(32.91389144688043,35.621795654296875),new google.maps.LatLng(32.908415185236095,35.624542236328125),new google.maps.LatLng(32.901497317924765,35.612525939941406),new google.maps.LatLng(32.891119503674965,35.611839294433594),new google.maps.LatLng(32.88650675152939,35.61389923095703),new google.maps.LatLng(32.88362365949454,35.623512268066406),new google.maps.LatLng(32.87382044499353,35.63758850097656),new google.maps.LatLng(32.86084393529929,35.64685821533203),new google.maps.LatLng(32.847865526878856,35.652008056640625),new google.maps.LatLng(32.835462162948076,35.65132141113281),new google.maps.LatLng(32.815555469135404,35.65166473388672),new google.maps.LatLng(32.799107444298684,35.64720153808594),new google.maps.LatLng(32.79333548619193,35.648231506347656),new google.maps.LatLng(32.787851778963635,35.658531188964844),new google.maps.LatLng(32.77976990995682,35.66814422607422),new google.maps.LatLng(32.77139862880317,35.666770935058594),new google.maps.LatLng(32.76273785414244,35.664024353027344),new google.maps.LatLng(32.7537875018279,35.66539764404297),new google.maps.LatLng(32.74310364571194,35.662994384765625),new google.maps.LatLng(32.732418508353746,35.65990447998047),new google.maps.LatLng(32.7231762754146,35.65681457519531),new google.maps.LatLng(32.71508853568461,35.657501220703125),new google.maps.LatLng(32.703533349557105,35.652008056640625),new google.maps.LatLng(32.700066501890824,35.65166473388672),new google.maps.LatLng(32.69255453660822,35.655784606933594),new google.maps.LatLng(32.683886098844695,35.65338134765625),new google.maps.LatLng(32.68446402087723,35.65990447998047),new google.maps.LatLng(32.67723972666319,35.65990447998047),new google.maps.LatLng(32.685041939169665,35.6781005859375),new google.maps.LatLng(32.69110985542416,35.677757263183594),new google.maps.LatLng(32.693999194413706,35.675697326660156),new google.maps.LatLng(32.704977829668,35.68016052246094),new google.maps.LatLng(32.711333264356284,35.71208953857422),new google.maps.LatLng(32.73328491856776,35.754661560058594),new google.maps.LatLng(32.74714633655501,35.765647888183594),new google.maps.LatLng(32.78756315342785,35.80272674560547),new google.maps.LatLng(32.84757709624005,35.85010528564453),new google.maps.LatLng(32.88881315761995,35.85662841796875),new google.maps.LatLng(32.93867449901647,35.89439392089844),new google.maps.LatLng(32.947894327523066,35.898170471191406),new google.maps.LatLng(32.96085808464397,35.89061737060547),new google.maps.LatLng(32.98073215189709,35.872764587402344),new google.maps.LatLng(33.00261725269998,35.86864471435547),new google.maps.LatLng(33.05040004241502,35.864524841308594),new google.maps.LatLng(33.100745405144245,35.85182189941406),new google.maps.LatLng(33.10851040943536,35.84083557128906),new google.maps.LatLng(33.116849834921005,35.811309814453125),new google.maps.LatLng(33.131226295431865,35.807533264160156),new google.maps.LatLng(33.1366887332403,35.826759338378906),new google.maps.LatLng(33.15623572499535,35.83946228027344),new google.maps.LatLng(33.16773192090341,35.843238830566406),new google.maps.LatLng(33.1869846718891,35.837745666503906),new google.maps.LatLng(33.19589122972613,35.836029052734375),new google.maps.LatLng(33.20278600728194,35.8209228515625),new google.maps.LatLng(33.20853124049305,35.81474304199219),new google.maps.LatLng(33.22375428474926,35.81439971923828),new google.maps.LatLng(33.251608467792614,35.81165313720703),new google.maps.LatLng(33.26251799637015,35.79414367675781),new google.maps.LatLng(33.268833416548325,35.78075408935547),new google.maps.LatLng(33.278018667005334,35.77903747558594),new google.maps.LatLng(33.31216783738619,35.81371307373047),new google.maps.LatLng(33.3184796651575,35.81268310546875),new google.maps.LatLng(33.33339671392772,35.780067443847656),new google.maps.LatLng(33.33511774753217,35.76873779296875),new google.maps.LatLng(33.329380836623415,35.74676513671875),new google.maps.LatLng(33.32651223950189,35.74230194091797),new google.maps.LatLng(33.32852026740331,35.73371887207031),new google.maps.LatLng(33.332823028503604,35.723419189453125),new google.maps.LatLng(33.32708596648145,35.712432861328125),new google.maps.LatLng(33.32278292205773,35.70934295654297),new google.maps.LatLng(33.31130709819114,35.711402893066406),new google.maps.LatLng(33.30729020292566,35.71037292480469),new google.maps.LatLng(33.30298618122413,35.70350646972656),new google.maps.LatLng(33.30126451306708,35.69664001464844),new google.maps.LatLng(33.29868194710951,35.692176818847656),new google.maps.LatLng(33.29954281092482,35.68737030029297),new google.maps.LatLng(33.29294263789357,35.683250427246094),new google.maps.LatLng(33.29581233969934,35.67741394042969),new google.maps.LatLng(33.293229612321824,35.67157745361328),new google.maps.LatLng(33.28863790820217,35.66814422607422),new google.maps.LatLng(33.28261092986074,35.666770935058594),new google.maps.LatLng(33.27945377510022,35.66059112548828),new google.maps.LatLng(33.2757224449812,35.65956115722656),new google.maps.LatLng(33.2817498989783,35.644798278808594),new google.maps.LatLng(33.28117587367123,35.64136505126953),new google.maps.LatLng(33.274000238828876,35.622825622558594),new google.maps.LatLng(33.27170391111521,35.61836242675781),new google.maps.LatLng(33.26481456563577,35.62145233154297),new google.maps.LatLng(33.25907302925473,35.62042236328125),new google.maps.LatLng(33.256202119547524,35.618019104003906),new google.maps.LatLng(33.25246979589199,35.61973571777344),new google.maps.LatLng(33.24959866921125,35.62248229980469),new google.maps.LatLng(33.246153192679756,35.624542236328125),new google.maps.LatLng(33.24299471987176,35.62248229980469),new google.maps.LatLng(33.23552878501954,35.653038024902344),new google.maps.LatLng(33.22461588729967,35.65269470214844),new google.maps.LatLng(33.21169095802982,35.655784606933594),new google.maps.LatLng(33.19847683493303,35.65544128417969),new google.maps.LatLng(33.173479453602404,35.64857482910156),new google.maps.LatLng(33.12145055836598,35.65269470214844),new google.maps.LatLng(33.061334627009195,35.64136505126953),new google.maps.LatLng(33.0509755807245,35.639991760253906),new google.maps.LatLng(33.01326987686982,35.628318786621094),new google.maps.LatLng(32.99225130249218,35.62591552734375),new google.maps.LatLng(32.95884162509528,35.62385559082031),new google.maps.LatLng(32.94991103685064,35.625572204589844)],w=new google.maps.Polygon({paths:h}),v=[new google.maps.LatLng(32.22892108389671,35.424041748046875),new google.maps.LatLng(32.253168334244684,35.4334831237793),new google.maps.LatLng(32.27668343339889,35.435028076171875),new google.maps.LatLng(32.29641979896909,35.42747497558594),new google.maps.LatLng(32.320213819653574,35.41511535644531),new google.maps.LatLng(32.34168110749222,35.41099548339844),new google.maps.LatLng(32.358503260304744,35.41717529296875),new google.maps.LatLng(32.385180257193184,35.43022155761719),new google.maps.LatLng(32.40605241348611,35.43983459472656),new google.maps.LatLng(32.41648668224032,35.419921875),new google.maps.LatLng(32.43561304116276,35.41236877441406),new google.maps.LatLng(32.45879106783458,35.419921875),new google.maps.LatLng(32.465743313283596,35.42060852050781),new google.maps.LatLng(32.47964619410741,35.410308837890625),new google.maps.LatLng(32.502233795716045,35.40618896484375),new google.maps.LatLng(32.50686644888966,35.386962890625),new google.maps.LatLng(32.5178680435577,35.369110107421875),new google.maps.LatLng(32.52018399717684,35.3485107421875),new google.maps.LatLng(32.51671004436773,35.33409118652344),new google.maps.LatLng(32.510919824624686,35.30731201171875),new google.maps.LatLng(32.51265692971026,35.283966064453125),new google.maps.LatLng(32.52192092322431,35.255126953125),new google.maps.LatLng(32.537551746769,35.237274169921875),new google.maps.LatLng(32.554337379308535,35.22491455078125),new google.maps.LatLng(32.54623436233052,35.21186828613281),new google.maps.LatLng(32.537551746769,35.19813537597656),new google.maps.LatLng(32.52423677239668,35.18714904785156),new google.maps.LatLng(32.5265525618821,35.179595947265625),new google.maps.LatLng(32.5178680435577,35.17478942871094),new google.maps.LatLng(32.50281289041497,35.160369873046875),new google.maps.LatLng(32.49586350791503,35.13908386230469),new google.maps.LatLng(32.47848770270873,35.116424560546875),new google.maps.LatLng(32.479066950271914,35.097198486328125),new google.maps.LatLng(32.45994981267565,35.071449279785156),new google.maps.LatLng(32.45270741287661,35.07007598876953),new google.maps.LatLng(32.44314655368639,35.07659912109375),new google.maps.LatLng(32.43387444886875,35.09136199951172),new google.maps.LatLng(32.42807889910622,35.092735290527344),new google.maps.LatLng(32.39706638207117,35.1123046875),new google.maps.LatLng(32.374452411547,35.13530731201172),new google.maps.LatLng(32.350382611597084,35.148353576660156),new google.maps.LatLng(32.33936056505929,35.16242980957031),new google.maps.LatLng(32.30831759039775,35.180625915527344),new google.maps.LatLng(32.3051256533381,35.31726837158203)],u=new google.maps.Polygon({paths:v}),b=[new google.maps.LatLng(32.017537149173535,34.99917984008789),new google.maps.LatLng(32.005746901214636,34.967079162597656),new google.maps.LatLng(31.989150649732125,34.96330261230469),new google.maps.LatLng(31.986093117922948,34.93875503540039),new google.maps.LatLng(32.020593632526015,34.86494064331055),new google.maps.LatLng(32.0464968721355,34.8651123046875),new google.maps.LatLng(32.0530442834722,34.85258102416992),new google.maps.LatLng(32.050425375149366,34.84245300292969),new google.maps.LatLng(32.05435370952644,34.83369827270508),new google.maps.LatLng(32.10918727429358,34.842796325683594),new google.maps.LatLng(32.112240696452,34.864253997802734),new google.maps.LatLng(32.18738082408719,34.883995056152344),new google.maps.LatLng(32.18970525564707,34.872493743896484),new google.maps.LatLng(32.19885712788491,34.861507415771484),new google.maps.LatLng(32.1994381680643,34.86665725708008),new google.maps.LatLng(32.20655560911948,34.871978759765625),new google.maps.LatLng(32.20742709424606,34.88382339477539),new google.maps.LatLng(32.22659765432214,34.88262176513672),new google.maps.LatLng(32.23501980392184,34.88485336303711),new google.maps.LatLng(32.22877587128842,34.89927291870117),new google.maps.LatLng(32.2292115084172,34.90184783935547),new google.maps.LatLng(32.23458419463704,34.9116325378418),new google.maps.LatLng(32.23516500655268,34.92982864379883),new google.maps.LatLng(32.23356776485105,34.93635177612305),new google.maps.LatLng(32.22892108389671,34.939613342285156),new google.maps.LatLng(32.22616200466447,34.94527816772461),new google.maps.LatLng(32.22093404590531,34.949398040771484),new google.maps.LatLng(32.21904609801856,34.95832443237305),new google.maps.LatLng(32.22078882053671,34.9669075012207),new google.maps.LatLng(32.22645243800159,34.9720573425293),new google.maps.LatLng(32.230808826690094,34.97051239013672),new google.maps.LatLng(32.236907420023044,34.97102737426758),new google.maps.LatLng(32.24837747454558,34.97669219970703),new google.maps.LatLng(32.2466352810787,35.00175476074219),new google.maps.LatLng(32.24721601594782,35.013084411621094),new google.maps.LatLng(32.249103378626025,35.02063751220703),new google.maps.LatLng(32.256362100282246,35.024757385253906),new google.maps.LatLng(32.25810410713092,35.0273323059082),new google.maps.LatLng(32.25360385441068,35.02939224243164),new google.maps.LatLng(32.24271522358435,35.01943588256836),new google.maps.LatLng(32.23443899107804,35.01995086669922),new google.maps.LatLng(32.23342255966773,35.017032623291016),new google.maps.LatLng(32.235600613052945,35.01394271850586),new google.maps.LatLng(32.23211570257628,35.00999450683594),new google.maps.LatLng(32.22892108389671,35.00947952270508),new google.maps.LatLng(32.21323678170093,34.99128341674805),new google.maps.LatLng(32.20858906142631,34.98991012573242),new google.maps.LatLng(32.19754977391484,34.96124267578125),new google.maps.LatLng(32.187816659526,34.956607818603516),new google.maps.LatLng(32.175612478499325,34.95952606201172),new google.maps.LatLng(32.173142385696316,34.96450424194336),new google.maps.LatLng(32.16805668957401,34.9639892578125),new google.maps.LatLng(32.158611072062605,34.9778938293457),new google.maps.LatLng(32.15207122481357,34.97428894042969),new google.maps.LatLng(32.14887379537526,34.98098373413086),new google.maps.LatLng(32.14843777358073,34.986820220947266),new google.maps.LatLng(32.14160649321828,34.990596771240234),new google.maps.LatLng(32.128087770687586,34.98544692993164),new google.maps.LatLng(32.11631176714,34.98767852783203),new google.maps.LatLng(32.110205093026245,34.99523162841797),new google.maps.LatLng(32.10235305468224,34.99042510986328),new google.maps.LatLng(32.08984656280848,34.982872009277344),new google.maps.LatLng(32.088101334800335,34.98664855957031),new google.maps.LatLng(32.03194539223801,35.00450134277344),new google.maps.LatLng(32.01942926993813,35.00587463378906)],f=new google.maps.Polygon({paths:b}),y=[new google.maps.LatLng(32.59816779959566,35.5682373046875),new google.maps.LatLng(32.60098783538449,35.56205749511719),new google.maps.LatLng(32.60192782758844,35.5543327331543),new google.maps.LatLng(32.60163860026847,35.54420471191406),new google.maps.LatLng(32.612050195473046,35.52978515625),new google.maps.LatLng(32.61291777377439,35.525665283203125),new google.maps.LatLng(32.613785343670244,35.5158805847168),new google.maps.LatLng(32.615665049608346,35.51279067993164),new google.maps.LatLng(32.61855682784329,35.50111770629883),new google.maps.LatLng(32.621593094464686,35.49476623535156),new google.maps.LatLng(32.622749740375305,35.489959716796875),new google.maps.LatLng(32.62087018318113,35.483951568603516),new google.maps.LatLng(32.62130393065182,35.47760009765625),new google.maps.LatLng(32.62737617455987,35.470733642578125),new google.maps.LatLng(32.63330344386202,35.47107696533203),new google.maps.LatLng(32.640820391386406,35.467472076416016),new google.maps.LatLng(32.656719545138934,35.46283721923828),new google.maps.LatLng(32.65758669040313,35.458717346191406),new google.maps.LatLng(32.65758669040313,35.453224182128906),new google.maps.LatLng(32.65426258787858,35.44395446777344),new google.maps.LatLng(32.65932095569672,35.43691635131836),new google.maps.LatLng(32.66914782344145,35.429534912109375),new google.maps.LatLng(32.66828079034104,35.42387008666992),new google.maps.LatLng(32.67059285991286,35.41425704956055),new google.maps.LatLng(32.67521681957013,35.407047271728516),new google.maps.LatLng(32.68157437331439,35.41717529296875),new google.maps.LatLng(32.68547537543456,35.418033599853516),new google.maps.LatLng(32.694721514549315,35.417518615722656),new google.maps.LatLng(32.69631059827375,35.41374206542969),new google.maps.LatLng(32.692121134707726,35.40224075317383),new google.maps.LatLng(32.69587721460903,35.39365768432617),new google.maps.LatLng(32.696599519547924,35.37580490112305),new google.maps.LatLng(32.70165549045599,35.37117004394531),new google.maps.LatLng(32.709166689755655,35.37254333496094),new google.maps.LatLng(32.71321091978183,35.37649154663086),new google.maps.LatLng(32.71869922440848,35.37820816040039),new google.maps.LatLng(32.72433160692846,35.37580490112305),new google.maps.LatLng(32.73155208971808,35.37031173706055),new google.maps.LatLng(32.74281487506093,35.3704833984375),new google.maps.LatLng(32.753210028851896,35.37477493286133),new google.maps.LatLng(32.76259350075932,35.38421630859375),new google.maps.LatLng(32.76461442682433,35.39228439331055),new google.maps.LatLng(32.77284200932199,35.407047271728516),new google.maps.LatLng(32.78337797791542,35.40773391723633),new google.maps.LatLng(32.798385970025585,35.40515899658203),new google.maps.LatLng(32.80444617195561,35.4008674621582),new google.maps.LatLng(32.80834179789677,35.387821197509766),new google.maps.LatLng(32.81166015939479,35.34198760986328),new google.maps.LatLng(32.79752019316996,35.319156646728516),new google.maps.LatLng(32.79550001438897,35.30473709106445),new google.maps.LatLng(32.79362409299568,35.268001556396484),new google.maps.LatLng(32.79477851084408,35.24139404296875),new google.maps.LatLng(32.80603329943089,35.221824645996094),new google.maps.LatLng(32.79420130379319,35.216331481933594),new google.maps.LatLng(32.78337797791542,35.21839141845703),new google.maps.LatLng(32.764325725909366,35.2140998840332),new google.maps.LatLng(32.759056769764186,35.2056884765625),new google.maps.LatLng(32.75970638394809,35.194101333618164),new google.maps.LatLng(32.764325725909366,35.1767635345459),new google.maps.LatLng(32.76995522487643,35.169081687927246),new google.maps.LatLng(32.76858396946491,35.16848087310791),new google.maps.LatLng(32.76371223335658,35.16105651855469),new google.maps.LatLng(32.75104447184547,35.15633583068848),new google.maps.LatLng(32.74591911051183,35.1536750793457),new google.maps.LatLng(32.73819441736631,35.155391693115234),new google.maps.LatLng(32.7316242915927,35.151615142822266),new google.maps.LatLng(32.72469264495655,35.14431953430176),new google.maps.LatLng(32.71913249723242,35.13547897338867),new google.maps.LatLng(32.701438811863056,35.130157470703125),new google.maps.LatLng(32.70483338270915,35.118913650512695),new google.maps.LatLng(32.70808338272434,35.110158920288086),new google.maps.LatLng(32.704183368500644,35.10809898376465),new google.maps.LatLng(32.69912754080412,35.1068115234375),new google.maps.LatLng(32.6914710279119,35.11136054992676),new google.maps.LatLng(32.68670343342672,35.112905502319336),new google.maps.LatLng(32.679768296108016,35.12320518493652),new google.maps.LatLng(32.657153118822464,35.108699798583984),new google.maps.LatLng(32.65050475793421,35.09925842285156),new google.maps.LatLng(32.64530134805362,35.08535385131836),new google.maps.LatLng(32.637061996573436,35.07556915283203),new google.maps.LatLng(32.63431537743207,35.05213737487793),new google.maps.LatLng(32.63380941207763,35.05179405212402),new google.maps.LatLng(32.62513527536472,35.06037712097168),new google.maps.LatLng(32.618665267710156,35.053510665893555),new google.maps.LatLng(32.61721939201909,35.05711555480957),new google.maps.LatLng(32.60120475753773,35.050764083862305),new google.maps.LatLng(32.5907195860086,35.05205154418945),new google.maps.LatLng(32.58450021500699,35.05780220031738),new google.maps.LatLng(32.57950994255046,35.059776306152344),new google.maps.LatLng(32.57394075985061,35.0588321685791),new google.maps.LatLng(32.569745562680495,35.05393981933594),new google.maps.LatLng(32.56555016928474,35.03445625305176),new google.maps.LatLng(32.560992881731266,35.02861976623535),new google.maps.LatLng(32.557014108101185,35.030250549316406),new google.maps.LatLng(32.55368627104408,35.03634452819824),new google.maps.LatLng(32.55310750417685,35.04183769226074),new google.maps.LatLng(32.5481154850361,35.05033493041992),new google.maps.LatLng(32.54883898327313,35.05411148071289),new google.maps.LatLng(32.547174928610474,35.05934715270996),new google.maps.LatLng(32.54457025938778,35.061750411987305),new google.maps.LatLng(32.540228976093275,35.073509216308594),new google.maps.LatLng(32.538854192626104,35.08114814758301),new google.maps.LatLng(32.53675579833513,35.08664131164551),new google.maps.LatLng(32.53270358784857,35.090932846069336),new google.maps.LatLng(32.532197048683244,35.10174751281738),new google.maps.LatLng(32.530749778185395,35.10912895202637),new google.maps.LatLng(32.530749778185395,35.11556625366211),new google.maps.LatLng(32.524960463022666,35.11771202087402),new google.maps.LatLng(32.52141432326176,35.120887756347656),new google.maps.LatLng(32.524888094222355,35.12826919555664),new google.maps.LatLng(32.538202972058755,35.13951301574707),new google.maps.LatLng(32.545366138556574,35.1478385925293),new google.maps.LatLng(32.55303515805604,35.147666931152344),new google.maps.LatLng(32.55846095528802,35.146379470825195),new google.maps.LatLng(32.561065221437005,35.15650749206543),new google.maps.LatLng(32.56858823237687,35.162858963012695),new google.maps.LatLng(32.57216867463962,35.17144203186035),new google.maps.LatLng(32.573796101145916,35.18019676208496),new google.maps.LatLng(32.57216867463962,35.181870460510254),new google.maps.LatLng(32.56934773207293,35.18054008483887),new google.maps.LatLng(32.562150310024094,35.189852714538574),new google.maps.LatLng(32.55603747306264,35.19144058227539),new google.maps.LatLng(32.55285429249884,35.19440174102783),new google.maps.LatLng(32.549417777664395,35.19925117492676),new google.maps.LatLng(32.54735580561151,35.20062446594238),new google.maps.LatLng(32.544389376774575,35.19478797912598),new google.maps.LatLng(32.538130613926434,35.19813537597656),new google.maps.LatLng(32.538130613926434,35.200066566467285),new google.maps.LatLng(32.541241960969494,35.20444393157959),new google.maps.LatLng(32.542616707880256,35.209808349609375),new google.maps.LatLng(32.544063787152474,35.21161079406738),new google.maps.LatLng(32.54435320020821,35.21435737609863),new google.maps.LatLng(32.545727899482785,35.215816497802734),new google.maps.LatLng(32.54768138329493,35.216073989868164),new google.maps.LatLng(32.55194995924591,35.22414207458496),new google.maps.LatLng(32.535019159084484,35.2371883392334),new google.maps.LatLng(32.52322359572793,35.25195121765137),new google.maps.LatLng(32.514538755672866,35.27503967285156),new google.maps.LatLng(32.51012364024236,35.29126167297363),new google.maps.LatLng(32.51005125949434,35.306968688964844),new google.maps.LatLng(32.511064584663885,35.31100273132324),new google.maps.LatLng(32.51309120073676,35.32301902770996),new google.maps.LatLng(32.51605866326671,35.33400535583496),new google.maps.LatLng(32.51924314821702,35.34250259399414),new google.maps.LatLng(32.51931552156364,35.34482002258301),new google.maps.LatLng(32.518012792407376,35.35031318664551),new google.maps.LatLng(32.51909840134896,35.353660583496094),new google.maps.LatLng(32.51859178547481,35.35769462585449),new google.maps.LatLng(32.51576915903987,35.369367599487305),new google.maps.LatLng(32.51222265658579,35.37520408630371),new google.maps.LatLng(32.50860363229594,35.38172721862793),new google.maps.LatLng(32.50527400128179,35.38447380065918),new google.maps.LatLng(32.50538257815097,35.38863658905029),new google.maps.LatLng(32.5031748227081,35.39567470550537),new google.maps.LatLng(32.50241476321004,35.397348403930664),new google.maps.LatLng(32.501871859635514,35.40236949920654),new google.maps.LatLng(32.501437534416105,35.4028844833374),new google.maps.LatLng(32.49904870821525,35.404300689697266),new google.maps.LatLng(32.49716655803491,35.40451526641846),new google.maps.LatLng(32.49485001143792,35.404043197631836),new google.maps.LatLng(32.49466902872255,35.40447235107422),new google.maps.LatLng(32.49369171576737,35.404086112976074),new google.maps.LatLng(32.476894752689354,35.408935546875),new google.maps.LatLng(32.469798541961715,35.41494369506836),new google.maps.LatLng(32.46342595776104,35.41717529296875),new google.maps.LatLng(32.462267257639176,35.41923522949219),new google.maps.LatLng(32.45937044211836,35.420265197753906),new google.maps.LatLng(32.45676322849572,35.41717529296875),new google.maps.LatLng(32.435757922340635,35.411338806152344),new google.maps.LatLng(32.41677650581706,35.419578552246094),new google.maps.LatLng(32.40634227057499,35.43571472167969),new google.maps.LatLng(32.40518283663468,35.44258117675781),new google.maps.LatLng(32.410400172081545,35.44395446777344),new google.maps.LatLng(32.413008726705044,35.45459747314453),new google.maps.LatLng(32.410979857403035,35.47863006591797),new google.maps.LatLng(32.4048929758226,35.488243103027344),new google.maps.LatLng(32.40257405581776,35.490989685058594),new google.maps.LatLng(32.39445736671402,35.525665283203125),new google.maps.LatLng(32.39242808043168,35.534934997558594),new google.maps.LatLng(32.387209706323894,35.53974151611328),new google.maps.LatLng(32.388659284930256,35.554161071777344),new google.maps.LatLng(32.3964866073953,35.547637939453125),new google.maps.LatLng(32.400834826722196,35.54695129394531),new google.maps.LatLng(32.40286392407606,35.551414489746094),new google.maps.LatLng(32.400544951948675,35.55622100830078),new google.maps.LatLng(32.400544951948675,35.55999755859375),new google.maps.LatLng(32.414168060111855,35.563087463378906),new google.maps.LatLng(32.42199317099747,35.55519104003906),new google.maps.LatLng(32.424311592027344,35.56480407714844),new google.maps.LatLng(32.43010738389209,35.55828094482422),new google.maps.LatLng(32.43648232473781,35.56926727294922),new google.maps.LatLng(32.45183828577544,35.5682373046875),new google.maps.LatLng(32.458501379295285,35.57544708251953),new google.maps.LatLng(32.464005302231875,35.5682373046875),new google.maps.LatLng(32.46342595776104,35.56480407714844),new google.maps.LatLng(32.46950888882687,35.568580627441406),new google.maps.LatLng(32.48138390324739,35.57167053222656),new google.maps.LatLng(32.48659682936049,35.584373474121094),new google.maps.LatLng(32.4999173796297,35.57716369628906),new google.maps.LatLng(32.50310243636601,35.565147399902344),new google.maps.LatLng(32.51063030384697,35.56720733642578),new google.maps.LatLng(32.517289045827724,35.562744140625),new google.maps.LatLng(32.51236741452707,35.55999755859375),new google.maps.LatLng(32.51873653315885,35.55828094482422),new google.maps.LatLng(32.52076297625624,35.568580627441406),new google.maps.LatLng(32.52799989999971,35.56995391845703),new google.maps.LatLng(32.532341774450515,35.56377410888672),new google.maps.LatLng(32.538130613926434,35.565834045410156),new google.maps.LatLng(32.53784118081413,35.57270050048828),new google.maps.LatLng(32.54768138329493,35.57476043701172),new google.maps.LatLng(32.552601080106484,35.58128356933594),new google.maps.LatLng(32.56359707439351,35.57373046875),new google.maps.LatLng(32.56533316084101,35.5792236328125),new google.maps.LatLng(32.59686621467839,35.580596923828125),new google.maps.LatLng(32.59918013034806,35.57647705078125)],_=new google.maps.Polygon({paths:y}),x=[new google.maps.LatLng(32.378076826192306,35.04158020019531),new google.maps.LatLng(32.376192148718644,35.048789978027344),new google.maps.LatLng(32.36792809887494,35.05136489868164),new google.maps.LatLng(32.36473826350448,35.05119323730469),new google.maps.LatLng(32.36024330444844,35.04844665527344),new google.maps.LatLng(32.356038140451744,35.041236877441406),new google.maps.LatLng(32.34719215726623,35.041751861572266),new google.maps.LatLng(32.34545186202365,35.037803649902344),new google.maps.LatLng(32.3470471339413,35.028018951416016),new google.maps.LatLng(32.33907049307107,35.0269889831543),new google.maps.LatLng(32.341391042942455,35.02046585083008),new google.maps.LatLng(32.33907049307107,35.0160026550293),new google.maps.LatLng(32.31208973467698,35.015316009521484),new google.maps.LatLng(32.3055609241037,35.011539459228516),new google.maps.LatLng(32.293372552377825,35.01274108886719),new google.maps.LatLng(32.280892283431456,35.00896453857422),new google.maps.LatLng(32.27929584606353,35.014286041259766),new google.maps.LatLng(32.280602024181825,35.0160026550293),new google.maps.LatLng(32.27798964913578,35.0214958190918),new google.maps.LatLng(32.27102294786611,35.02767562866211),new google.maps.LatLng(32.263184769505486,35.03059387207031),new google.maps.LatLng(32.25912026235577,35.028018951416016),new google.maps.LatLng(32.25505557320963,35.02389907836914),new google.maps.LatLng(32.24895819827413,35.02098083496094),new google.maps.LatLng(32.246780465144106,35.01239776611328),new google.maps.LatLng(32.246490096781194,35.00072479248047),new google.maps.LatLng(32.247941929312105,34.976863861083984),new google.maps.LatLng(32.24329598351848,34.974117279052734),new google.maps.LatLng(32.23632661924573,34.971370697021484),new google.maps.LatLng(32.23095403605002,34.970855712890625),new google.maps.LatLng(32.22674287041067,34.97222900390625),new google.maps.LatLng(32.22354806286899,34.97051239013672),new google.maps.LatLng(32.22035314303901,34.967079162597656),new google.maps.LatLng(32.218465183089,34.95866775512695),new google.maps.LatLng(32.22093404590531,34.94922637939453),new google.maps.LatLng(32.22572635291873,34.94476318359375),new google.maps.LatLng(32.22863065844813,34.939613342285156),new google.maps.LatLng(32.23095403605002,34.937896728515625),new google.maps.LatLng(32.23342255966773,34.935665130615234),new google.maps.LatLng(32.23472939796403,34.93034362792969),new google.maps.LatLng(32.23487460105895,34.918155670166016),new google.maps.LatLng(32.23443899107804,34.9116325378418),new google.maps.LatLng(32.233132148605,34.910430908203125),new google.maps.LatLng(32.23051840727417,34.905967712402344),new google.maps.LatLng(32.22892108389671,34.90236282348633),new google.maps.LatLng(32.22863065844813,34.899444580078125),new google.maps.LatLng(32.23443899107804,34.885196685791016),new google.maps.LatLng(32.22630722144903,34.88279342651367),new google.maps.LatLng(32.21991746345339,34.883480072021484),new google.maps.LatLng(32.21163915464707,34.88365173339844),new google.maps.LatLng(32.20735447080443,34.8841667175293),new google.maps.LatLng(32.20582936513577,34.871463775634766),new google.maps.LatLng(32.19951079782584,34.8665714263916),new google.maps.LatLng(32.19878449760158,34.86167907714844),new google.maps.LatLng(32.206918728936934,34.853525161743164),new google.maps.LatLng(32.208298571022866,34.84511375427246),new google.maps.LatLng(32.20641036078661,34.834556579589844),new google.maps.LatLng(32.2091700394498,34.81112480163574),new google.maps.LatLng(32.288293580436644,34.83489990234375),new google.maps.LatLng(32.39213817866891,34.86408233642578),new google.maps.LatLng(32.402284186628684,34.86408233642578),new google.maps.LatLng(32.41126969866743,34.86614227294922),new google.maps.LatLng(32.413008726705044,34.870262145996094),new google.maps.LatLng(32.410110328024494,34.88090515136719),new google.maps.LatLng(32.407211836256685,34.88433837890625),new google.maps.LatLng(32.4048929758226,34.90837097167969),new google.maps.LatLng(32.410690015207734,34.918670654296875),new google.maps.LatLng(32.412429054416144,34.925880432128906),new google.maps.LatLng(32.410400172081545,34.93206024169922),new google.maps.LatLng(32.404023387801594,34.934120178222656),new google.maps.LatLng(32.394167471465536,34.958152770996094),new google.maps.LatLng(32.38691978781105,34.99042510986328),new google.maps.LatLng(32.38199103072684,34.999351501464844),new google.maps.LatLng(32.38112122215103,35.004844665527344),new google.maps.LatLng(32.377351954892745,35.01239776611328),new google.maps.LatLng(32.37561224004946,35.02269744873047)],S=new google.maps.Polygon({paths:x}),k=[new google.maps.LatLng(32.19856660640375,34.861507415771484),new google.maps.LatLng(32.18999580541844,34.87266540527344),new google.maps.LatLng(32.187671381278264,34.88433837890625),new google.maps.LatLng(32.112240696452,34.86442565917969),new google.maps.LatLng(32.108751062791974,34.8431396484375),new google.maps.LatLng(32.05420821866798,34.834041595458984),new google.maps.LatLng(32.050570872022476,34.84193801879883),new google.maps.LatLng(32.05318977618135,34.85240936279297),new google.maps.LatLng(32.04693338079779,34.8651123046875),new google.maps.LatLng(32.032673021160385,34.865970611572266),new google.maps.LatLng(32.020593632526015,34.86528396606445),new google.maps.LatLng(32.01710050037138,34.84880447387695),new google.maps.LatLng(32.021757980316536,34.846229553222656),new google.maps.LatLng(32.02146689475617,34.838504791259766),new google.maps.LatLng(32.028452692935645,34.82837677001953),new google.maps.LatLng(31.977211138105698,34.792327880859375),new google.maps.LatLng(31.997594731962774,34.72984313964844),new google.maps.LatLng(32.02001145308173,34.738426208496094),new google.maps.LatLng(32.02248569017118,34.73705291748047),new google.maps.LatLng(32.0383483283312,34.74357604980469),new google.maps.LatLng(32.04664237525425,34.74409103393555),new google.maps.LatLng(32.05784542072537,34.74958419799805),new google.maps.LatLng(32.05813639064348,34.75627899169922),new google.maps.LatLng(32.083592674837845,34.766578674316406),new google.maps.LatLng(32.08693783094361,34.76554870605469),new google.maps.LatLng(32.10220764019743,34.7743034362793),new google.maps.LatLng(32.109041870691286,34.772586822509766),new google.maps.LatLng(32.109914288831845,34.7772216796875),new google.maps.LatLng(32.11921956361475,34.780311584472656),new google.maps.LatLng(32.122418032739795,34.77928161621094),new google.maps.LatLng(32.12474412169509,34.78202819824219),new google.maps.LatLng(32.15584986046307,34.79301452636719),new google.maps.LatLng(32.15991898519912,34.78889465332031),new google.maps.LatLng(32.1674754490803,34.792327880859375),new google.maps.LatLng(32.17096283641326,34.79747772216797),new google.maps.LatLng(32.2098962567604,34.811553955078125),new google.maps.LatLng(32.20641036078661,34.83386993408203),new google.maps.LatLng(32.20844381634056,34.845542907714844),new google.maps.LatLng(32.20757234095538,34.85343933105469)],C=new google.maps.Polygon({paths:k}),A=[new google.maps.LatLng(32.30991351676043,35.17976760864258),new google.maps.LatLng(32.30657654775904,35.17770767211914),new google.maps.LatLng(32.30222379480205,35.17599105834961),new google.maps.LatLng(32.2999022410693,35.17890930175781),new google.maps.LatLng(32.29409809657151,35.180110931396484),new google.maps.LatLng(32.28698751309372,35.17873764038086),new google.maps.LatLng(32.281472799144076,35.1756477355957),new google.maps.LatLng(32.27639316068085,35.17341613769531),new google.maps.LatLng(32.25563625422983,35.16397476196289),new google.maps.LatLng(32.24823229303319,35.16294479370117),new google.maps.LatLng(32.24024695243935,35.1643180847168),new google.maps.LatLng(32.23197049507261,35.16620635986328),new google.maps.LatLng(32.22398372505503,35.169124603271484),new google.maps.LatLng(32.21236535224182,35.17375946044922),new google.maps.LatLng(32.204376859773525,35.1753044128418),new google.maps.LatLng(32.16631295696736,35.187835693359375),new google.maps.LatLng(32.15526854209781,35.19641876220703),new google.maps.LatLng(32.14335069856222,35.2056884765625),new google.maps.LatLng(32.13084982308751,35.21736145019531),new google.maps.LatLng(32.118638011730695,35.224571228027344),new google.maps.LatLng(32.10409801044057,35.231781005859375),new google.maps.LatLng(32.091882620021785,35.232810974121094),new google.maps.LatLng(32.07530197765318,35.22972106933594),new google.maps.LatLng(32.06511939104014,35.2166748046875),new google.maps.LatLng(32.058718327703446,35.203285217285156),new google.maps.LatLng(32.053771744704605,35.18543243408203),new google.maps.LatLng(32.049988883142014,34.9969482421875),new google.maps.LatLng(32.08722870829662,34.98664855957031),new google.maps.LatLng(32.08984656280848,34.98218536376953),new google.maps.LatLng(32.11049589629439,34.993858337402344),new google.maps.LatLng(32.116602550956046,34.98699188232422),new google.maps.LatLng(32.13084982308751,34.98424530029297),new google.maps.LatLng(32.14160649321828,34.99042510986328),new google.maps.LatLng(32.14800174970085,34.98664855957031),new google.maps.LatLng(32.14887379537526,34.97943878173828),new google.maps.LatLng(32.15294323155951,34.97394561767578),new google.maps.LatLng(32.15933769278929,34.976348876953125),new google.maps.LatLng(32.1674754490803,34.963645935058594),new google.maps.LatLng(32.1718346623851,34.96330261230469),new google.maps.LatLng(32.17357828929423,34.96278762817383),new google.maps.LatLng(32.175467180777176,34.95918273925781),new google.maps.LatLng(32.187671381278264,34.956607818603516),new google.maps.LatLng(32.197695036394656,34.9610710144043),new google.maps.LatLng(32.20858906142631,34.990081787109375),new google.maps.LatLng(32.213382019132254,34.99094009399414),new google.maps.LatLng(32.22863065844813,35.00913619995117),new google.maps.LatLng(32.232406116887525,35.009307861328125),new google.maps.LatLng(32.23574581475559,35.01411437988281),new google.maps.LatLng(32.23385817452153,35.017032623291016),new google.maps.LatLng(32.23487460105895,35.01943588256836),new google.maps.LatLng(32.24329598351848,35.01909255981445),new google.maps.LatLng(32.25360385441068,35.029048919677734),new google.maps.LatLng(32.25853960362009,35.0269889831543),new google.maps.LatLng(32.263620241619456,35.03042221069336),new google.maps.LatLng(32.271458382368515,35.027503967285156),new google.maps.LatLng(32.278715316417774,35.02063751220703),new google.maps.LatLng(32.2801666335657,35.01565933227539),new google.maps.LatLng(32.27857018342579,35.01325607299805),new google.maps.LatLng(32.281182541752244,35.00810623168945),new google.maps.LatLng(32.293662770752114,35.01239776611328),new google.maps.LatLng(32.30628637073342,35.011024475097656),new google.maps.LatLng(32.3122348140127,35.014801025390625),new google.maps.LatLng(32.339795671298255,35.01565933227539),new google.maps.LatLng(32.34168110749222,35.02098083496094),new google.maps.LatLng(32.33965063611772,35.0269889831543),new google.maps.LatLng(32.34748220321868,35.02767562866211),new google.maps.LatLng(32.34588693897268,35.037288665771484),new google.maps.LatLng(32.34748220321868,35.04140853881836),new google.maps.LatLng(32.35647316648509,35.040550231933594),new google.maps.LatLng(32.35995329941639,35.047760009765625),new google.maps.LatLng(32.365608229767886,35.05136489868164),new google.maps.LatLng(32.375902194849225,35.04861831665039),new google.maps.LatLng(32.377931852397595,35.04140853881836),new google.maps.LatLng(32.379961464357315,35.03986358642578),new google.maps.LatLng(32.3992405039502,35.051536560058594),new google.maps.LatLng(32.40880601824827,35.0547981262207),new google.maps.LatLng(32.41721123943659,35.05342483520508),new google.maps.LatLng(32.420109410034684,35.057029724121094),new google.maps.LatLng(32.42416669245876,35.05531311035156),new google.maps.LatLng(32.42793400558988,35.05840301513672),new google.maps.LatLng(32.44024912337551,35.06303787231445),new google.maps.LatLng(32.44401576461801,35.0654411315918),new google.maps.LatLng(32.451114006786995,35.06561279296875),new google.maps.LatLng(32.45314197328334,35.070247650146484),new google.maps.LatLng(32.44314655368639,35.07728576660156),new google.maps.LatLng(32.43401933284037,35.09204864501953),new google.maps.LatLng(32.42764421785883,35.09359359741211),new google.maps.LatLng(32.39721132515847,35.113162994384766),new google.maps.LatLng(32.37503232765891,35.13530731201172),new google.maps.LatLng(32.35081766483307,35.14904022216797),new google.maps.LatLng(32.34066587750003,35.16191482543945)],B=new google.maps.Polygon({paths:A}),j=[new google.maps.LatLng(32.00924046613807,34.81550216674805),new google.maps.LatLng(31.957551241076636,34.853224754333496),new google.maps.LatLng(31.950851351639255,34.848246574401855),new google.maps.LatLng(31.915158927025217,34.800310134887695),new google.maps.LatLng(31.901315279500793,34.8445987701416),new google.maps.LatLng(31.873184404478362,34.82245445251465),new google.maps.LatLng(31.850440216816747,34.8610782623291),new google.maps.LatLng(31.84941951275602,34.84871864318848),new google.maps.LatLng(31.834836792922044,34.8526668548584),new google.maps.LatLng(31.823023100337416,34.84820365905762),new google.maps.LatLng(31.820543491418945,34.86777305603027),new google.maps.LatLng(31.809165608610932,34.87103462219238),new google.maps.LatLng(31.810186757909364,34.85867500305176),new google.maps.LatLng(31.80756092262095,34.848031997680664),new google.maps.LatLng(31.803330253219116,34.84013557434082),new google.maps.LatLng(31.793555207271424,34.82966423034668),new google.maps.LatLng(31.789323896632943,34.82125282287598),new google.maps.LatLng(31.78334136836679,34.81593132019043),new google.maps.LatLng(31.775461350260947,34.809579849243164),new google.maps.LatLng(31.764004941401378,34.794859886169434),new google.maps.LatLng(31.761669703141145,34.7916841506958),new google.maps.LatLng(31.75488258247236,34.800095558166504),new google.maps.LatLng(31.748021976303317,34.79340076446533),new google.maps.LatLng(31.758020775392023,34.78241443634033),new google.maps.LatLng(31.77524245128506,34.77769374847412),new google.maps.LatLng(31.78735408251097,34.77554798126221),new google.maps.LatLng(31.793919966361674,34.769368171691895),new google.maps.LatLng(31.80033949073343,34.76241588592529),new google.maps.LatLng(31.80785268578335,34.75632190704346),new google.maps.LatLng(31.812739581768103,34.741387367248535),new google.maps.LatLng(31.809676184671194,34.726881980895996),new google.maps.LatLng(31.787937735515168,34.7312593460083),new google.maps.LatLng(31.776701768005832,34.75194454193115),new google.maps.LatLng(31.762983281913396,34.74576473236084),new google.maps.LatLng(31.76976980853248,34.735379219055176),new google.maps.LatLng(31.768967127038472,34.72250461578369),new google.maps.LatLng(31.768967127038472,34.709715843200684),new google.maps.LatLng(31.772688591623375,34.698214530944824),new google.maps.LatLng(31.776920663528124,34.69057559967041),new google.maps.LatLng(31.780787732333163,34.688429832458496),new google.maps.LatLng(31.78144438833414,34.68551158905029),new google.maps.LatLng(31.780641808144185,34.68079090118408),new google.maps.LatLng(31.781006618184914,34.67426776885986),new google.maps.LatLng(31.783779127463312,34.67255115509033),new google.maps.LatLng(31.794430626669744,34.68302249908447),new google.maps.LatLng(31.80289258670676,34.68838691711426),new google.maps.LatLng(31.807998567019013,34.68890190124512),new google.maps.LatLng(31.81295839195873,34.68066215515137),new google.maps.LatLng(31.82156451492074,34.67362403869629),new google.maps.LatLng(31.829732296454807,34.67362403869629),new google.maps.LatLng(31.835857658336558,34.682722091674805),new google.maps.LatLng(31.83614933209499,34.693193435668945),new google.maps.LatLng(31.834690954083786,34.70778465270996),new google.maps.LatLng(31.830169835785558,34.71379280090332),new google.maps.LatLng(31.83089906339438,34.71945762634277),new google.maps.LatLng(31.834982631529826,34.72306251525879),new google.maps.LatLng(31.84037849798919,34.722890853881836),new google.maps.LatLng(31.85598098460412,34.72254753112793),new google.maps.LatLng(31.85991764361354,34.71928596496582),new google.maps.LatLng(31.866332579615154,34.718942642211914),new google.maps.LatLng(31.872455511154488,34.72134590148926),new google.maps.LatLng(31.877849185217027,34.72460746765137),new google.maps.LatLng(31.88120185049087,34.72958564758301),new google.maps.LatLng(31.884845913480035,34.729413986206055),new google.maps.LatLng(31.88382559037508,34.71980094909668),new google.maps.LatLng(31.884408633533365,34.71053123474121),new google.maps.LatLng(31.88659501250599,34.69988822937012),new google.maps.LatLng(31.88921859876096,34.68924522399902),new google.maps.LatLng(31.891987858720142,34.67860221862793),new google.maps.LatLng(31.915450349851064,34.687442779541016),new google.maps.LatLng(31.93322539632358,34.698429107666016),new google.maps.LatLng(31.936721722335196,34.70254898071289),new google.maps.LatLng(31.95536654821663,34.71250534057617),new google.maps.LatLng(31.99788589334565,34.72932815551758),new google.maps.LatLng(31.99846821333791,34.73276138305664),new google.maps.LatLng(31.977211138105698,34.79318618774414),new google.maps.LatLng(31.978594453778623,34.793057441711426),new google.maps.LatLng(31.987476299697423,34.79923725128174),new google.maps.LatLng(32.01258834091205,34.816575050354004)],R=new google.maps.Polygon({paths:j}),H=[new google.maps.LatLng(31.802746697408622,35.25332450866699),new google.maps.LatLng(31.806539744296064,35.328168869018555),new google.maps.LatLng(31.810186757909364,35.33949851989746),new google.maps.LatLng(31.814708854822385,35.347394943237305),new google.maps.LatLng(31.817480353171682,35.35820960998535),new google.maps.LatLng(31.8150005954075,35.36593437194824),new google.maps.LatLng(31.81820968101838,35.377092361450195),new google.maps.LatLng(31.822002092965203,35.376577377319336),new google.maps.LatLng(31.874059068856333,35.400352478027344),new google.maps.LatLng(31.916033192733178,35.408592224121094),new google.maps.LatLng(31.921278612494262,35.40945053100586),new google.maps.LatLng(31.922735620452148,35.4005241394043),new google.maps.LatLng(31.919821581454634,35.391597747802734),new google.maps.LatLng(31.91195321501266,35.372371673583984),new google.maps.LatLng(31.914284653008707,35.355892181396484),new google.maps.LatLng(31.92040439664025,35.34318923950195),new google.maps.LatLng(31.92856342145468,35.33597946166992),new google.maps.LatLng(31.946627257153615,35.344905853271484),new google.maps.LatLng(31.97051268309372,35.34696578979492),new google.maps.LatLng(32.00370892685605,35.36378860473633),new google.maps.LatLng(32.0232133942454,35.38267135620117),new google.maps.LatLng(32.03543795833829,35.39194107055664),new google.maps.LatLng(32.04358676118635,35.39400100708008),new google.maps.LatLng(32.03893039122854,35.38198471069336),new google.maps.LatLng(32.04038553228215,35.34524917602539),new google.maps.LatLng(32.04504182822618,35.32087326049805),new google.maps.LatLng(32.04620586520412,35.30027389526367),new google.maps.LatLng(32.0464968721355,35.28413772583008),new google.maps.LatLng(32.04416879077791,35.27212142944336),new google.maps.LatLng(32.048242894293644,35.24362564086914),new google.maps.LatLng(32.05260780395669,35.20586013793945),new google.maps.LatLng(32.053771744704605,35.18766403198242),new google.maps.LatLng(32.05435370952644,35.173587799072266),new google.maps.LatLng(32.0528987905317,35.127925872802734),new google.maps.LatLng(32.05260780395669,35.077457427978516),new google.maps.LatLng(32.050570872022476,34.99849319458008),new google.maps.LatLng(32.043004727893994,35.000553131103516),new google.maps.LatLng(32.02030254326629,35.0053596496582),new google.maps.LatLng(32.017973795894896,34.998836517333984),new google.maps.LatLng(32.005455764794334,34.99814987182617),new google.maps.LatLng(31.992644847013356,34.99917984008789),new google.maps.LatLng(31.976337454305813,34.9943733215332),new google.maps.LatLng(31.972260153269048,34.99197006225586),new google.maps.LatLng(31.971095176848408,34.98613357543945),new google.maps.LatLng(31.96701764294695,34.98613357543945),new google.maps.LatLng(31.955075251909054,34.993343353271484),new google.maps.LatLng(31.949540446547825,35.00123977661133),new google.maps.LatLng(31.946627257153615,35.00638961791992),new google.maps.LatLng(31.943422642136195,35.006046295166016),new google.maps.LatLng(31.93963522575865,35.000553131103516),new google.maps.LatLng(31.93322539632358,35.00089645385742),new google.maps.LatLng(31.930020313995197,35.0053596496582),new google.maps.LatLng(31.925066785173286,35.01943588256836),new google.maps.LatLng(31.925358176608505,35.02836227416992),new google.maps.LatLng(31.920112989509068,35.03557205200195),new google.maps.LatLng(31.909038834436902,35.03934860229492),new google.maps.LatLng(31.895048522832873,35.04037857055664),new google.maps.LatLng(31.88630349830843,35.04037857055664),new google.maps.LatLng(31.85598098460412,35.0324821472168),new google.maps.LatLng(31.85598098460412,35.00810623168945),new google.maps.LatLng(31.85423130442635,34.99814987182617),new google.maps.LatLng(31.85131509702077,34.9940299987793),new google.maps.LatLng(31.84489911613476,34.98922348022461),new google.maps.LatLng(31.837607687058213,34.979610443115234),new google.maps.LatLng(31.8311907528247,34.968624114990234),new google.maps.LatLng(31.825940202041995,34.95798110961914),new google.maps.LatLng(31.827398718328755,34.94596481323242),new google.maps.LatLng(31.827398718328755,34.93669509887695),new google.maps.LatLng(31.822147951852507,34.92502212524414),new google.maps.LatLng(31.81864727496152,34.916439056396484),new google.maps.LatLng(31.81310426513118,34.912662506103516),new google.maps.LatLng(31.808436209343757,34.91334915161133),new google.maps.LatLng(31.806977393531774,34.91849899291992),new google.maps.LatLng(31.806977393531774,34.92570877075195),new google.maps.LatLng(31.809895002118832,34.93703842163086),new google.maps.LatLng(31.813396010784928,34.949398040771484),new google.maps.LatLng(31.81485472523014,34.96072769165039),new google.maps.LatLng(31.81514646535446,34.97617721557617),new google.maps.LatLng(31.8163134166359,34.990596771240234),new google.maps.LatLng(31.8183555458965,35.008792877197266),new google.maps.LatLng(31.817480353171682,35.01943588256836),new google.maps.LatLng(31.817480353171682,35.02973556518555),new google.maps.LatLng(31.820981074302225,35.040035247802734),new google.maps.LatLng(31.827982118391024,35.047245025634766),new google.maps.LatLng(31.834690954083786,35.05170822143555),new google.maps.LatLng(31.844315823015002,35.05582809448242),new google.maps.LatLng(31.84839879739921,35.05960464477539),new google.maps.LatLng(31.84781552640937,35.06406784057617),new google.maps.LatLng(31.838482688972906,35.08054733276367),new google.maps.LatLng(31.83264918614865,35.08981704711914),new google.maps.LatLng(31.828565514766165,35.09359359741211),new google.maps.LatLng(31.824481662711353,35.10526657104492),new google.maps.LatLng(31.823314814655653,35.1152229309082),new google.maps.LatLng(31.82389824052695,35.12277603149414),new google.maps.LatLng(31.820397629997018,35.12758255004883),new google.maps.LatLng(31.8163134166359,35.132389068603516),new google.maps.LatLng(31.81397949932771,35.138912200927734),new google.maps.LatLng(31.81281251855591,35.144405364990234),new google.maps.LatLng(31.81193727330082,35.15024185180664),new google.maps.LatLng(31.809603245406805,35.15642166137695),new google.maps.LatLng(31.808727969741742,35.166378021240234),new google.maps.LatLng(31.80931148777328,35.17324447631836),new google.maps.LatLng(31.814271242216744,35.177364349365234),new google.maps.LatLng(31.819814182005135,35.180110931396484),new google.maps.LatLng(31.824773372420967,35.18217086791992),new google.maps.LatLng(31.826231907142883,35.18766403198242),new google.maps.LatLng(31.826231907142883,35.193843841552734),new google.maps.LatLng(31.823606528052164,35.19693374633789),new google.maps.LatLng(31.823314814655653,35.20071029663086),new google.maps.LatLng(31.826231907142883,35.20345687866211),new google.maps.LatLng(31.830315681768234,35.20448684692383),new google.maps.LatLng(31.83994100705821,35.20551681518555),new google.maps.LatLng(31.84635733279808,35.20551681518555),new google.maps.LatLng(31.851606721911097,35.206546783447266),new google.maps.LatLng(31.85598098460412,35.20963668823242),new google.maps.LatLng(31.856855812242912,35.2137565612793),new google.maps.LatLng(31.852773212250856,35.223026275634766),new google.maps.LatLng(31.847523889531306,35.22714614868164),new google.maps.LatLng(31.841690958335214,35.229549407958984),new google.maps.LatLng(31.83731601790945,35.229549407958984),new google.maps.LatLng(31.83644100493149,35.23469924926758),new google.maps.LatLng(31.838191022589953,35.23916244506836),new google.maps.LatLng(31.837899355285046,35.244998931884766),new google.maps.LatLng(31.835565983656227,35.248775482177734),new google.maps.LatLng(31.830023989572435,35.25083541870117),new google.maps.LatLng(31.82273138509748,35.2522087097168)],T=new google.maps.Polygon({paths:H}),M=[new google.maps.LatLng(32.017537149173535,34.99926567077637),new google.maps.LatLng(32.01360723504821,34.998579025268555),new google.maps.LatLng(32.00705700366404,34.999094009399414),new google.maps.LatLng(31.995410992124047,34.99926567077637),new google.maps.LatLng(31.988422675211265,34.99789237976074),new google.maps.LatLng(31.975463762188678,34.994802474975586),new google.maps.LatLng(31.972260153269048,34.993085861206055),new google.maps.LatLng(31.970658306878924,34.9874210357666),new google.maps.LatLng(31.96949331012912,34.98673439025879),new google.maps.LatLng(31.96090100253141,34.9899959564209),new google.maps.LatLng(31.953910057440805,34.99566078186035),new google.maps.LatLng(31.948520840766903,35.00338554382324),new google.maps.LatLng(31.946335933133938,35.00699043273926),new google.maps.LatLng(31.943859641674045,35.0064754486084),new google.maps.LatLng(31.94138328348212,35.003042221069336),new google.maps.LatLng(31.9386155100657,35.00046730041504),new google.maps.LatLng(31.934245171813757,35.00046730041504),new google.maps.LatLng(31.931331497543805,35.00287055969238),new google.maps.LatLng(31.928854801809585,35.00836372375488),new google.maps.LatLng(31.926815119934417,35.015058517456055),new google.maps.LatLng(31.925649567120374,35.01969337463379),new google.maps.LatLng(31.925358176608505,35.026044845581055),new google.maps.LatLng(31.925649567120374,35.02896308898926),new google.maps.LatLng(31.922735620452148,35.03342628479004),new google.maps.LatLng(31.917635991618184,35.03720283508301),new google.maps.LatLng(31.908164502264,35.03960609436035),new google.maps.LatLng(31.900295138882477,35.04080772399902),new google.maps.LatLng(31.8924251026796,35.04063606262207),new google.maps.LatLng(31.88601198318818,35.04097938537598),new google.maps.LatLng(31.879744184929415,35.03840446472168),new google.maps.LatLng(31.87041457917487,35.03617286682129),new google.maps.LatLng(31.863125167416378,35.03445625305176),new google.maps.LatLng(31.855251955231434,35.03308296203613),new google.maps.LatLng(31.855397761567097,35.00844955444336),new google.maps.LatLng(31.853648070322752,34.99711990356445),new google.maps.LatLng(31.848982064700547,34.99197006225586),new google.maps.LatLng(31.84344087642,34.987850189208984),new google.maps.LatLng(31.837024347838707,34.98098373413086),new google.maps.LatLng(31.832065815584627,34.97102737426758),new google.maps.LatLng(31.82769041882079,34.96347427368164),new google.maps.LatLng(31.825356789074995,34.95420455932617),new google.maps.LatLng(31.826815314579356,34.938411712646484),new google.maps.LatLng(31.824481662711353,34.930171966552734),new google.maps.LatLng(31.817480353171682,34.91678237915039),new google.maps.LatLng(31.812520771059095,34.91231918334961),new google.maps.LatLng(31.811062019751912,34.89927291870117),new google.maps.LatLng(31.81135377185641,34.88107681274414),new google.maps.LatLng(31.809165608610932,34.87103462219238),new google.maps.LatLng(31.820251768344665,34.86811637878418),new google.maps.LatLng(31.823168957611745,34.848031997680664),new google.maps.LatLng(31.834836792922044,34.85232353210449),new google.maps.LatLng(31.84956532831343,34.84854698181152),new google.maps.LatLng(31.850294402642543,34.860734939575195),new google.maps.LatLng(31.87347596019353,34.82159614562988),new google.maps.LatLng(31.901315279500793,34.84391212463379),new google.maps.LatLng(31.915013215266125,34.80048179626465),new google.maps.LatLng(31.920841505605924,34.80751991271973),new google.maps.LatLng(31.950560041013226,34.84768867492676),new google.maps.LatLng(31.957405596502664,34.853010177612305),new google.maps.LatLng(32.009094903591254,34.815073013305664),new google.maps.LatLng(32.02859822473254,34.827775955200195),new google.maps.LatLng(32.021757980316536,34.838247299194336),new google.maps.LatLng(32.021903522749895,34.846487045288086),new google.maps.LatLng(32.017537149173535,34.84889030456543),new google.maps.LatLng(32.02073917680909,34.86519813537598),new google.maps.LatLng(31.985656319345722,34.9390983581543),new google.maps.LatLng(31.989733025189313,34.96347427368164),new google.maps.LatLng(32.005164627449425,34.9665641784668)],I=new google.maps.Polygon({paths:M}),D=[new google.maps.LatLng(31.599884357287426,34.95772361755371),new google.maps.LatLng(31.594182039540698,34.9515438079834),new google.maps.LatLng(31.577511724716405,34.94622230529785),new google.maps.LatLng(31.565226426769065,34.945363998413086),new google.maps.LatLng(31.551915527480222,34.94175910949707),new google.maps.LatLng(31.54460103811182,34.94175910949707),new google.maps.LatLng(31.53991946406062,34.94158744812012),new google.maps.LatLng(31.527482892904917,34.94193077087402),new google.maps.LatLng(31.523532106031112,34.939870834350586),new google.maps.LatLng(31.50933715991989,34.94467735290527),new google.maps.LatLng(31.50480017606385,34.943647384643555),new google.maps.LatLng(31.493090813268065,34.93969917297363),new google.maps.LatLng(31.491334282379498,34.94021415710449),new google.maps.LatLng(31.482111954012925,34.93523597717285),new google.maps.LatLng(31.46673938656549,34.927167892456055),new google.maps.LatLng(31.457221770075776,34.9185848236084),new google.maps.LatLng(31.449899868379653,34.91086006164551),new google.maps.LatLng(31.44579935344329,34.90828514099121),new google.maps.LatLng(31.440234081843446,34.90279197692871),new google.maps.LatLng(31.437597785201056,34.89884376525879),new google.maps.LatLng(31.424708156450638,34.89386558532715),new google.maps.LatLng(31.418409170638487,34.8911190032959),new google.maps.LatLng(31.406689001646452,34.883737564086914),new google.maps.LatLng(31.396579180020808,34.88116264343262),new google.maps.LatLng(31.391743663020442,34.879961013793945),new google.maps.LatLng(31.387494063706352,34.88184928894043),new google.maps.LatLng(31.383830461672204,34.88579750061035),new google.maps.LatLng(31.37723561789299,34.88802909851074),new google.maps.LatLng(31.37049374352203,34.890947341918945),new google.maps.LatLng(31.365656883495785,34.89523887634277),new google.maps.LatLng(31.35935393482094,34.90588188171387),new google.maps.LatLng(31.354076722558787,34.91086006164551),new google.maps.LatLng(31.350118618997662,34.91137504577637),new google.maps.LatLng(31.346160348851598,34.91583824157715),new google.maps.LatLng(31.34220191213246,34.923906326293945),new google.maps.LatLng(31.34322818949811,34.93094444274902),new google.maps.LatLng(31.34689337440921,34.9434757232666),new google.maps.LatLng(31.34821280601745,34.949655532836914),new google.maps.LatLng(31.3498254195143,34.96201515197754),new google.maps.LatLng(31.3508516137071,34.97677803039551),new google.maps.LatLng(31.35349034735801,34.98501777648926),new google.maps.LatLng(31.354956278504087,34.9954891204834),new google.maps.LatLng(31.358327833411312,35.01042366027832),new google.maps.LatLng(31.359060764132366,35.023298263549805),new google.maps.LatLng(31.357741484720663,35.03840446472168),new google.maps.LatLng(31.358181246581474,35.05660057067871),new google.maps.LatLng(31.35671536571315,35.0862979888916),new google.maps.LatLng(31.35568923550721,35.096940994262695),new google.maps.LatLng(31.356275596996106,35.11479377746582),new google.maps.LatLng(31.354809686417862,35.13333320617676),new google.maps.LatLng(31.35598241670874,35.137624740600586),new google.maps.LatLng(31.3608197745508,35.149126052856445),new google.maps.LatLng(31.36360480706991,35.16045570373535),new google.maps.LatLng(31.36419111919158,35.16371726989746),new google.maps.LatLng(31.36419111919158,35.17504692077637),new google.maps.LatLng(31.371812843961937,35.203800201416016),new google.maps.LatLng(31.37239910488052,35.21100997924805),new google.maps.LatLng(31.372692233968184,35.22439956665039),new google.maps.LatLng(31.375037233750135,35.2305793762207),new google.maps.LatLng(31.387494063706352,35.24491310119629),new google.maps.LatLng(31.394820839017864,35.25637149810791),new google.maps.LatLng(31.401341188186898,35.26529788970947),new google.maps.LatLng(31.40939942086384,35.27493238449097),new google.maps.LatLng(31.414270653187202,35.28351545333862),new google.maps.LatLng(31.41621175047934,35.28737783432007),new google.maps.LatLng(31.422071423173335,35.293192863464355),new google.maps.LatLng(31.43935532453555,35.319457054138184),new google.maps.LatLng(31.467325054442888,35.36215782165527),new google.maps.LatLng(31.47581682691747,35.34893989562988),new google.maps.LatLng(31.505385605709815,35.316152572631836),new google.maps.LatLng(31.516654411752928,35.29829978942871),new google.maps.LatLng(31.52982402108432,35.27083396911621),new google.maps.LatLng(31.540943578447695,35.25143623352051),new google.maps.LatLng(31.548404644131857,35.24422645568848),new google.maps.LatLng(31.562301117249707,35.23135185241699),new google.maps.LatLng(31.57063800748382,35.2291202545166),new google.maps.LatLng(31.592134968533564,35.22294044494629),new google.maps.LatLng(31.60441671979008,35.21847724914551),new google.maps.LatLng(31.609972218045684,35.2181339263916),new google.maps.LatLng(31.61187270713691,35.21641731262207),new google.maps.LatLng(31.614357903559373,35.21195411682129),new google.maps.LatLng(31.614650275246916,35.20766258239746),new google.maps.LatLng(31.614357903559373,35.2016544342041),new google.maps.LatLng(31.614065530953464,35.19787788391113),new google.maps.LatLng(31.612165086630373,35.19564628601074),new google.maps.LatLng(31.609972218045684,35.19169807434082),new google.maps.LatLng(31.607925494096836,35.18380165100098),new google.maps.LatLng(31.606902115249365,35.173845291137695),new google.maps.LatLng(31.6080716901568,35.16440391540527),new google.maps.LatLng(31.609533638130237,35.15582084655762),new google.maps.LatLng(31.61289603134632,35.147409439086914),new google.maps.LatLng(31.627952215442463,35.12801170349121),new google.maps.LatLng(31.640229241591097,35.111188888549805),new google.maps.LatLng(31.65864174185037,35.08715629577637),new google.maps.LatLng(31.66419400221431,35.08011817932129),new google.maps.LatLng(31.667408317080916,35.079946517944336),new google.maps.LatLng(31.669745930760243,35.08166313171387),new google.maps.LatLng(31.674128797835984,35.08076190948486),new google.maps.LatLng(31.677269725334405,35.078444480895996),new google.maps.LatLng(31.68121399542306,35.073723793029785),new google.maps.LatLng(31.684135568936938,35.069947242736816),new google.maps.LatLng(31.663171242341786,35.03497123718262),new google.maps.LatLng(31.65864174185037,35.02621650695801),new google.maps.LatLng(31.655719366285815,35.01626014709473),new google.maps.LatLng(31.65308914970076,35.00716209411621),new google.maps.LatLng(31.64885142196549,35.00218391418457),new google.maps.LatLng(31.640229241591097,34.99218463897705),new google.maps.LatLng(31.63131394323651,34.98497486114502),new google.maps.LatLng(31.622105442974345,34.97742176055908),new google.maps.LatLng(31.612969125502246,34.96978282928467),new google.maps.LatLng(31.60785239598076,34.965577125549316)],P=new google.maps.Polygon({paths:D}),E=[new google.maps.LatLng(31.683989492444987,35.069947242736816),new google.maps.LatLng(31.679899257344882,35.07518291473389),new google.maps.LatLng(31.677050594305346,35.07835865020752),new google.maps.LatLng(31.672887006497955,35.08084774017334),new google.maps.LatLng(31.66872323201452,35.0813627243042),new google.maps.LatLng(31.666458644719125,35.07964611053467),new google.maps.LatLng(31.664559270868608,35.07913112640381),new google.maps.LatLng(31.61391934430613,35.14607906341553),new google.maps.LatLng(31.60946054127679,35.15346050262451),new google.maps.LatLng(31.608364081588007,35.16067028045654),new google.maps.LatLng(31.606390421607475,35.17294406890869),new google.maps.LatLng(31.60946054127679,35.19165515899658),new google.maps.LatLng(31.61187270713691,35.19697666168213),new google.maps.LatLng(31.613846250896362,35.19852161407471),new google.maps.LatLng(31.6139924376585,35.21139621734619),new google.maps.LatLng(31.610630084044825,35.217833518981934),new google.maps.LatLng(31.605513225964707,35.21817684173584),new google.maps.LatLng(31.561130967751275,35.2316951751709),new google.maps.LatLng(31.541089879585808,35.250749588012695),new google.maps.LatLng(31.527921858908762,35.27358055114746),new google.maps.LatLng(31.515703201415246,35.299458503723145),new google.maps.LatLng(31.50516607002222,35.3161096572876),new google.maps.LatLng(31.484015048599076,35.33846855163574),new google.maps.LatLng(31.475377616200426,35.34893989562988),new google.maps.LatLng(31.467032220962164,35.36267280578613),new google.maps.LatLng(31.47874484568745,35.37825107574463),new google.maps.LatLng(31.502458420817202,35.37344455718994),new google.maps.LatLng(31.51423978198768,35.37670612335205),new google.maps.LatLng(31.53611551225996,35.38297176361084),new google.maps.LatLng(31.55374406024056,35.38425922393799),new google.maps.LatLng(31.56698156843796,35.3918981552124),new google.maps.LatLng(31.574294303146736,35.38846492767334),new google.maps.LatLng(31.589795403731287,35.39747714996338),new google.maps.LatLng(31.646367146916386,35.411338806152344),new google.maps.LatLng(31.690781806136822,35.44361114501953),new google.maps.LatLng(31.71122878128754,35.44567108154297),new google.maps.LatLng(31.731671248829198,35.44910430908203),new google.maps.LatLng(31.757363953119533,35.44841766357422),new google.maps.LatLng(31.767872550142034,35.447731018066406),new google.maps.LatLng(31.777212523418644,35.439491271972656),new google.maps.LatLng(31.783049527817784,35.420780181884766),new google.maps.LatLng(31.789761627404793,35.4060173034668),new google.maps.LatLng(31.799682968938473,35.391597747802734),new google.maps.LatLng(31.811062019751912,35.38026809692383),new google.maps.LatLng(31.81806381590986,35.37752151489258),new google.maps.LatLng(31.817480353171682,35.37271499633789),new google.maps.LatLng(31.814271242216744,35.365848541259766),new google.maps.LatLng(31.817772085001568,35.358638763427734),new google.maps.LatLng(31.81485472523014,35.34730911254883),new google.maps.LatLng(31.811062019751912,35.34078598022461),new google.maps.LatLng(31.806977393531774,35.3294563293457),new google.maps.LatLng(31.805810324295997,35.29306411743164),new google.maps.LatLng(31.80376791765831,35.26834487915039),new google.maps.LatLng(31.80289258670676,35.2522087097168),new google.maps.LatLng(31.79063708273051,35.25358200073242),new google.maps.LatLng(31.7815903112567,35.2522087097168),new google.maps.LatLng(31.77020763186669,35.2522087097168),new google.maps.LatLng(31.75561240427337,35.24843215942383),new google.maps.LatLng(31.738095093126777,35.24534225463867),new google.maps.LatLng(31.727875131475486,35.24019241333008),new google.maps.LatLng(31.723786831179385,35.23710250854492),new google.maps.LatLng(31.720574468715053,35.22783279418945),new google.maps.LatLng(31.72028243024323,35.21547317504883),new google.maps.LatLng(31.723786831179385,35.20002365112305),new google.maps.LatLng(31.729919213990538,35.17770767211914),new google.maps.LatLng(31.7369271545675,35.152645111083984),new google.maps.LatLng(31.735175219118705,35.137882232666016),new google.maps.LatLng(31.730795235550936,35.127925872802734),new google.maps.LatLng(31.727583116006834,35.12346267700195),new google.maps.LatLng(31.71940630930742,35.121402740478516),new google.maps.LatLng(31.71619379503302,35.11453628540039),new google.maps.LatLng(31.712981169438624,35.1042366027832),new google.maps.LatLng(31.7059714181356,35.09702682495117),new google.maps.LatLng(31.699253242631475,35.09016036987305),new google.maps.LatLng(31.693118831385902,35.08501052856445)],F=new google.maps.Polygon({paths:E}),Z=[new google.maps.LatLng(31.812593708019694,34.91261959075928),new google.maps.LatLng(31.808436209343757,34.91485118865967),new google.maps.LatLng(31.807633863497934,34.92223262786865),new google.maps.LatLng(31.809457366705228,34.93502140045166),new google.maps.LatLng(31.81186433582184,34.94094371795654),new google.maps.LatLng(31.815438204557204,34.956865310668945),new google.maps.LatLng(31.815292335071042,34.97506141662598),new google.maps.LatLng(31.816167548532086,34.98295783996582),new google.maps.LatLng(31.818501410544197,35.00201225280762),new google.maps.LatLng(31.819668319431138,35.010080337524414),new google.maps.LatLng(31.8183555458965,35.015058517456055),new google.maps.LatLng(31.817772085001568,35.025272369384766),new google.maps.LatLng(31.820689352610472,35.03660202026367),new google.maps.LatLng(31.827398718328755,35.04690170288086),new google.maps.LatLng(31.83644100493149,35.05205154418945),new google.maps.LatLng(31.845482405566294,35.055484771728516),new google.maps.LatLng(31.849856958736677,35.05857467651367),new google.maps.LatLng(31.84781552640937,35.0654411315918),new google.maps.LatLng(31.841107644930872,35.07608413696289),new google.maps.LatLng(31.833815916214295,35.0877571105957),new google.maps.LatLng(31.830315681768234,35.091190338134766),new google.maps.LatLng(31.826523611321996,35.09908676147461),new google.maps.LatLng(31.824481662711353,35.10526657104492),new google.maps.LatLng(31.824189952080015,35.11178970336914),new google.maps.LatLng(31.825065081208855,35.118656158447266),new google.maps.LatLng(31.823314814655653,35.12552261352539),new google.maps.LatLng(31.81820968101838,35.130929946899414),new google.maps.LatLng(31.814271242216744,35.138139724731445),new google.maps.LatLng(31.81281251855591,35.14792442321777),new google.maps.LatLng(31.81033263545907,35.154619216918945),new google.maps.LatLng(31.808727969741742,35.16268730163574),new google.maps.LatLng(31.808727969741742,35.17075538635254),new google.maps.LatLng(31.811062019751912,35.17556190490723),new google.maps.LatLng(31.81412537088744,35.17727851867676),new google.maps.LatLng(31.817626219201827,35.1796817779541),new google.maps.LatLng(31.820105906461915,35.17951011657715),new google.maps.LatLng(31.824481662711353,35.18105506896973),new google.maps.LatLng(31.82696116586236,35.18551826477051),new google.maps.LatLng(31.8266694630659,35.192556381225586),new google.maps.LatLng(31.824773372420967,35.19598960876465),new google.maps.LatLng(31.82389824052695,35.19719123840332),new google.maps.LatLng(31.823460671469107,35.20010948181152),new google.maps.LatLng(31.8255026426624,35.20285606384277),new google.maps.LatLng(31.8291489074541,35.204057693481445),new google.maps.LatLng(31.836878512457638,35.20491600036621),new google.maps.LatLng(31.848982064700547,35.20525932312012),new google.maps.LatLng(31.853064832530322,35.20646095275879),new google.maps.LatLng(31.856855812242912,35.209550857543945),new google.maps.LatLng(31.85627259473929,35.2152156829834),new google.maps.LatLng(31.85379387919446,35.221052169799805),new google.maps.LatLng(31.849127880949563,35.22637367248535),new google.maps.LatLng(31.845190761311553,35.228776931762695),new google.maps.LatLng(31.841107644930872,35.22963523864746),new google.maps.LatLng(31.83746185259907,35.23032188415527),new google.maps.LatLng(31.838045189052764,35.23358345031738),new google.maps.LatLng(31.838336855896692,35.23821830749512),new google.maps.LatLng(31.838336855896692,35.24697303771973),new google.maps.LatLng(31.834399275715842,35.24937629699707),new google.maps.LatLng(31.830169835785558,35.25160789489746),new google.maps.LatLng(31.825648496019358,35.251779556274414),new google.maps.LatLng(31.819814182005135,35.25195121765137),new google.maps.LatLng(31.81135377185641,35.25263786315918),new google.maps.LatLng(31.803476141595862,35.25315284729004),new google.maps.LatLng(31.79720273339778,35.25383949279785),new google.maps.LatLng(31.791804343601445,35.254011154174805),new google.maps.LatLng(31.784070965709624,35.25280952453613),new google.maps.LatLng(31.773418273007145,35.25263786315918),new google.maps.LatLng(31.76889415564824,35.251779556274414),new google.maps.LatLng(31.763786015317773,35.25092124938965),new google.maps.LatLng(31.733277251661814,35.24405479431152),new google.maps.LatLng(31.724662910711018,35.23821830749512),new google.maps.LatLng(31.720428449594177,35.23066520690918),new google.maps.LatLng(31.719114267155366,35.21967887878418),new google.maps.LatLng(31.720574468715053,35.210580825805664),new google.maps.LatLng(31.725100947371363,35.19289970397949),new google.maps.LatLng(31.7369271545675,35.150413513183594),new google.maps.LatLng(31.733715247602944,35.13444900512695),new google.maps.LatLng(31.7296272049633,35.1262092590332),new google.maps.LatLng(31.72261871225556,35.122432708740234),new google.maps.LatLng(31.71940630930742,35.12105941772461),new google.maps.LatLng(31.71210497950279,35.103206634521484),new google.maps.LatLng(31.701005857062714,35.091190338134766),new google.maps.LatLng(31.69282670644841,35.08501052856445),new google.maps.LatLng(31.68698401458388,35.074710845947266),new google.maps.LatLng(31.67675841879551,35.058231353759766),new google.maps.LatLng(31.67237567582654,35.051021575927734),new google.maps.LatLng(31.66419400221431,35.03694534301758),new google.maps.LatLng(31.65864174185037,35.02595901489258),new google.maps.LatLng(31.655719366285815,35.01668930053711),new google.maps.LatLng(31.652796898818547,35.007076263427734),new google.maps.LatLng(31.6428598220613,34.995059967041016),new google.maps.LatLng(31.625905886872008,34.98064041137695),new google.maps.LatLng(31.6071945103536,34.96519088745117),new google.maps.LatLng(31.600176774428046,34.95798110961914),new google.maps.LatLng(31.608364081588007,34.948368072509766),new google.maps.LatLng(31.60982602497012,34.94047164916992),new google.maps.LatLng(31.612457465205498,34.930171966552734),new google.maps.LatLng(31.6133345954209,34.920902252197266),new google.maps.LatLng(31.644321223497375,34.869747161865234),new google.maps.LatLng(31.68128703588148,34.85678672790527),new google.maps.LatLng(31.686107579079483,34.86279487609863),new google.maps.LatLng(31.694579442278776,34.86416816711426),new google.maps.LatLng(31.702758438382748,34.86142158508301),new google.maps.LatLng(31.7059714181356,34.85541343688965),new google.maps.LatLng(31.70918428658835,34.85043525695801),new google.maps.LatLng(31.723786831179385,34.84665870666504),new google.maps.LatLng(31.72831315295311,34.852495193481445),new google.maps.LatLng(31.736343179765843,34.85592842102051),new google.maps.LatLng(31.75210920715378,34.84871864318848),new google.maps.LatLng(31.755320476243437,34.84305381774902),new google.maps.LatLng(31.759553342568687,34.83258247375488),new google.maps.LatLng(31.767872550142034,34.82949256896973),new google.maps.LatLng(31.77487761850741,34.82691764831543),new google.maps.LatLng(31.77648287196549,34.82159614562988),new google.maps.LatLng(31.782611765267234,34.814558029174805),new google.maps.LatLng(31.78961571737781,34.82125282287598),new google.maps.LatLng(31.79384701465877,34.82949256896973),new google.maps.LatLng(31.8044973537833,34.84133720397949),new google.maps.LatLng(31.80785268578335,34.84768867492676),new google.maps.LatLng(31.810624389867336,34.85918998718262),new google.maps.LatLng(31.80931148777328,34.87137794494629),new google.maps.LatLng(31.81208314808596,34.88133430480957),new google.maps.LatLng(31.81135377185641,34.89901542663574)],O=new google.maps.Polygon({paths:Z}),K=ko.observableArray([]);
-K.push(new t("ZF",e)),K.push(new t("SM",r)),K.push(new t("YZ",o)),K.push(new t("HF",i)),K.push(new t("AK",d)),K.push(new t("HD",m)),K.push(new t("KN",L)),K.push(new t("HG",w)),K.push(new t("JN",u)),K.push(new t("PT",f)),K.push(new t("YZ",_)),K.push(new t("HS",S)),K.push(new t("TA",C)),K.push(new t("TK",B)),K.push(new t("RH",R)),K.push(new t("RA",T)),K.push(new t("RM",I)),K.push(new t("HB",P)),K.push(new t("BL",F)),K.push(new t("JS",O));var N=ko.observableArray([]);N.push(new t("ZF",n)),N.push(new t("SM",a)),N.push(new t("YZ",g)),N.push(new t("HF",l)),N.push(new t("AK",s)),N.push(new t("HD",p)),N.push(new t("KN",c)),N.push(new t("HG",h)),N.push(new t("JN",v)),N.push(new t("PT",b)),N.push(new t("YZ",y)),N.push(new t("HS",x)),N.push(new t("TA",k)),N.push(new t("TK",A)),N.push(new t("RH",j)),N.push(new t("RA",H)),N.push(new t("RM",M)),N.push(new t("HB",D)),N.push(new t("BL",E)),N.push(new t("JS",Z));var q=function(t){var n=t.coords.latitude,e=t.coords.longitude;return Y(n,e)},Y=function(t,n){var e=-11.404583294670063*(t-33.365161);e=parseInt(e),10>e&&(e="0"+e);var a=9.557660836847592*(n-34.262562);a=parseInt(a),a>7&&a++,a=String.fromCharCode(65+a);var r=a+"-"+e,g="XX";return ko.utils.arrayForEach(K(),function(e){google.maps.geometry.poly.containsLocation(new google.maps.LatLng(t,n),e.poly)&&(g=e.name)}),r+"-"+g},G={getAreaByPosition:q,getAreaByLatLng:Y,Areas:K,Coords:N};return G});
-define('services/httpService',[],function(){var t=function(t,n,e){return $.ajax({type:"GET",url:t,data:n,contentType:"application/json",headers:e})},n=function(t,n,e){return $.ajax({url:t,data:n,type:"POST",headers:e})},e={get:t,post:n};return e});
-define('services/themeManager',[],function(){var t="style",n=30,e=function(e){var a,g;for(a=0,g=document.getElementsByTagName("link");a<g.length;a++)-1!=g[a].rel.indexOf("stylesheet")&&g[a].title&&(g[a].disabled=!0,g[a].title==e&&(g[a].disabled=!1)),r(t,e,n)},a=function(){var n=g(t);n.length&&e(n)},r=function(t,n,e,a){var r=a?"; domain="+a:"";document.cookie=t+"="+encodeURIComponent(n)+"; max-age="+86400*e+"; path=/"+r},g=function(t){var n=document.cookie;if(0!=n.length){n.match("(^|;)[s]*"+t+"=([^;]*)");var e=n.match(t+"=([^;]*)");return decodeURIComponent(e[1])}return""},o={switch_style:e,set_style_from_cookie:a};return o});
-define('services/utilities',[],function(){base64Keys="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",base64Encode=function(t){var n,e,a,r,g,o,l,i,s;for(s="",i=0,t=utf8Encode(t);i<t.length;)n=t.charCodeAt(i++),e=t.charCodeAt(i++),a=t.charCodeAt(i++),r=n>>2,g=(3&n)<<4|e>>4,o=(15&e)<<2|a>>6,l=63&a,isNaN(e)?o=l=64:isNaN(a)&&(l=64),s=""+s+base64Keys.charAt(r)+base64Keys.charAt(g)+(64>o?base64Keys.charAt(o):"")+(64>l?base64Keys.charAt(l):"");return s},utf8Encode=function(t){var n,e,a,r,g,o;for(t=t.replace(/\r\n/g,"\n"),a="",o=t.split(""),r=0,g=o.length;g>r;r++)e=o[r],n=e.charCodeAt(0),128>n?a+=String.fromCharCode(n):n>127&&2048>n?(a+=String.fromCharCode(192|n>>6),a+=String.fromCharCode(128|63&n)):(a+=String.fromCharCode(224|n>>12),a+=String.fromCharCode(128|63&n>>6),a+=String.fromCharCode(128|63&n));return a};var t=function(t,n){var e=n.toLowerCase();$(t).each(function(){$(this).text().toLowerCase().indexOf(e)<0?$(this).hide():$(this).show()})},n=function(t,n,e){try{var a=jQuery.parseJSON(t.responseText).error;alert("There was an error: "+a)}catch(r){alert(e)}},e=function(t,n){var e=t+":"+n,a=base64Encode(e);return a},a={base64Encode:base64Encode,getBase64Auth:e,applyRowSearch:t,handleError:n};return a});
-define('plugins/history',["durandal/system","jquery"],function(e,t){function n(e,t,n){if(n){var a=e.href.replace(/(javascript:|#).*$/,"");e.replace(a+"#"+t)}else e.hash="#"+t}var a=/^[#\/]|\s+$/g,r=/^\/+|\/+$/g,o=/msie [\w.]+/,l=/\/$/,g={interval:50,active:!1};return"undefined"!=typeof window&&(g.location=window.location,g.history=window.history),g.getHash=function(e){var t=(e||g).location.href.match(/#(.*)$/);return t?t[1]:""},g.getFragment=function(e,t){if(null==e)if(g._hasPushState||!g._wantsHashChange||t){e=g.location.pathname;var n=g.root.replace(l,"");e.indexOf(n)||(e=e.substr(n.length))}else e=g.getHash();return e.replace(a,"")},g.activate=function(n){g.active&&e.error("History has already been activated."),g.active=!0,g.options=e.extend({},{root:"/"},g.options,n),g.root=g.options.root,g._wantsHashChange=g.options.hashChange!==!1,g._wantsPushState=!!g.options.pushState,g._hasPushState=!!(g.options.pushState&&g.history&&g.history.pushState);var l=g.getFragment(),i=document.documentMode,s=o.exec(navigator.userAgent.toLowerCase())&&(!i||7>=i);g.root=("/"+g.root+"/").replace(r,"/"),s&&g._wantsHashChange&&(g.iframe=t('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo("body")[0].contentWindow,g.navigate(l,!1)),g._hasPushState?t(window).on("popstate",g.checkUrl):g._wantsHashChange&&"onhashchange"in window&&!s?t(window).on("hashchange",g.checkUrl):g._wantsHashChange&&(g._checkUrlInterval=setInterval(g.checkUrl,g.interval)),g.fragment=l;var d=g.location,p=d.pathname.replace(/[^\/]$/,"$&/")===g.root;if(g._wantsHashChange&&g._wantsPushState){if(!g._hasPushState&&!p)return g.fragment=g.getFragment(null,!0),g.location.replace(g.root+g.location.search+"#"+g.fragment),!0;g._hasPushState&&p&&d.hash&&(this.fragment=g.getHash().replace(a,""),this.history.replaceState({},document.title,g.root+g.fragment+d.search))}return g.options.silent?void 0:g.loadUrl()},g.deactivate=function(){t(window).off("popstate",g.checkUrl).off("hashchange",g.checkUrl),clearInterval(g._checkUrlInterval),g.active=!1},g.checkUrl=function(){var e=g.getFragment();return e===g.fragment&&g.iframe&&(e=g.getFragment(g.getHash(g.iframe))),e===g.fragment?!1:(g.iframe&&g.navigate(e,!1),g.loadUrl(),void 0)},g.loadUrl=function(e){var t=g.fragment=g.getFragment(e);return g.options.routeHandler?g.options.routeHandler(t):!1},g.navigate=function(t,a){if(!g.active)return!1;if(void 0===a?a={trigger:!0}:e.isBoolean(a)&&(a={trigger:a}),t=g.getFragment(t||""),g.fragment!==t){g.fragment=t;var r=g.root+t;if(g._hasPushState)g.history[a.replace?"replaceState":"pushState"]({},document.title,r);else{if(!g._wantsHashChange)return g.location.assign(r);n(g.location,t,a.replace),g.iframe&&t!==g.getFragment(g.getHash(g.iframe))&&(a.replace||g.iframe.document.open().close(),n(g.iframe.location,t,a.replace))}return a.trigger?g.loadUrl(t):void 0}},g.navigateBack=function(){g.history.back()},g});
-define('plugins/router',["durandal/system","durandal/app","durandal/activator","durandal/events","durandal/composition","plugins/history","knockout","jquery"],function(e,t,n,a,r,o,l,g){function i(e){return e=e.replace(v,"\\$&").replace(h,"(?:$1)?").replace(u,function(e,t){return t?e:"([^/]+)"}).replace(w,"(.*?)"),new RegExp("^"+e+"$")}function s(e){var t=e.indexOf(":"),n=t>0?t-1:e.length;return e.substring(0,n)}function d(e){return e.router&&e.router.loadUrl}function p(e,t){return-1!==e.indexOf(t,e.length-t.length)}function c(e,t){if(!e||!t)return!1;if(e.length!=t.length)return!1;for(var n=0,a=e.length;a>n;n++)if(e[n]!=t[n])return!1;return!0}var m,L,h=/\((.*?)\)/g,u=/(\(\?)?:\w+/g,w=/\*\w+/g,v=/[\-{}\[\]+?.,\\\^$|#\s]/g,f=/\/$/,b=function(){function r(t,n){e.log("Navigation Complete",t,n);var a=e.getModuleId(B);a&&j.trigger("router:navigation:from:"+a),B=t,M=n;var r=e.getModuleId(B);r&&j.trigger("router:navigation:to:"+r),d(t)||j.updateDocumentTitle(t,n),L.explicitNavigation=!1,L.navigatingBack=!1,j.trigger("router:navigation:complete",t,n,j)}function g(t,n){e.log("Navigation Cancelled"),j.activeInstruction(M),M&&j.navigate(M.fragment,!1),H(!1),L.explicitNavigation=!1,L.navigatingBack=!1,j.trigger("router:navigation:cancelled",t,n,j)}function h(t){e.log("Navigation Redirecting"),H(!1),L.explicitNavigation=!1,L.navigatingBack=!1,j.navigate(t,{trigger:!0,replace:!0})}function u(e,t,n){L.navigatingBack=!L.explicitNavigation&&B!=n.fragment,j.trigger("router:route:activating",t,n,j),e.activateItem(t,n.params).then(function(a){if(a){var o=B;r(t,n),d(t)&&x({router:t.router,fragment:n.fragment,queryString:n.queryString}),o==t&&j.attached()}else e.settings.lifecycleData&&e.settings.lifecycleData.redirect?h(e.settings.lifecycleData.redirect):g(t,n);m&&(m.resolve(),m=null)})}function w(t,n,a){var r=j.guardRoute(n,a);r?r.then?r.then(function(r){r?e.isString(r)?h(r):u(t,n,a):g(n,a)}):e.isString(r)?h(r):u(t,n,a):g(n,a)}function v(e,t,n){j.guardRoute?w(e,t,n):u(e,t,n)}function y(e){return M&&M.config.moduleId==e.config.moduleId&&B&&(B.canReuseForRoute&&B.canReuseForRoute.apply(B,e.params)||B.router&&B.router.loadUrl)}function _(){if(!H()){var t=R.shift();if(R=[],t){if(t.router){var a=t.fragment;return t.queryString&&(a+="?"+t.queryString),t.router.loadUrl(a),void 0}H(!0),j.activeInstruction(t),y(t)?v(n.create(),B,t):e.acquire(t.config.moduleId).then(function(n){var a=e.resolveObject(n);v(T,a,t)}).fail(function(n){e.error("Failed to load routed module ("+t.config.moduleId+"). Details: "+n.message)})}}}function x(e){R.unshift(e),_()}function S(e,t,n){for(var a=e.exec(t).slice(1),r=0;r<a.length;r++){var o=a[r];a[r]=o?decodeURIComponent(o):null}var l=j.parseQueryString(n);return l&&a.push(l),{params:a,queryParams:l}}function k(t){j.trigger("router:route:before-config",t,j),e.isRegExp(t)?t.routePattern=t.route:(t.title=t.title||j.convertRouteToTitle(t.route),t.moduleId=t.moduleId||j.convertRouteToModuleId(t.route),t.hash=t.hash||j.convertRouteToHash(t.route),t.routePattern=i(t.route)),j.trigger("router:route:after-config",t,j),j.routes.push(t),j.route(t.routePattern,function(e,n){var a=S(t.routePattern,e,n);x({fragment:e,queryString:n,config:t,params:a.params,queryParams:a.queryParams})})}function C(t){if(e.isArray(t.route))for(var n=0,a=t.route.length;a>n;n++){var r=e.extend({},t);r.route=t.route[n],n>0&&delete r.nav,k(r)}else k(t);return j}function A(e){e.isActive||(e.isActive=l.computed(function(){var t=T();return t&&t.__moduleId__==e.moduleId}))}var B,M,R=[],H=l.observable(!1),T=n.create(),j={handlers:[],routes:[],navigationModel:l.observableArray([]),activeItem:T,isNavigating:l.computed(function(){var e=T(),t=H(),n=e&&e.router&&e.router!=j&&e.router.isNavigating()?!0:!1;return t||n}),activeInstruction:l.observable(null),__router__:!0};return a.includeIn(j),T.settings.areSameItem=function(e,t,n,a){return e==t?c(n,a):!1},j.parseQueryString=function(e){var t,n;if(!e)return null;if(n=e.split("&"),0==n.length)return null;t={};for(var a=0;a<n.length;a++){var r=n[a];if(""!==r){var o=r.split("=");t[o[0]]=o[1]&&decodeURIComponent(o[1].replace(/\+/g," "))}}return t},j.route=function(e,t){j.handlers.push({routePattern:e,callback:t})},j.loadUrl=function(t){var n=j.handlers,a=null,r=t,l=t.indexOf("?");if(-1!=l&&(r=t.substring(0,l),a=t.substr(l+1)),j.relativeToParentRouter){var g=this.parent.activeInstruction();r=g.params.join("/"),r&&"/"==r[0]&&(r=r.substr(1)),r||(r=""),r=r.replace("//","/").replace("//","/")}r=r.replace(f,"");for(var i=0;i<n.length;i++){var s=n[i];if(s.routePattern.test(r))return s.callback(r,a),!0}return e.log("Route Not Found"),j.trigger("router:route:not-found",t,j),M&&o.navigate(M.fragment,{trigger:!1,replace:!0}),L.explicitNavigation=!1,L.navigatingBack=!1,!1},j.updateDocumentTitle=function(e,n){n.config.title?document.title=t.title?n.config.title+" | "+t.title:n.config.title:t.title&&(document.title=t.title)},j.navigate=function(e,t){return e&&-1!=e.indexOf("://")?(window.location.href=e,!0):(L.explicitNavigation=!0,o.navigate(e,t))},j.navigateBack=function(){o.navigateBack()},j.attached=function(){setTimeout(function(){H(!1),j.trigger("router:navigation:attached",B,M,j),_()},10)},j.compositionComplete=function(){j.trigger("router:navigation:composition-complete",B,M,j)},j.convertRouteToHash=function(e){if(j.relativeToParentRouter){var t=j.parent.activeInstruction(),n=t.config.hash+"/"+e;return o._hasPushState&&(n="/"+n),n=n.replace("//","/").replace("//","/")}return o._hasPushState?e:"#"+e},j.convertRouteToModuleId=function(e){return s(e)},j.convertRouteToTitle=function(e){var t=s(e);return t.substring(0,1).toUpperCase()+t.substring(1)},j.map=function(t,n){if(e.isArray(t)){for(var a=0;a<t.length;a++)j.map(t[a]);return j}return e.isString(t)||e.isRegExp(t)?(n?e.isString(n)&&(n={moduleId:n}):n={},n.route=t):n=t,C(n)},j.buildNavigationModel=function(t){var n=[],a=j.routes;t=t||100;for(var r=0;r<a.length;r++){var o=a[r];o.nav&&(e.isNumber(o.nav)||(o.nav=t),A(o),n.push(o))}return n.sort(function(e,t){return e.nav-t.nav}),j.navigationModel(n),j},j.mapUnknownRoutes=function(t,n){var a="*catchall",r=i(a);return j.route(r,function(l,g){var i=S(r,l,g),s={fragment:l,queryString:g,config:{route:a,routePattern:r},params:i.params,queryParams:i.queryParams};if(t)if(e.isString(t))s.config.moduleId=t,n&&o.navigate(n,{trigger:!1,replace:!0});else if(e.isFunction(t)){var d=t(s);if(d&&d.then)return d.then(function(){j.trigger("router:route:before-config",s.config,j),j.trigger("router:route:after-config",s.config,j),x(s)}),void 0}else s.config=t,s.config.route=a,s.config.routePattern=r;else s.config.moduleId=l;j.trigger("router:route:before-config",s.config,j),j.trigger("router:route:after-config",s.config,j),x(s)}),j},j.reset=function(){return M=B=void 0,j.handlers=[],j.routes=[],j.off(),delete j.options,j},j.makeRelative=function(t){return e.isString(t)&&(t={moduleId:t,route:t}),t.moduleId&&!p(t.moduleId,"/")&&(t.moduleId+="/"),t.route&&!p(t.route,"/")&&(t.route+="/"),t.fromParent&&(j.relativeToParentRouter=!0),j.on("router:route:before-config").then(function(e){t.moduleId&&(e.moduleId=t.moduleId+e.moduleId),t.route&&(e.route=""===e.route?t.route.substring(0,t.route.length-1):t.route+e.route)}),j},j.createChildRouter=function(){var e=b();return e.parent=j,e},j};return L=b(),L.explicitNavigation=!1,L.navigatingBack=!1,L.activate=function(t){return e.defer(function(n){if(m=n,L.options=e.extend({routeHandler:L.loadUrl},L.options,t),o.activate(L.options),o._hasPushState)for(var a=L.routes,r=a.length;r--;){var l=a[r];l.hash=l.hash.replace("#","")}g(document).delegate("a","click",function(e){if(L.explicitNavigation=!0,o._hasPushState&&!(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)){var t=g(this).attr("href"),n=this.protocol+"//";(!t||"#"!==t.charAt(0)&&t.slice(n.length)!==n)&&(e.preventDefault(),o.navigate(t))}})}).promise()},L.deactivate=function(){o.deactivate()},L.install=function(){l.bindingHandlers.router={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t,n,a,o){var g=l.utils.unwrapObservable(t())||{};if(g.__router__)g={model:g.activeItem(),attached:g.attached,compositionComplete:g.compositionComplete,activate:!1};else{var i=l.utils.unwrapObservable(g.router||a.router)||L;g.model=i.activeItem(),g.attached=i.attached,g.compositionComplete=i.compositionComplete,g.activate=!1}r.compose(e,g,o)}},l.virtualElements.allowedBindings.router=!0},L});
-define('viewmodels/shell',["plugins/router","durandal/app"],function(e,t){var n=ko.observable(""),a=ko.observable("main"),r=t.version;return{selectedSubMenu:n,selectedMainMenu:a,version:r,router:e,search:function(){t.showMessage("Search not yet implemented...")},activate:function(){return e.map([{route:"",title:"Dashboard",moduleId:"viewmodels/dashboard",nav:!0},{route:"Aguda",title:"Aguda",moduleId:"viewmodels/aguda",nav:!0},{route:"Procedures",title:"Procedures",moduleId:"viewmodels/procedures",nav:!0},{route:"HamInIsrael",title:"Ham In Israel",moduleId:"viewmodels/haminisrael",nav:!0},{route:"HagalMain",title:"Hagal",moduleId:"viewmodels/hagalmain",nav:!0},{route:"About",title:"About",moduleId:"viewmodels/about",nav:!0},{route:"EventRegistration",title:"Event Registration",moduleId:"viewmodels/event_registration",nav:!0},{route:"EventRegistrationAdmin",title:"Event Registration Admin",moduleId:"viewmodels/event_registration_admin",nav:!1},{route:"Membership",title:"Membership",moduleId:"viewmodels/membership",nav:!0},{route:"Repeaters",title:"Repeaters",moduleId:"viewmodels/repeaters",nav:!0},{route:"RepeatersMap",title:"Repeaters Map",moduleId:"viewmodels/repeatersmap",nav:!0},{route:"Hagal",title:"Hagal",moduleId:"viewmodels/hagal",nav:!0},{route:"HagalArchive",title:"Hagal Archive",moduleId:"viewmodels/hagalarchive",nav:!0},{route:"Protocols",title:"Protocols",moduleId:"viewmodels/protocols",nav:!0},{route:"QSL",title:"QSL",moduleId:"viewmodels/qsl",nav:!0},{route:"Directors",title:"Directors",moduleId:"viewmodels/directors",nav:!0},{route:"Contact",title:"Contact",moduleId:"viewmodels/contact",nav:!0},{route:"Ham",title:"Ham",moduleId:"viewmodels/ham",nav:!0},{route:"Regulations",title:"Regulations",moduleId:"viewmodels/regulations",nav:!0},{route:"EchoLink",title:"EchoLink",moduleId:"viewmodels/echolink",nav:!0},{route:"WWFF",title:"WWFF",moduleId:"viewmodels/wwff",nav:!0},{route:"Freq",title:"Freq",moduleId:"viewmodels/freq",nav:!0},{route:"Bandplan",title:"Bandplan",moduleId:"viewmodels/english/freq",nav:!0},{route:"Onairhagal",title:"Onairhagal",moduleId:"viewmodels/onairhagal",nav:!0},{route:"Holyland",title:"Holyland",moduleId:"viewmodels/holyland",nav:!0},{route:"SukotResults",title:"SukotResults",moduleId:"viewmodels/sukotresults",nav:!0},{route:"News",title:"News",moduleId:"viewmodels/news",nav:!0},{route:"Emergency",title:"Emergency",moduleId:"viewmodels/emergency",nav:!0},{route:"CEPT",title:"CEPT",moduleId:"viewmodels/english/cept",nav:!0},{route:"4X4Z",title:"4X4Z",moduleId:"viewmodels/english/4x4z",nav:!0},{route:"4Z8",title:"4Z8",moduleId:"viewmodels/english/4z8",nav:!0},{route:"HolylandContest",title:"Holyland Contest",moduleId:"viewmodels/holyland/holylandcontest",nav:!0},{route:"HolylandAward",title:"Holyland Award",moduleId:"viewmodels/holyland/holylandaward",nav:!0},{route:"HolylandResults",title:"Holyland Contest Results",moduleId:"viewmodels/holyland/holylandresults",nav:!0},{route:"HolylandResultsISR",title:"Holyland Contest Results - Israeli Stations",moduleId:"viewmodels/holyland/holylandresults_isr",nav:!0},{route:"LogUpload",title:"Log Upload",moduleId:"viewmodels/holyland/logupload",nav:!0},{route:"LogUpload2",title:"Log Upload",moduleId:"viewmodels/holyland/logupload2",nav:!0},{route:"SilentKeyForest",title:"Silent Key Forest",moduleId:"viewmodels/english/skf",nav:!0},{route:"Meetings",title:"Meetings",moduleId:"viewmodels/english/meetings",nav:!0},{route:"EN_Membership",title:"Membership",moduleId:"viewmodels/english/membership",nav:!0},{route:"Beacons",title:"Beacons",moduleId:"viewmodels/english/beacons",nav:!0},{route:"EN_Repeaters",title:"Repeaters",moduleId:"viewmodels/english/repeaters",nav:!0},{route:"PA",title:"Private Area",moduleId:"viewmodels/pa",nav:!0},{route:"Media",title:"Media",moduleId:"viewmodels/media",nav:!0},{route:"DXpeditions",title:"DXpeditions",moduleId:"viewmodels/dxpeditions",nav:!0},{route:"NewsManager",title:"News Manager",moduleId:"viewmodels/back_office/newsmanager",nav:!1},{route:"Market",title:"Market",moduleId:"viewmodels/market",nav:!0},{route:"Register",title:"Register",moduleId:"viewmodels/register",nav:!0},{route:"OnlineCourse",title:"Online Course",moduleId:"viewmodels/onlinecourse",nav:!0},{route:"Shop",title:"Shop",moduleId:"viewmodels/shop",nav:!0},{route:"Import",title:"Import",moduleId:"viewmodels/import",nav:!0},{route:"Exams",title:"Exams",moduleId:"viewmodels/exams",nav:!0},{route:"ExamForms",title:"ExamForms",moduleId:"viewmodels/examforms",nav:!0},{route:"Squares",title:"Squares",moduleId:"viewmodels/squares",nav:!0},{route:"HolylandSquares",title:"Holyland Squares",moduleId:"viewmodels/holyland/holylandsquares",nav:!0},{route:"HolylandLogs",title:"Holyland Logs",moduleId:"viewmodels/holyland/holylandlogs",nav:!0},{route:"Certificategenerator",title:"Certificate Generator",moduleId:"viewmodels/holyland/certificategenerator",nav:!0},{route:"HolylandRules",title:"Holyland Rules",moduleId:"viewmodels/holyland/holylandrules",nav:!0},{route:"Gallery",title:"Gallery",moduleId:"viewmodels/gallery",nav:!0}]).buildNavigationModel(),e.activate()},compositionComplete:function(){!function(e,t,n){var a,r=e.getElementsByTagName(t)[0],o=/^http:/.test(e.location)?"http":"https";e.getElementById(n)||(a=e.createElement(t),a.id=n,a.src=o+"://platform.twitter.com/widgets.js",r.parentNode.insertBefore(a,r))}(document,"script","twitter-wjs")}}});
-define('viewmodels/about',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("about"),t.selectedMainMenu("aguda")}};return n});
-define('viewmodels/aguda',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("aguda")}};return n});
-define('viewmodels/components/events',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/events.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
-define('viewmodels/components/features',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/features.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
-define('viewmodels/components/news',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/news.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
-define('viewmodels/components/news_abstract',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/news_abstract.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
-define('viewmodels/components/posts',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/posts.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
-define('viewmodels/contact',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n=function(){var t=new google.maps.LatLng(32.034412,34.89383);new google.maps.LatLng(32.054412,34.87383);var n={center:t,zoom:15},e=new google.maps.Map(document.getElementById("map-canvas"),n);new google.maps.Marker({position:t,map:e,animation:google.maps.Animation.DROP,title:"בנין חיל הקשר"})},e={compositionComplete:function(){n()},activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("contact")}};return e});
-define('viewmodels/dashboard',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n=ko.observable("1"),e=function(){return Math.floor(7*Math.random()+1)},a={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("main"),n(e())},compositionComplete:function(){},getActiveImage:e,activeImage:n};return a});
-define('viewmodels/directors',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("directors"),t.selectedMainMenu("aguda")}};return n});
-define('viewmodels/dxpeditions',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("dxpeditions"),t.selectedMainMenu("ham")}};return n});
-define('viewmodels/echolink',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("echolink"),t.selectedMainMenu("israelham")}};return n});
-define('viewmodels/emergency',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("emergency"),t.selectedMainMenu("israelham")}};return n});
-define('viewmodels/english/4x4z',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("4x4z"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/4z8',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("4z8"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/beacons',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("beacons"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/cept',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("cept"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/freq',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("bandplan"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/meetings',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("meetings"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/membership',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("membership"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/repeaters',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("repeaters"),t.selectedMainMenu("english")}};return n});
-define('viewmodels/english/skf',["services/utilities","services/httpService"],function(t,n){var e=require("viewmodels/shell"),a=ko.observableArray(),r=ko.observable(),g=ko.observable();this.getSKF=function(){n.get("Server/skf.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},this.getSKFCount=function(){n.get("Server/skf_count.php?d="+Date.now()).done(function(t){r(t)}).error(t.handleError)};var o={activate:function(){e.selectedSubMenu("skf"),e.selectedMainMenu("english"),g.subscribe(function(n){void 0!==n&&t.applyRowSearch("#dataTable tbody tr",n)})},compositionComplete:function(){getSKF(),getSKFCount(),g("")},skf:a,skfcount:r,searchInput:g};return o});
-define('viewmodels/event_registration',["services/utilities","services/httpService","services/displayService"],function(t,n,e){var a=require("viewmodels/shell"),r=ko.observable(),g=ko.observable(),o=ko.observable(),l=ko.observableArray(),i=function(){n.get("Server/get_events.php?d="+Date.now()).done(function(t){l(t)}).error(t.handleError)};this.Send=ko.asyncCommand({execute:function(a){if(null==g())e.display("אל תשכח להכניס אות קריאה..","error");else if(null==r())e.display("אל תשכח להכניס שם..","error");else if(null==o())e.display("אל תשכח להכניס אימייל..","error");else{var l={info:{name:r(),callsign:g(),email:o(),event_id:this.id}};n.post("Server/event_registration.php",l).done(function(t){e.display(t),a(!0)}).error(function(){e.display("Something went wrong..","error"),t.handleError(),a(!0)})}},canExecute:function(){return!0}});var s={activate:function(){a.selectedSubMenu("eventregistration"),a.selectedMainMenu("aguda"),i()},compositionComplete:function(){},name:r,callsign:g,email:o,getItems:i,items:l};return s});
-define('viewmodels/event_registration_admin',["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=ko.observableArray(),r=function(){n.get("Server/get_event_registrants.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},g=function(){n.get("Server/get_events.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},o=function(t){return ko.utils.arrayFilter(e(),function(n){return n.event_id===t})},l={activate:function(){r(),g()},compositionComplete:function(){},list:e,events:a,getEventRegistrants:o};return l});
-define('viewmodels/examforms',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("examforms"),t.selectedMainMenu("israelham")}};return n});
-define('viewmodels/exams',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("exams"),t.selectedMainMenu("israelham")}};return n});
-define('viewmodels/freq',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("freq"),t.selectedMainMenu("israelham")}};return n});
-define('viewmodels/gallery',['viewmodels/shell'],function(){var t=require("viewmodels/shell");this.list=ko.observableArray(),this.getData=function(){$.ajax({type:"GET",url:"./Server/get_videos.php?d="+Date.now()}).done(function(t){list(t)}).error(function(t){alert(jQuery.parseJSON(t.responseText).error)})};var n={compositionComplete:function(){getData()},activate:function(){t.selectedSubMenu("videogallery"),t.selectedMainMenu("gallery")}};return n});
-define('viewmodels/hagal',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),n={activate:function(){t.selectedSubMenu("hagal"),t.selectedMainMenu("hagal")}};return n});
-define('viewmodels/hagalarchive',["services/utilities","services/httpService"],function(t,n){var e=require("viewmodels/shell"),a=ko.observableArray();this.getHagal=function(){n.get("Server/hagal.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)};var r={activate:function(){e.selectedSubMenu("hagalarchive"),e.selectedMainMenu("hagal")},compositionComplete:function(){getHagal()},hagal:a};return r});
-define('viewmodels/hagalmain',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("hagal")}};return e});
-define('viewmodels/ham',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("ham"),t.selectedMainMenu("israelham")}};return e});
-define('viewmodels/haminisrael',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("israelham")}};return e});
-define('viewmodels/holyland',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("holylamd"),t.selectedMainMenu("israelham")}};return e});
-define('viewmodels/holyland/certificategenerator',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("certificategenerator"),t.selectedMainMenu("holyland")}};return e});
-define('viewmodels/holyland/holylandaward',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("holylandaward"),t.selectedMainMenu("holyland")}};return e});
-define('viewmodels/holyland/holylandcontest',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("holylandcontest"),t.selectedMainMenu("holyland")}};return e});
-define('viewmodels/holyland/holylandlogs',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observableArray(),r=ko.observableArray(),g=ko.observableArray(),o=ko.observable();this.getlogs=function(){e.get("Server/hl_2015.php?d="+Date.now()).done(function(t){a(t),r(Enumerable.From(a()).Count()),g(Enumerable.From(a()).Select("$.country").Distinct().Count())}).error(t.handleError)},this.getCount=function(){e.get("Server/hl2015_count.php?d="+Date.now()).done(function(t){r(t)}).error(t.handleError)};var l={activate:function(){n.selectedSubMenu("holylandlogs"),n.selectedMainMenu("holyland"),o.subscribe(function(e){void 0!==e&&t.applyRowSearch("#dataTable tbody tr",e)}),getlogs(),o("")},compositionComplete:function(){},logs:a,counter:r,DXCCcounter:g,searchInput:o,year:moment()._d.getUTCFullYear()};return l});
-define('viewmodels/holyland/holylandresults',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observable();this.results=ko.observableArray(),this.years=ko.computed(function(){var t=Enumerable.From(this.results()).Select("i=>i.year").Distinct().OrderBy(function(t){return t.year}).Reverse().ToArray();return t},this),this.categories=ko.computed(function(){var t=Enumerable.From(this.results()).Select("i=>i.category").Distinct().ToArray();return t},this),this.getResults=function(){e.get("Server/hl.php?d="+Date.now()).done(function(t){results(t)}).error(t.handleError)};var r={activate:function(){n.selectedSubMenu("holylandresults"),n.selectedMainMenu("holyland"),a.subscribe(function(e){void 0!==e&&t.applyRowSearch("#dataTable tbody tr",e)}),getResults()},compositionComplete:function(){},searchInput:a};return r});
-define('viewmodels/holyland/holylandresults_isr',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observable();this.results=ko.observableArray(),this.years=ko.computed(function(){var t=Enumerable.From(this.results()).Select("i=>i.year").Distinct().OrderBy(function(t){return t.year}).Reverse().ToArray();return t},this),this.categories=ko.computed(function(){var t=Enumerable.From(this.results()).Select("i=>i.category").Distinct().ToArray();return t},this),this.getResults=function(){e.get("Server/hl_4x.php?d="+Date.now()).done(function(t){results(t)}).error(t.handleError)};var r={activate:function(){n.selectedSubMenu("holylandresults_isr"),n.selectedMainMenu("holyland"),a.subscribe(function(e){void 0!==e&&t.applyRowSearch("#dataTable tbody tr",e)}),getResults()},compositionComplete:function(){},searchInput:a};return r});
-define('viewmodels/holyland/holylandrules',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("holylandrules"),t.selectedMainMenu("holyland")}};return e});
-define('viewmodels/holyland/holylandsquares',["services/utilities","services/httpService"],function(t){var e=require("viewmodels/shell"),n=ko.observable(),a={activate:function(){e.selectedSubMenu("holylandsquares"),e.selectedMainMenu("holyland"),n.subscribe(function(e){void 0!==e&&t.applyRowSearch("#dataTable tbody tr",e)})},compositionComplete:function(){n("")},searchInput:n};return a});
-define('viewmodels/holyland/logupload',["services/utilities","services/httpService","services/displayService"],function(t,e,n){var a,r=require("viewmodels/shell"),g=ko.observable(),o=function(){g(""),a.removeCurrent()},l=ko.asyncCommand({execute:function(t){a.getQueueSize()>0?a.submit():n.display("Do not forget to select your log file","error"),t(!0)},canExecute:function(t){return!t}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var i=function(){},s={activate:function(){r.selectedSubMenu("logupload"),r.selectedMainMenu("holyland")},compositionComplete:function(){i(),$(".selectpicker").selectpicker();var r=document.getElementById("upload-btn"),l=document.getElementById("pic-progress-wrap"),s=(document.getElementById("picbox"),document.getElementById("errormsg"));a=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=log",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:300,allowedExtensions:["adi","txt","cabrillo.txt","log","cbr"],hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){g(t)},onExtError:function(t){n.display(t+" is not a permitted file type."+"\n\n"+"Only ADI, TXT, LOG and CBR files are allowed.","error")},onSizeError:function(t){n.display(t+" is too big. (300K max file size)","error")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),l.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),s.innerHTML=""},startXHR:function(){var t=document.createElement("button");l.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(a,r){if(!r)return s.innerHTML="Unable to upload file",void 0;if(r.success===!0){var g={info:{timestamp:r.timestamp,filename:r.file}};e.post("Server/upload_log.php",g).done(function(t){t.success===!0?n.display(t.msg):n.display(t.msg,"error"),o()}).error(function(){t.handleError()})}else s.innerHTML=r.msg?r.msg:"Unable to upload file"}})},file:g,Clear:o,Send:l,uploader:a};return s});
-define('viewmodels/holyland/logupload2',["services/utilities","services/httpService","services/displayService"],function(t,e,n){var a,r=require("viewmodels/shell"),g=ko.observable(),o=function(){g(""),a.removeCurrent()},l=ko.asyncCommand({execute:function(t){a.getQueueSize()>0?a.submit():n.display("Do not forget to select your log file","error"),t(!0)},canExecute:function(t){return!t}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var i=function(){},s={activate:function(){r.selectedSubMenu("logupload"),r.selectedMainMenu("holyland")},compositionComplete:function(){i(),$(".selectpicker").selectpicker();var r=document.getElementById("upload-btn"),l=document.getElementById("pic-progress-wrap"),s=(document.getElementById("picbox"),document.getElementById("errormsg"));a=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=log",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:300,allowedExtensions:["adi","txt","cabrillo.txt","log","cbr"],hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){g(t)},onExtError:function(t){n.display(t+" is not a permitted file type."+"\n\n"+"Only ADI, TXT, LOG and CBR files are allowed.","error")},onSizeError:function(t){n.display(t+" is too big. (300K max file size)","error")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),l.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),s.innerHTML=""},startXHR:function(){var t=document.createElement("button");l.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(a,r){if(!r)return s.innerHTML="Unable to upload file",void 0;if(r.success===!0){var g={info:{timestamp:r.timestamp,filename:r.file}};e.post("Server/upload_log.php",g).done(function(t){t.success===!0?n.display(t.msg):n.display(t.msg,"error"),o()}).error(function(){t.handleError()})}else s.innerHTML=r.msg?r.msg:"Unable to upload file"}})},file:g,Clear:o,Send:l,uploader:a};return s});
-define('viewmodels/import',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("import"),t.selectedMainMenu("israelham")}};return e});
-define('viewmodels/market',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observableArray(),r=function(){e.get("Server/markolit.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},g={activate:function(){n.selectedSubMenu("market"),n.selectedMainMenu("aguda")},getItems:r,compositionComplete:function(){r()},items:a};return g});
-define('viewmodels/media',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("media"),t.selectedMainMenu("aguda")}};return e});
-define('viewmodels/membership',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("membership"),t.selectedMainMenu("aguda")}};return e});
-define('viewmodels/news',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("news")}};return e});
-define('viewmodels/onairhagal',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observableArray();this.getHagalFiles=function(){e.get("Server/broadcasted_hagal.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)};var r={activate:function(){n.selectedSubMenu("onairhagal"),n.selectedMainMenu("hagal"),getHagalFiles()},files:a};return r});
-define('viewmodels/onlinecourse',["services/utilities","services/httpService","services/displayService"],function(t,e){var n,a,r=require("viewmodels/shell"),o=ko.observable(),g=ko.observable(),l=ko.observable(),i=ko.observable(),s=ko.observable(),d=ko.observable(),p=ko.observable(),m=ko.observable(),c=ko.observable("m"),L=ko.observable(),h=ko.observable(),w=ko.observable(),u=ko.observable(),v=ko.observable(),f=ko.observable(),b=ko.observable(),y=ko.observable(),_=ko.observable(),x=ko.observable(),S=function(){$("#registration-form").parsley().reset(),o(""),g(""),l(""),i(""),s(""),d(""),p(""),m(""),c("m"),L(""),h(""),w(""),u(""),v(""),f(""),b(""),y(""),_(""),n.removeCurrent()},k=ko.asyncCommand({execute:function(r){if($("#registration-form").parsley().validate(),$("#registration-form").parsley().isValid())if(n.getQueueSize()>0)n.submit();else if(a.getQueueSize()>0)a.submit();else{var _={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),birthdate:d(),id:p(),country:m(),gender:c(),city:L(),address:h(),house:w(),zip:u(),phone:v(),mobile:f(),reason:b(),cv:y(),timestamp:Date.now(),filename:""}};e.post("Server/register_online_course.php",_).done(function(t){alert("OK! "+t),S(),r(!0)}).error(function(){alert("Oops, an error has occured"),t.handleError(),r(!0)})}else r(!0)},canExecute:function(){return!0}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var C=function(){$("#mobile").tooltip(),$("#phone").tooltip(),$("#id").tooltip()},A={activate:function(){r.selectedSubMenu("onlinecourse"),r.selectedMainMenu("aguda"),ko.bindingHandlers.datetimepicker={init:function(t,e){$(t).datetimepicker({format:"dd/MM/yyyy HH:mm:ss PP",language:"en",pick12HourFormat:!0}).on("changeDate",function(t){var n=e();n(t.date)})},update:function(t,e){var n=ko.utils.unwrapObservable(e());$(t).datetimepicker("setValue",n)}}},compositionComplete:function(){C(),$("#birthdate").datetimepicker({pickTime:!1}),$("#birthdate").on("dp.change",function(t){d(moment(t.date).format("DD-MM-YYYY"))}),$("#firstname").focus();var r=document.getElementById("upload-btn"),k=document.getElementById("payment-btn"),A=document.getElementById("pic-progress-wrap"),B=(document.getElementById("picbox"),document.getElementById("errormsg"));n=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=img",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){_(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),A.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),B.innerHTML=""},startXHR:function(){var t=document.createElement("button");A.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,r){if(_(r.file),a.getQueueSize()>0)a.submit();else{var k={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),birthdate:d(),id:p(),country:m(),gender:c(),city:L(),address:h(),house:w(),zip:u(),phone:v(),mobile:f(),reason:b(),cv:y(),timestamp:r.timestamp,filename:_,paymentfilename:x}};e.post("Server/register_online_course.php",k).done(function(t){alert("Very well! "+t),S()}).error(function(){t.handleError()})}}}),a=new ss.SimpleUpload({button:k,url:"Server/uploadHandler.php?dir=payment",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){x(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),A.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),B.innerHTML=""},startXHR:function(){var t=document.createElement("button");A.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,a){if(!a)return B.innerHTML="Unable to upload file",void 0;if(a.success===!0){x(a.file);var r={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),birthdate:d(),id:p(),country:m(),gender:c(),city:L(),address:h(),house:w(),zip:u(),phone:v(),mobile:f(),reason:b(),cv:y(),timestamp:a.timestamp,filename:_,paymentfilename:x}};e.post("Server/register_online_course.php",r).done(function(t){alert("Very well! "+t),S()}).error(function(){t.handleError()})}else B.innerHTML=a.msg?a.msg:"Unable to upload file"}})},firstname:o,lastname:g,efirstname:l,elastname:i,email:s,birthdate:d,id:p,country:m,gender:c,city:L,address:h,house:w,zip:u,phone:v,mobile:f,reason:b,cv:y,file:_,paymentfile:x,Clear:S,Send:k,uploader:n,uploader2:a};return A});
-define('viewmodels/pa',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu(""),t.selectedMainMenu("pa")}};return e});
-define('viewmodels/procedures',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("about"),t.selectedMainMenu("procedures")}};return e});
-define('viewmodels/protocols',["services/utilities","services/httpService"],function(t,e){var n=require("viewmodels/shell"),a=ko.observableArray(),r=ko.observableArray(),o=ko.observableArray();this.getAnnual=function(){e.get("Server/annual.php?d="+Date.now()).done(function(t){a(t)}).error(t.handleError)},this.getProtocol=function(){e.get("Server/protocol.php?d="+Date.now()).done(function(t){r(t)}).error(t.handleError)},this.getFinance=function(){e.get("Server/finance.php?d="+Date.now()).done(function(t){o(t)}).error(t.handleError)};var g={activate:function(){n.selectedSubMenu("protocols"),n.selectedMainMenu("aguda")},compositionComplete:function(){getAnnual(),getProtocol(),getFinance()},annual:a,protocol:r,finance:o};return g});
-define('viewmodels/qsl',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("qsl"),t.selectedMainMenu("aguda")}};return e});
-define('viewmodels/register',["services/utilities","services/httpService","services/displayService"],function(t,e){var n,a,r=require("viewmodels/shell"),o=ko.observable(),g=ko.observable(),l=ko.observable(),i=ko.observable(),s=ko.observable(),d=ko.observable(),p=ko.observable(),m=ko.observable(),c=ko.observable(),L=ko.observable(),h=ko.observable("m"),w=ko.observable(),u=ko.observable(),v=ko.observable(),b=ko.observable(),f=ko.observable(),y=ko.observable(),_=ko.observable(),x=ko.observable(),S=ko.observable(),k=ko.observable(),C=function(){$("#registration-form").parsley().reset(),o(""),g(""),l(""),i(""),s(""),d(""),p(""),m(""),c(""),L(""),h("m"),w(""),u(""),v(""),b(""),f(""),y(""),_(""),x(""),S(""),n.removeCurrent()},A=ko.asyncCommand({execute:function(r){if($("#registration-form").parsley().validate(),$("#registration-form").parsley().isValid())if(n.getQueueSize()>0)n.submit();else if(a.getQueueSize()>0)a.submit();else{var S={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:Date.now(),filename:""}};e.post("Server/register.php",S).done(function(t){alert("OK! "+t),C(),r(!0)}).error(function(){alert("Oops, an error has occured"),t.handleError(),r(!0)})}else r(!0)},canExecute:function(){return!0}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var B=function(){$("#mobile").tooltip(),$("#phone").tooltip(),$("#id").tooltip(),$("#licensenum").tooltip()},M={activate:function(){r.selectedSubMenu("register"),r.selectedMainMenu("aguda"),ko.bindingHandlers.datetimepicker={init:function(t,e){$(t).datetimepicker({format:"dd/MM/yyyy HH:mm:ss PP",language:"en",pick12HourFormat:!0}).on("changeDate",function(t){var n=e();n(t.date)})},update:function(t,e){var n=ko.utils.unwrapObservable(e());$(t).datetimepicker("setValue",n)}}},compositionComplete:function(){B(),$("#birthdate").datetimepicker({pickTime:!1}),$("#birthdate").on("dp.change",function(t){m(moment(t.date).format("DD-MM-YYYY"))}),$("#firstname").focus();var r=document.getElementById("upload-btn"),A=document.getElementById("payment-btn"),M=document.getElementById("pic-progress-wrap"),H=(document.getElementById("picbox"),document.getElementById("errormsg"));n=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=img",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){S(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),M.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),H.innerHTML=""},startXHR:function(){var t=document.createElement("button");M.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,r){if(S(r.file),a.getQueueSize()>0)a.submit();else{var A={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:r.timestamp,filename:S,paymentfilename:k}};e.post("Server/register.php",A).done(function(t){alert("Very well! "+t),C()}).error(function(){t.handleError()})}}}),a=new ss.SimpleUpload({button:A,url:"Server/uploadHandler.php?dir=payment",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:600,accept:"image/*",hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){k(t)},onExtError:function(t){alert(t+" is not a permitted file type."+"\n\n"+"Only PNG, JPG, and GIF files are allowed.")},onSizeError:function(t){alert(t+" is too big. (600K max file size)")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),M.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),H.innerHTML=""},startXHR:function(){var t=document.createElement("button");M.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(n,a){if(!a)return H.innerHTML="Unable to upload file",void 0;if(a.success===!0){k(a.file);var r={info:{firstname:o(),lastname:g(),efirstname:l(),elastname:i(),email:s(),licensenum:d(),callsign:p(),birthdate:m(),id:c(),country:L(),gender:h(),city:w(),address:u(),house:v(),zip:b(),phone:f(),mobile:y(),reason:_(),cv:x(),timestamp:a.timestamp,filename:S,paymentfilename:k}};e.post("Server/register.php",r).done(function(t){alert("Very well! "+t),C()}).error(function(){t.handleError()})}else H.innerHTML=a.msg?a.msg:"Unable to upload file"}})},firstname:o,lastname:g,efirstname:l,elastname:i,email:s,licensenum:d,callsign:p,birthdate:m,id:c,country:L,gender:h,city:w,address:u,house:v,zip:b,phone:f,mobile:y,reason:_,cv:x,file:S,paymentfile:k,Clear:C,Send:A,uploader:n,uploader2:a};return M});
-define('viewmodels/regulations',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("regulations"),t.selectedMainMenu("israelham")}};return e});
-define('viewmodels/repeaters',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e=function(){var t=new google.maps.LatLng(30.614596,34.804811),e=new google.maps.LatLng(31.768689,35.216128),n=new google.maps.LatLng(32.583741,35.181742),a=new google.maps.LatLng(32.074502,34.791491),r=new google.maps.LatLng(32.762539,35.018685),o=new google.maps.LatLng(29.572127,34.964874),g=new google.maps.LatLng(31.256257,34.785504),l=new google.maps.LatLng(31.344768,35.049863),i=new google.maps.LatLng(32.980831,35.506225),s=new google.maps.LatLng(32.072165,34.816521),d=new google.maps.LatLng(32.315934,34.862816),p=new google.maps.LatLng(32.0553536,34.8621609),m=new google.maps.LatLng(32.764199,35.016099),c=new google.maps.LatLng(33.128886,35.785405),L={center:new google.maps.LatLng(31.44741,35.079346),zoom:8},h=new google.maps.Map(document.getElementById("map-canvas"),L),w=new google.maps.Marker({position:t,map:h,animation:google.maps.Animation.DROP,title:"ממסר מצפה רמון - R0 - 145.000"}),u=new google.maps.Marker({position:e,map:h,animation:google.maps.Animation.DROP,title:"ממסר ירושלים - R1 - 145.625"}),v=new google.maps.Marker({position:n,map:h,animation:google.maps.Animation.DROP,title:"ממסר מגידו - R3 - 145.675"}),f=new google.maps.Marker({position:a,map:h,animation:google.maps.Animation.DROP,title:"ממסר תל-אביב - R7 - 145.775"}),b=new google.maps.Marker({position:r,map:h,animation:google.maps.Animation.DROP,title:"ממסר חיפה - R12 - 144.700"}),y=new google.maps.Marker({position:o,map:h,animation:google.maps.Animation.DROP,title:"ממסר אילת - R12B - 145.300"}),_=new google.maps.Marker({position:g,map:h,animation:google.maps.Animation.DROP,title:"ממסר באר-שבע - R12C - 145.300"}),x=new google.maps.Marker({position:l,map:h,animation:google.maps.Animation.DROP,title:"ממסר יתיר - R13 - 145.325"}),S=new google.maps.Marker({position:i,map:h,animation:google.maps.Animation.DROP,title:"ממסר צפת - R14 - 145.350"}),k=new google.maps.Marker({position:s,map:h,animation:google.maps.Animation.DROP,title:"ממסר גבעתיים - R15 - 144.775"}),C=new google.maps.Marker({position:d,map:h,animation:google.maps.Animation.DROP,title:"ממסר נתניה - R16 - 145.400"}),A=new google.maps.Marker({position:p,map:h,animation:google.maps.Animation.DROP,title:"ממסר קרית אונו - R18 - 145.450"}),B=new google.maps.Marker({position:m,map:h,animation:google.maps.Animation.DROP,title:"ממסר חיפה - UHF - R73 - 438.725"}),M=new google.maps.Marker({position:c,map:h,animation:google.maps.Animation.DROP,title:"ממסר בנטל - R4.5 - 145.7125"});B.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");var R,H={strokeColor:"#555555",strokeOpacity:.7,strokeWeight:1,fillColor:"#555555",fillOpacity:.3,map:h,radius:7e4},j=function(t){h.getZoom()<11&&(H.center=t.latLng,H.radius=t.radius,R=new google.maps.Circle(H),R.setMap(h))},T=function(){R.setMap(null)};google.maps.event.addListener(w,"mouseover",function(t){t.radius=8e4,j(t)}),google.maps.event.addListener(w,"mouseout",T),google.maps.event.addListener(u,"mouseover",function(t){t.radius=7e4,j(t)}),google.maps.event.addListener(u,"mouseout",T),google.maps.event.addListener(v,"mouseover",function(t){t.radius=6e4,j(t)}),google.maps.event.addListener(v,"mouseout",T),google.maps.event.addListener(f,"mouseover",function(t){t.radius=7e4,j(t)}),google.maps.event.addListener(f,"mouseout",T),google.maps.event.addListener(b,"mouseover",function(t){t.radius=8e4,j(t)}),google.maps.event.addListener(b,"mouseout",T),google.maps.event.addListener(y,"mouseover",function(t){t.radius=6e4,j(t)}),google.maps.event.addListener(y,"mouseout",T),google.maps.event.addListener(_,"mouseover",function(t){t.radius=8e4,j(t)}),google.maps.event.addListener(_,"mouseout",T),google.maps.event.addListener(x,"mouseover",function(t){t.radius=7e4,j(t)}),google.maps.event.addListener(x,"mouseout",T),google.maps.event.addListener(S,"mouseover",function(t){t.radius=13e4,j(t)}),google.maps.event.addListener(S,"mouseout",T),google.maps.event.addListener(k,"mouseover",function(t){t.radius=7e4,j(t)}),google.maps.event.addListener(k,"mouseout",T),google.maps.event.addListener(C,"mouseover",function(t){t.radius=5e4,j(t)}),google.maps.event.addListener(C,"mouseout",T),google.maps.event.addListener(A,"mouseover",function(t){t.radius=4e4,j(t)}),google.maps.event.addListener(A,"mouseout",T),google.maps.event.addListener(B,"mouseover",function(t){t.radius=8e4,j(t)}),google.maps.event.addListener(B,"mouseout",T),google.maps.event.addListener(M,"mouseover",function(t){t.radius=5e4,j(t)}),google.maps.event.addListener(M,"mouseout",T)},n={activate:function(){t.selectedSubMenu("repeaters"),t.selectedMainMenu("israelham")},compositionComplete:function(){e()}};return n});
-define('viewmodels/repeatersmap',['viewmodels/shell'],function(){var t=require("viewmodels/shell"),e={activate:function(){t.selectedSubMenu("repeatersmap"),t.selectedMainMenu("israelham")},compositionComplete:function(){}};return e});
-define('viewmodels/shop',["services/utilities","services/httpService"],function(e,t){var n=require("viewmodels/shell"),a=ko.observableArray(),r=function(){t.get("Server/markolit.php?d="+Date.now()).done(function(e){a(e)}).error(e.handleError)},o={activate:function(){n.selectedSubMenu("market"),n.selectedMainMenu("aguda"),simpleCart({currency:"ILS",checkout:{type:"PayPal",email:"gilifon@gmail.com"}})},getItems:r,compositionComplete:function(){r()},items:a};return o});
-define('viewmodels/squares',["services/holylandUtility"],function(e){require("viewmodels/shell");var t=function(t){var n=t.coords.latitude,a=t.coords.longitude,r=new google.maps.LatLng(n,a),o={center:new google.maps.LatLng(32.01258834091205,34.816575050354004),zoom:12},l=new google.maps.Map(document.getElementById("map-canvas"),o);new google.maps.Marker({position:r,map:l,title:"Good Luck in Holyland Contest!"});var g=new google.maps.drawing.DrawingManager({drawingMode:google.maps.drawing.OverlayType.POLYGON,drawingControl:!0,drawingControlOptions:{position:google.maps.ControlPosition.TOP_CENTER,drawingModes:[google.maps.drawing.OverlayType.POLYGON]}});g.setMap(l),google.maps.event.addListener(g,"polygoncomplete",function(e){var t=e.getPath().getArray();console.log(t);for(var n=0;n<t.length;n++)console.log("lat:"+t[n].lat()+" lng: "+t[n].lng())}),ko.utils.arrayForEach(e.Areas(),function(e){e.poly.setMap(l)})},n=function(n){t(n);var a=e.getAreaByPosition(n);$("#square").html(a)},a={compositionComplete:function(){navigator.geolocation?navigator.geolocation.getCurrentPosition(n):x.innerHTML="Geolocation is not supported by this browser."}};return a});
-define('viewmodels/sukotresults',["services/utilities","services/httpService"],function(e){var t=require("viewmodels/shell"),n=ko.observable(),a={activate:function(){t.selectedSubMenu("sukotresults"),t.selectedMainMenu("israelham"),n.subscribe(function(t){void 0!==t&&e.applyRowSearch("#dataTable tbody tr",t)}),n("")},searchInput:n};return a});
-define('viewmodels/wwff',['viewmodels/shell'],function(){var e=require("viewmodels/shell"),t={activate:function(){e.selectedSubMenu("wwff"),e.selectedMainMenu("israelham")}};return t});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The system module encapsulates the most basic features used by other modules.
+ * @module system
+ * @requires require
+ * @requires jquery
+ */
+define('durandal/system',['require', 'jquery'], function(require, $) {
+    var isDebugging = false,
+        nativeKeys = Object.keys,
+        hasOwnProperty = Object.prototype.hasOwnProperty,
+        toString = Object.prototype.toString,
+        system,
+        treatAsIE8 = false,
+        nativeIsArray = Array.isArray,
+        slice = Array.prototype.slice;
+
+    //see http://patik.com/blog/complete-cross-browser-console-log/
+    // Tell IE9 to use its built-in console
+    if (Function.prototype.bind && (typeof console === 'object' || typeof console === 'function') && typeof console.log == 'object') {
+        try {
+            ['log', 'info', 'warn', 'error', 'assert', 'dir', 'clear', 'profile', 'profileEnd']
+                .forEach(function(method) {
+                    console[method] = this.call(console[method], console);
+                }, Function.prototype.bind);
+        } catch (ex) {
+            treatAsIE8 = true;
+        }
+    }
+
+    // callback for dojo's loader 
+    // note: if you wish to use Durandal with dojo's AMD loader,
+    // currently you must fork the dojo source with the following
+    // dojo/dojo.js, line 1187, the last line of the finishExec() function: 
+    //  (add) signal("moduleLoaded", [module.result, module.mid]);
+    // an enhancement request has been submitted to dojo to make this
+    // a permanent change. To view the status of this request, visit:
+    // http://bugs.dojotoolkit.org/ticket/16727
+
+    if (require.on) {
+        require.on("moduleLoaded", function(module, mid) {
+            system.setModuleId(module, mid);
+        });
+    }
+
+    // callback for require.js loader
+    if (typeof requirejs !== 'undefined') {
+        requirejs.onResourceLoad = function(context, map, depArray) {
+            system.setModuleId(context.defined[map.id], map.id);
+        };
+    }
+
+    var noop = function() { };
+
+    var log = function() {
+        try {
+            // Modern browsers
+            if (typeof console != 'undefined' && typeof console.log == 'function') {
+                // Opera 11
+                if (window.opera) {
+                    var i = 0;
+                    while (i < arguments.length) {
+                        console.log('Item ' + (i + 1) + ': ' + arguments[i]);
+                        i++;
+                    }
+                }
+                // All other modern browsers
+                else if ((slice.call(arguments)).length == 1 && typeof slice.call(arguments)[0] == 'string') {
+                    console.log((slice.call(arguments)).toString());
+                } else {
+                    console.log.apply(console, slice.call(arguments));
+                }
+            }
+            // IE8
+            else if ((!Function.prototype.bind || treatAsIE8) && typeof console != 'undefined' && typeof console.log == 'object') {
+                Function.prototype.call.call(console.log, console, slice.call(arguments));
+            }
+
+            // IE7 and lower, and other old browsers
+        } catch (ignore) { }
+    };
+
+    var logError = function(error) {
+        if(error instanceof Error){
+            throw error;
+        }
+
+        throw new Error(error);
+    };
+
+    /**
+     * @class SystemModule
+     * @static
+     */
+    system = {
+        /**
+         * Durandal's version.
+         * @property {string} version
+         */
+        version: "2.0.0",
+        /**
+         * A noop function.
+         * @method noop
+         */
+        noop: noop,
+        /**
+         * Gets the module id for the specified object.
+         * @method getModuleId
+         * @param {object} obj The object whose module id you wish to determine.
+         * @return {string} The module id.
+         */
+        getModuleId: function(obj) {
+            if (!obj) {
+                return null;
+            }
+
+            if (typeof obj == 'function') {
+                return obj.prototype.__moduleId__;
+            }
+
+            if (typeof obj == 'string') {
+                return null;
+            }
+
+            return obj.__moduleId__;
+        },
+        /**
+         * Sets the module id for the specified object.
+         * @method setModuleId
+         * @param {object} obj The object whose module id you wish to set.
+         * @param {string} id The id to set for the specified object.
+         */
+        setModuleId: function(obj, id) {
+            if (!obj) {
+                return;
+            }
+
+            if (typeof obj == 'function') {
+                obj.prototype.__moduleId__ = id;
+                return;
+            }
+
+            if (typeof obj == 'string') {
+                return;
+            }
+
+            obj.__moduleId__ = id;
+        },
+        /**
+         * Resolves the default object instance for a module. If the module is an object, the module is returned. If the module is a function, that function is called with `new` and it's result is returned.
+         * @method resolveObject
+         * @param {object} module The module to use to get/create the default object for.
+         * @return {object} The default object for the module.
+         */
+        resolveObject: function(module) {
+            if (system.isFunction(module)) {
+                return new module();
+            } else {
+                return module;
+            }
+        },
+        /**
+         * Gets/Sets whether or not Durandal is in debug mode.
+         * @method debug
+         * @param {boolean} [enable] Turns on/off debugging.
+         * @return {boolean} Whether or not Durandal is current debugging.
+         */
+        debug: function(enable) {
+            if (arguments.length == 1) {
+                isDebugging = enable;
+                if (isDebugging) {
+                    this.log = log;
+                    this.error = logError;
+                    this.log('Debug:Enabled');
+                } else {
+                    this.log('Debug:Disabled');
+                    this.log = noop;
+                    this.error = noop;
+                }
+            }
+
+            return isDebugging;
+        },
+        /**
+         * Logs data to the console. Pass any number of parameters to be logged. Log output is not processed if the framework is not running in debug mode.
+         * @method log
+         * @param {object} info* The objects to log.
+         */
+        log: noop,
+        /**
+         * Logs an error.
+         * @method error
+         * @param {string|Error} obj The error to report.
+         */
+        error: noop,
+        /**
+         * Asserts a condition by throwing an error if the condition fails.
+         * @method assert
+         * @param {boolean} condition The condition to check.
+         * @param {string} message The message to report in the error if the condition check fails.
+         */
+        assert: function (condition, message) {
+            if (!condition) {
+                system.error(new Error(message || 'Assert:Failed'));
+            }
+        },
+        /**
+         * Creates a deferred object which can be used to create a promise. Optionally pass a function action to perform which will be passed an object used in resolving the promise.
+         * @method defer
+         * @param {function} [action] The action to defer. You will be passed the deferred object as a paramter.
+         * @return {Deferred} The deferred object.
+         */
+        defer: function(action) {
+            return $.Deferred(action);
+        },
+        /**
+         * Creates a simple V4 UUID. This should not be used as a PK in your database. It can be used to generate internal, unique ids. For a more robust solution see [node-uuid](https://github.com/broofa/node-uuid).
+         * @method guid
+         * @return {string} The guid.
+         */
+        guid: function() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        },
+        /**
+         * Uses require.js to obtain a module. This function returns a promise which resolves with the module instance. You can pass more than one module id to this function or an array of ids. If more than one or an array is passed, then the promise will resolve with an array of module instances.
+         * @method acquire
+         * @param {string|string[]} moduleId The id(s) of the modules to load.
+         * @return {Promise} A promise for the loaded module(s).
+         */
+        acquire: function() {
+            var modules,
+                first = arguments[0],
+                arrayRequest = false;
+
+            if(system.isArray(first)){
+                modules = first;
+                arrayRequest = true;
+            }else{
+                modules = slice.call(arguments, 0);
+            }
+
+            return this.defer(function(dfd) {
+                require(modules, function() {
+                    var args = arguments;
+                    setTimeout(function() {
+                        if(args.length > 1 || arrayRequest){
+                            dfd.resolve(slice.call(args, 0));
+                        }else{
+                            dfd.resolve(args[0]);
+                        }
+                    }, 1);
+                }, function(err){
+                    dfd.reject(err);
+                });
+            }).promise();
+        },
+        /**
+         * Extends the first object with the properties of the following objects.
+         * @method extend
+         * @param {object} obj The target object to extend.
+         * @param {object} extension* Uses to extend the target object.
+         */
+        extend: function(obj) {
+            var rest = slice.call(arguments, 1);
+
+            for (var i = 0; i < rest.length; i++) {
+                var source = rest[i];
+
+                if (source) {
+                    for (var prop in source) {
+                        obj[prop] = source[prop];
+                    }
+                }
+            }
+
+            return obj;
+        },
+        /**
+         * Uses a setTimeout to wait the specified milliseconds.
+         * @method wait
+         * @param {number} milliseconds The number of milliseconds to wait.
+         * @return {Promise}
+         */
+        wait: function(milliseconds) {
+            return system.defer(function(dfd) {
+                setTimeout(dfd.resolve, milliseconds);
+            }).promise();
+        }
+    };
+
+    /**
+     * Gets all the owned keys of the specified object.
+     * @method keys
+     * @param {object} object The object whose owned keys should be returned.
+     * @return {string[]} The keys.
+     */
+    system.keys = nativeKeys || function(obj) {
+        if (obj !== Object(obj)) {
+            throw new TypeError('Invalid object');
+        }
+
+        var keys = [];
+
+        for (var key in obj) {
+            if (hasOwnProperty.call(obj, key)) {
+                keys[keys.length] = key;
+            }
+        }
+
+        return keys;
+    };
+
+    /**
+     * Determines if the specified object is an html element.
+     * @method isElement
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+    system.isElement = function(obj) {
+        return !!(obj && obj.nodeType === 1);
+    };
+
+    /**
+     * Determines if the specified object is an array.
+     * @method isArray
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+    system.isArray = nativeIsArray || function(obj) {
+        return toString.call(obj) == '[object Array]';
+    };
+
+    /**
+     * Determines if the specified object is...an object. ie. Not an array, string, etc.
+     * @method isObject
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+    system.isObject = function(obj) {
+        return obj === Object(obj);
+    };
+
+    /**
+     * Determines if the specified object is a boolean.
+     * @method isBoolean
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+    system.isBoolean = function(obj) {
+        return typeof(obj) === "boolean";
+    };
+
+    /**
+     * Determines if the specified object is a promise.
+     * @method isPromise
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+    system.isPromise = function(obj) {
+        return obj && system.isFunction(obj.then);
+    };
+
+    /**
+     * Determines if the specified object is a function arguments object.
+     * @method isArguments
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    /**
+     * Determines if the specified object is a function.
+     * @method isFunction
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    /**
+     * Determines if the specified object is a string.
+     * @method isString
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    /**
+     * Determines if the specified object is a number.
+     * @method isNumber
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    /**
+     * Determines if the specified object is a date.
+     * @method isDate
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    /**
+     * Determines if the specified object is a boolean.
+     * @method isBoolean
+     * @param {object} object The object to check.
+     * @return {boolean} True if matches the type, false otherwise.
+     */
+
+    //isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+    var isChecks = ['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'];
+
+    function makeIsFunction(name) {
+        var value = '[object ' + name + ']';
+        system['is' + name] = function(obj) {
+            return toString.call(obj) == value;
+        };
+    }
+
+    for (var i = 0; i < isChecks.length; i++) {
+        makeIsFunction(isChecks[i]);
+    }
+
+    return system;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The viewEngine module provides information to the viewLocator module which is used to locate the view's source file. The viewEngine also transforms a view id into a view instance.
+ * @module viewEngine
+ * @requires system
+ * @requires jquery
+ */
+define('durandal/viewEngine',['durandal/system', 'jquery'], function (system, $) {
+    var parseMarkup;
+
+    if ($.parseHTML) {
+        parseMarkup = function (html) {
+            return $.parseHTML(html);
+        };
+    } else {
+        parseMarkup = function (html) {
+            return $(html).get();
+        };
+    }
+
+    /**
+     * @class ViewEngineModule
+     * @static
+     */
+    return {
+        /**
+         * The file extension that view source files are expected to have.
+         * @property {string} viewExtension
+         * @default .html
+         */
+        viewExtension: '.html',
+        /**
+         * The name of the RequireJS loader plugin used by the viewLocator to obtain the view source. (Use requirejs to map the plugin's full path).
+         * @property {string} viewPlugin
+         * @default text
+         */
+        viewPlugin: 'text',
+        /**
+         * Determines if the url is a url for a view, according to the view engine.
+         * @method isViewUrl
+         * @param {string} url The potential view url.
+         * @return {boolean} True if the url is a view url, false otherwise.
+         */
+        isViewUrl: function (url) {
+            return url.indexOf(this.viewExtension, url.length - this.viewExtension.length) !== -1;
+        },
+        /**
+         * Converts a view url into a view id.
+         * @method convertViewUrlToViewId
+         * @param {string} url The url to convert.
+         * @return {string} The view id.
+         */
+        convertViewUrlToViewId: function (url) {
+            return url.substring(0, url.length - this.viewExtension.length);
+        },
+        /**
+         * Converts a view id into a full RequireJS path.
+         * @method convertViewIdToRequirePath
+         * @param {string} viewId The view id to convert.
+         * @return {string} The require path.
+         */
+        convertViewIdToRequirePath: function (viewId) {
+            return this.viewPlugin + '!' + viewId + this.viewExtension;
+        },
+        /**
+         * Parses the view engine recognized markup and returns DOM elements.
+         * @method parseMarkup
+         * @param {string} markup The markup to parse.
+         * @return {DOMElement[]} The elements.
+         */
+        parseMarkup: parseMarkup,
+        /**
+         * Calls `parseMarkup` and then pipes the results through `ensureSingleElement`.
+         * @method processMarkup
+         * @param {string} markup The markup to process.
+         * @return {DOMElement} The view.
+         */
+        processMarkup: function (markup) {
+            var allElements = this.parseMarkup(markup);
+            return this.ensureSingleElement(allElements);
+        },
+        /**
+         * Converts an array of elements into a single element. White space and comments are removed. If a single element does not remain, then the elements are wrapped.
+         * @method ensureSingleElement
+         * @param {DOMElement[]} allElements The elements.
+         * @return {DOMElement} A single element.
+         */
+        ensureSingleElement:function(allElements){
+            if (allElements.length == 1) {
+                return allElements[0];
+            }
+
+            var withoutCommentsOrEmptyText = [];
+
+            for (var i = 0; i < allElements.length; i++) {
+                var current = allElements[i];
+                if (current.nodeType != 8) {
+                    if (current.nodeType == 3) {
+                        var result = /\S/.test(current.nodeValue);
+                        if (!result) {
+                            continue;
+                        }
+                    }
+
+                    withoutCommentsOrEmptyText.push(current);
+                }
+            }
+
+            if (withoutCommentsOrEmptyText.length > 1) {
+                return $(withoutCommentsOrEmptyText).wrapAll('<div class="durandal-wrapper"></div>').parent().get(0);
+            }
+
+            return withoutCommentsOrEmptyText[0];
+        },
+        /**
+         * Creates the view associated with the view id.
+         * @method createView
+         * @param {string} viewId The view id whose view should be created.
+         * @return {Promise} A promise of the view.
+         */
+        createView: function(viewId) {
+            var that = this;
+            var requirePath = this.convertViewIdToRequirePath(viewId);
+
+            return system.defer(function(dfd) {
+                system.acquire(requirePath).then(function(markup) {
+                    var element = that.processMarkup(markup);
+                    element.setAttribute('data-view', viewId);
+                    dfd.resolve(element);
+                }).fail(function(err){
+                        that.createFallbackView(viewId, requirePath, err).then(function(element){
+                            element.setAttribute('data-view', viewId);
+                            dfd.resolve(element);
+                        });
+                    });
+            }).promise();
+        },
+        /**
+         * Called when a view cannot be found to provide the opportunity to locate or generate a fallback view. Mainly used to ease development.
+         * @method createFallbackView
+         * @param {string} viewId The view id whose view should be created.
+         * @param {string} requirePath The require path that was attempted.
+         * @param {Error} requirePath The error that was returned from the attempt to locate the default view.
+         * @return {Promise} A promise for the fallback view.
+         */
+        createFallbackView: function (viewId, requirePath, err) {
+            var that = this,
+                message = 'View Not Found. Searched for "' + viewId + '" via path "' + requirePath + '".';
+
+            return system.defer(function(dfd) {
+                dfd.resolve(that.processMarkup('<div class="durandal-view-404">' + message + '</div>'));
+            }).promise();
+        }
+    };
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The viewLocator module collaborates with the viewEngine module to provide views (literally dom sub-trees) to other parts of the framework as needed. The primary consumer of the viewLocator is the composition module.
+ * @module viewLocator
+ * @requires system
+ * @requires viewEngine
+ */
+define('durandal/viewLocator',['durandal/system', 'durandal/viewEngine'], function (system, viewEngine) {
+    function findInElements(nodes, url) {
+        for (var i = 0; i < nodes.length; i++) {
+            var current = nodes[i];
+            var existingUrl = current.getAttribute('data-view');
+            if (existingUrl == url) {
+                return current;
+            }
+        }
+    }
+    
+    function escape(str) {
+        return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+    }
+
+    /**
+     * @class ViewLocatorModule
+     * @static
+     */
+    return {
+        /**
+         * Allows you to set up a convention for mapping module folders to view folders. It is a convenience method that customizes `convertModuleIdToViewId` and `translateViewIdToArea` under the covers.
+         * @method useConvention
+         * @param {string} [modulesPath] A string to match in the path and replace with the viewsPath. If not specified, the match is 'viewmodels'.
+         * @param {string} [viewsPath] The replacement for the modulesPath. If not specified, the replacement is 'views'.
+         * @param {string} [areasPath] Partial views are mapped to the "views" folder if not specified. Use this parameter to change their location.
+         */
+        useConvention: function(modulesPath, viewsPath, areasPath) {
+            modulesPath = modulesPath || 'viewmodels';
+            viewsPath = viewsPath || 'views';
+            areasPath = areasPath || viewsPath;
+
+            var reg = new RegExp(escape(modulesPath), 'gi');
+
+            this.convertModuleIdToViewId = function (moduleId) {
+                return moduleId.replace(reg, viewsPath);
+            };
+
+            this.translateViewIdToArea = function (viewId, area) {
+                if (!area || area == 'partial') {
+                    return areasPath + '/' + viewId;
+                }
+                
+                return areasPath + '/' + area + '/' + viewId;
+            };
+        },
+        /**
+         * Maps an object instance to a view instance.
+         * @method locateViewForObject
+         * @param {object} obj The object to locate the view for.
+         * @param {string} [area] The area to translate the view to.
+         * @param {DOMElement[]} [elementsToSearch] An existing set of elements to search first.
+         * @return {Promise} A promise of the view.
+         */
+        locateViewForObject: function(obj, area, elementsToSearch) {
+            var view;
+
+            if (obj.getView) {
+                view = obj.getView();
+                if (view) {
+                    return this.locateView(view, area, elementsToSearch);
+                }
+            }
+
+            if (obj.viewUrl) {
+                return this.locateView(obj.viewUrl, area, elementsToSearch);
+            }
+
+            var id = system.getModuleId(obj);
+            if (id) {
+                return this.locateView(this.convertModuleIdToViewId(id), area, elementsToSearch);
+            }
+
+            return this.locateView(this.determineFallbackViewId(obj), area, elementsToSearch);
+        },
+        /**
+         * Converts a module id into a view id. By default the ids are the same.
+         * @method convertModuleIdToViewId
+         * @param {string} moduleId The module id.
+         * @return {string} The view id.
+         */
+        convertModuleIdToViewId: function(moduleId) {
+            return moduleId;
+        },
+        /**
+         * If no view id can be determined, this function is called to genreate one. By default it attempts to determine the object's type and use that.
+         * @method determineFallbackViewId
+         * @param {object} obj The object to determine the fallback id for.
+         * @return {string} The view id.
+         */
+        determineFallbackViewId: function (obj) {
+            var funcNameRegex = /function (.{1,})\(/;
+            var results = (funcNameRegex).exec((obj).constructor.toString());
+            var typeName = (results && results.length > 1) ? results[1] : "";
+
+            return 'views/' + typeName;
+        },
+        /**
+         * Takes a view id and translates it into a particular area. By default, no translation occurs.
+         * @method translateViewIdToArea
+         * @param {string} viewId The view id.
+         * @param {string} area The area to translate the view to.
+         * @return {string} The translated view id.
+         */
+        translateViewIdToArea: function (viewId, area) {
+            return viewId;
+        },
+        /**
+         * Locates the specified view.
+         * @method locateView
+         * @param {string|DOMElement} viewOrUrlOrId A view, view url or view id to locate.
+         * @param {string} [area] The area to translate the view to.
+         * @param {DOMElement[]} [elementsToSearch] An existing set of elements to search first.
+         * @return {Promise} A promise of the view.
+         */
+        locateView: function(viewOrUrlOrId, area, elementsToSearch) {
+            if (typeof viewOrUrlOrId === 'string') {
+                var viewId;
+
+                if (viewEngine.isViewUrl(viewOrUrlOrId)) {
+                    viewId = viewEngine.convertViewUrlToViewId(viewOrUrlOrId);
+                } else {
+                    viewId = viewOrUrlOrId;
+                }
+
+                if (area) {
+                    viewId = this.translateViewIdToArea(viewId, area);
+                }
+
+                if (elementsToSearch) {
+                    var existing = findInElements(elementsToSearch, viewId);
+                    if (existing) {
+                        return system.defer(function(dfd) {
+                            dfd.resolve(existing);
+                        }).promise();
+                    }
+                }
+
+                return viewEngine.createView(viewId);
+            }
+
+            return system.defer(function(dfd) {
+                dfd.resolve(viewOrUrlOrId);
+            }).promise();
+        }
+    };
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The binder joins an object instance and a DOM element tree by applying databinding and/or invoking binding lifecycle callbacks (binding and bindingComplete).
+ * @module binder
+ * @requires system
+ * @requires knockout
+ */
+define('durandal/binder',['durandal/system', 'knockout'], function (system, ko) {
+    var binder,
+        insufficientInfoMessage = 'Insufficient Information to Bind',
+        unexpectedViewMessage = 'Unexpected View Type',
+        bindingInstructionKey = 'durandal-binding-instruction',
+        koBindingContextKey = '__ko_bindingContext__';
+
+    function normalizeBindingInstruction(result){
+        if(result === undefined){
+            return { applyBindings: true };
+        }
+
+        if(system.isBoolean(result)){
+            return { applyBindings:result };
+        }
+
+        if(result.applyBindings === undefined){
+            result.applyBindings = true;
+        }
+
+        return result;
+    }
+
+    function doBind(obj, view, bindingTarget, data){
+        if (!view || !bindingTarget) {
+            if (binder.throwOnErrors) {
+                system.error(insufficientInfoMessage);
+            } else {
+                system.log(insufficientInfoMessage, view, data);
+            }
+            return;
+        }
+
+        if (!view.getAttribute) {
+            if (binder.throwOnErrors) {
+                system.error(unexpectedViewMessage);
+            } else {
+                system.log(unexpectedViewMessage, view, data);
+            }
+            return;
+        }
+
+        var viewName = view.getAttribute('data-view');
+
+        try {
+            var instruction;
+
+            if (obj && obj.binding) {
+                instruction = obj.binding(view);
+            }
+
+            instruction = normalizeBindingInstruction(instruction);
+            binder.binding(data, view, instruction);
+
+            if(instruction.applyBindings){
+                system.log('Binding', viewName, data);
+                ko.applyBindings(bindingTarget, view);
+            }else if(obj){
+                ko.utils.domData.set(view, koBindingContextKey, { $data:obj });
+            }
+
+            binder.bindingComplete(data, view, instruction);
+
+            if (obj && obj.bindingComplete) {
+                obj.bindingComplete(view);
+            }
+
+            ko.utils.domData.set(view, bindingInstructionKey, instruction);
+            return instruction;
+        } catch (e) {
+            e.message = e.message + ';\nView: ' + viewName + ";\nModuleId: " + system.getModuleId(data);
+            if (binder.throwOnErrors) {
+                system.error(e);
+            } else {
+                system.log(e.message);
+            }
+        }
+    }
+
+    /**
+     * @class BinderModule
+     * @static
+     */
+    return binder = {
+        /**
+         * Called before every binding operation. Does nothing by default.
+         * @method binding
+         * @param {object} data The data that is about to be bound.
+         * @param {DOMElement} view The view that is about to be bound.
+         * @param {object} instruction The object that carries the binding instructions.
+         */
+        binding: system.noop,
+        /**
+         * Called after every binding operation. Does nothing by default.
+         * @method bindingComplete
+         * @param {object} data The data that has just been bound.
+         * @param {DOMElement} view The view that has just been bound.
+         * @param {object} instruction The object that carries the binding instructions.
+         */
+        bindingComplete: system.noop,
+        /**
+         * Indicates whether or not the binding system should throw errors or not.
+         * @property {boolean} throwOnErrors
+         * @default false The binding system will not throw errors by default. Instead it will log them.
+         */
+        throwOnErrors: false,
+        /**
+         * Gets the binding instruction that was associated with a view when it was bound.
+         * @method getBindingInstruction
+         * @param {DOMElement} view The view that was previously bound.
+         * @return {object} The object that carries the binding instructions.
+         */
+        getBindingInstruction:function(view){
+            return ko.utils.domData.get(view, bindingInstructionKey);
+        },
+        /**
+         * Binds the view, preserving the existing binding context. Optionally, a new context can be created, parented to the previous context.
+         * @method bindContext
+         * @param {KnockoutBindingContext} bindingContext The current binding context.
+         * @param {DOMElement} view The view to bind.
+         * @param {object} [obj] The data to bind to, causing the creation of a child binding context if present.
+         */
+        bindContext: function(bindingContext, view, obj) {
+            if (obj && bindingContext) {
+                bindingContext = bindingContext.createChildContext(obj);
+            }
+
+            return doBind(obj, view, bindingContext, obj || (bindingContext ? bindingContext.$data : null));
+        },
+        /**
+         * Binds the view, preserving the existing binding context. Optionally, a new context can be created, parented to the previous context.
+         * @method bind
+         * @param {object} obj The data to bind to.
+         * @param {DOMElement} view The view to bind.
+         */
+        bind: function(obj, view) {
+            return doBind(obj, view, obj, obj);
+        }
+    };
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The activator module encapsulates all logic related to screen/component activation.
+ * An activator is essentially an asynchronous state machine that understands a particular state transition protocol.
+ * The protocol ensures that the following series of events always occur: `canDeactivate` (previous state), `canActivate` (new state), `deactivate` (previous state), `activate` (new state).
+ * Each of the _can_ callbacks may return a boolean, affirmative value or promise for one of those. If either of the _can_ functions yields a false result, then activation halts.
+ * @module activator
+ * @requires system
+ * @requires knockout
+ */
+define('durandal/activator',['durandal/system', 'knockout'], function (system, ko) {
+    var activator;
+
+    function ensureSettings(settings) {
+        if (settings == undefined) {
+            settings = {};
+        }
+
+        if (!settings.closeOnDeactivate) {
+            settings.closeOnDeactivate = activator.defaults.closeOnDeactivate;
+        }
+
+        if (!settings.beforeActivate) {
+            settings.beforeActivate = activator.defaults.beforeActivate;
+        }
+
+        if (!settings.afterDeactivate) {
+            settings.afterDeactivate = activator.defaults.afterDeactivate;
+        }
+
+        if(!settings.affirmations){
+            settings.affirmations = activator.defaults.affirmations;
+        }
+
+        if (!settings.interpretResponse) {
+            settings.interpretResponse = activator.defaults.interpretResponse;
+        }
+
+        if (!settings.areSameItem) {
+            settings.areSameItem = activator.defaults.areSameItem;
+        }
+
+        return settings;
+    }
+
+    function invoke(target, method, data) {
+        if (system.isArray(data)) {
+            return target[method].apply(target, data);
+        }
+
+        return target[method](data);
+    }
+
+    function deactivate(item, close, settings, dfd, setter) {
+        if (item && item.deactivate) {
+            system.log('Deactivating', item);
+
+            var result;
+            try {
+                result = item.deactivate(close);
+            } catch(error) {
+                system.error(error);
+                dfd.resolve(false);
+                return;
+            }
+
+            if (result && result.then) {
+                result.then(function() {
+                    settings.afterDeactivate(item, close, setter);
+                    dfd.resolve(true);
+                }, function(reason) {
+                    system.log(reason);
+                    dfd.resolve(false);
+                });
+            } else {
+                settings.afterDeactivate(item, close, setter);
+                dfd.resolve(true);
+            }
+        } else {
+            if (item) {
+                settings.afterDeactivate(item, close, setter);
+            }
+
+            dfd.resolve(true);
+        }
+    }
+
+    function activate(newItem, activeItem, callback, activationData) {
+        if (newItem) {
+            if (newItem.activate) {
+                system.log('Activating', newItem);
+
+                var result;
+                try {
+                    result = invoke(newItem, 'activate', activationData);
+                } catch (error) {
+                    system.error(error);
+                    callback(false);
+                    return;
+                }
+
+                if (result && result.then) {
+                    result.then(function() {
+                        activeItem(newItem);
+                        callback(true);
+                    }, function(reason) {
+                        system.log(reason);
+                        callback(false);
+                    });
+                } else {
+                    activeItem(newItem);
+                    callback(true);
+                }
+            } else {
+                activeItem(newItem);
+                callback(true);
+            }
+        } else {
+            callback(true);
+        }
+    }
+
+    function canDeactivateItem(item, close, settings) {
+        settings.lifecycleData = null;
+
+        return system.defer(function (dfd) {
+            if (item && item.canDeactivate) {
+                var resultOrPromise;
+                try {
+                    resultOrPromise = item.canDeactivate(close);
+                } catch(error) {
+                    system.error(error);
+                    dfd.resolve(false);
+                    return;
+                }
+
+                if (resultOrPromise.then) {
+                    resultOrPromise.then(function(result) {
+                        settings.lifecycleData = result;
+                        dfd.resolve(settings.interpretResponse(result));
+                    }, function(reason) {
+                        system.error(reason);
+                        dfd.resolve(false);
+                    });
+                } else {
+                    settings.lifecycleData = resultOrPromise;
+                    dfd.resolve(settings.interpretResponse(resultOrPromise));
+                }
+            } else {
+                dfd.resolve(true);
+            }
+        }).promise();
+    };
+
+    function canActivateItem(newItem, activeItem, settings, activationData) {
+        settings.lifecycleData = null;
+
+        return system.defer(function (dfd) {
+            if (newItem == activeItem()) {
+                dfd.resolve(true);
+                return;
+            }
+
+            if (newItem && newItem.canActivate) {
+                var resultOrPromise;
+                try {
+                    resultOrPromise = invoke(newItem, 'canActivate', activationData);
+                } catch (error) {
+                    system.error(error);
+                    dfd.resolve(false);
+                    return;
+                }
+
+                if (resultOrPromise.then) {
+                    resultOrPromise.then(function(result) {
+                        settings.lifecycleData = result;
+                        dfd.resolve(settings.interpretResponse(result));
+                    }, function(reason) {
+                        system.error(reason);
+                        dfd.resolve(false);
+                    });
+                } else {
+                    settings.lifecycleData = resultOrPromise;
+                    dfd.resolve(settings.interpretResponse(resultOrPromise));
+                }
+            } else {
+                dfd.resolve(true);
+            }
+        }).promise();
+    };
+
+    /**
+     * An activator is a read/write computed observable that enforces the activation lifecycle whenever changing values.
+     * @class Activator
+     */
+    function createActivator(initialActiveItem, settings) {
+        var activeItem = ko.observable(null);
+        var activeData;
+
+        settings = ensureSettings(settings);
+
+        var computed = ko.computed({
+            read: function () {
+                return activeItem();
+            },
+            write: function (newValue) {
+                computed.viaSetter = true;
+                computed.activateItem(newValue);
+            }
+        });
+
+        computed.__activator__ = true;
+
+        /**
+         * The settings for this activator.
+         * @property {ActivatorSettings} settings
+         */
+        computed.settings = settings;
+        settings.activator = computed;
+
+        /**
+         * An observable which indicates whether or not the activator is currently in the process of activating an instance.
+         * @method isActivating
+         * @return {boolean}
+         */
+        computed.isActivating = ko.observable(false);
+
+        /**
+         * Determines whether or not the specified item can be deactivated.
+         * @method canDeactivateItem
+         * @param {object} item The item to check.
+         * @param {boolean} close Whether or not to check if close is possible.
+         * @return {promise}
+         */
+        computed.canDeactivateItem = function (item, close) {
+            return canDeactivateItem(item, close, settings);
+        };
+
+        /**
+         * Deactivates the specified item.
+         * @method deactivateItem
+         * @param {object} item The item to deactivate.
+         * @param {boolean} close Whether or not to close the item.
+         * @return {promise}
+         */
+        computed.deactivateItem = function (item, close) {
+            return system.defer(function(dfd) {
+                computed.canDeactivateItem(item, close).then(function(canDeactivate) {
+                    if (canDeactivate) {
+                        deactivate(item, close, settings, dfd, activeItem);
+                    } else {
+                        computed.notifySubscribers();
+                        dfd.resolve(false);
+                    }
+                });
+            }).promise();
+        };
+
+        /**
+         * Determines whether or not the specified item can be activated.
+         * @method canActivateItem
+         * @param {object} item The item to check.
+         * @param {object} activationData Data associated with the activation.
+         * @return {promise}
+         */
+        computed.canActivateItem = function (newItem, activationData) {
+            return canActivateItem(newItem, activeItem, settings, activationData);
+        };
+
+        /**
+         * Activates the specified item.
+         * @method activateItem
+         * @param {object} newItem The item to activate.
+         * @param {object} newActivationData Data associated with the activation.
+         * @return {promise}
+         */
+        computed.activateItem = function (newItem, newActivationData) {
+            var viaSetter = computed.viaSetter;
+            computed.viaSetter = false;
+
+            return system.defer(function (dfd) {
+                if (computed.isActivating()) {
+                    dfd.resolve(false);
+                    return;
+                }
+
+                computed.isActivating(true);
+
+                var currentItem = activeItem();
+                if (settings.areSameItem(currentItem, newItem, activeData, newActivationData)) {
+                    computed.isActivating(false);
+                    dfd.resolve(true);
+                    return;
+                }
+
+                computed.canDeactivateItem(currentItem, settings.closeOnDeactivate).then(function (canDeactivate) {
+                    if (canDeactivate) {
+                        computed.canActivateItem(newItem, newActivationData).then(function (canActivate) {
+                            if (canActivate) {
+                                system.defer(function (dfd2) {
+                                    deactivate(currentItem, settings.closeOnDeactivate, settings, dfd2);
+                                }).promise().then(function () {
+                                    newItem = settings.beforeActivate(newItem, newActivationData);
+                                    activate(newItem, activeItem, function (result) {
+                                        activeData = newActivationData;
+                                        computed.isActivating(false);
+                                        dfd.resolve(result);
+                                    }, newActivationData);
+                                });
+                            } else {
+                                if (viaSetter) {
+                                    computed.notifySubscribers();
+                                }
+
+                                computed.isActivating(false);
+                                dfd.resolve(false);
+                            }
+                        });
+                    } else {
+                        if (viaSetter) {
+                            computed.notifySubscribers();
+                        }
+
+                        computed.isActivating(false);
+                        dfd.resolve(false);
+                    }
+                });
+            }).promise();
+        };
+
+        /**
+         * Determines whether or not the activator, in its current state, can be activated.
+         * @method canActivate
+         * @return {promise}
+         */
+        computed.canActivate = function () {
+            var toCheck;
+
+            if (initialActiveItem) {
+                toCheck = initialActiveItem;
+                initialActiveItem = false;
+            } else {
+                toCheck = computed();
+            }
+
+            return computed.canActivateItem(toCheck);
+        };
+
+        /**
+         * Activates the activator, in its current state.
+         * @method activate
+         * @return {promise}
+         */
+        computed.activate = function () {
+            var toActivate;
+
+            if (initialActiveItem) {
+                toActivate = initialActiveItem;
+                initialActiveItem = false;
+            } else {
+                toActivate = computed();
+            }
+
+            return computed.activateItem(toActivate);
+        };
+
+        /**
+         * Determines whether or not the activator, in its current state, can be deactivated.
+         * @method canDeactivate
+         * @return {promise}
+         */
+        computed.canDeactivate = function (close) {
+            return computed.canDeactivateItem(computed(), close);
+        };
+
+        /**
+         * Deactivates the activator, in its current state.
+         * @method deactivate
+         * @return {promise}
+         */
+        computed.deactivate = function (close) {
+            return computed.deactivateItem(computed(), close);
+        };
+
+        computed.includeIn = function (includeIn) {
+            includeIn.canActivate = function () {
+                return computed.canActivate();
+            };
+
+            includeIn.activate = function () {
+                return computed.activate();
+            };
+
+            includeIn.canDeactivate = function (close) {
+                return computed.canDeactivate(close);
+            };
+
+            includeIn.deactivate = function (close) {
+                return computed.deactivate(close);
+            };
+        };
+
+        if (settings.includeIn) {
+            computed.includeIn(settings.includeIn);
+        } else if (initialActiveItem) {
+            computed.activate();
+        }
+
+        computed.forItems = function (items) {
+            settings.closeOnDeactivate = false;
+
+            settings.determineNextItemToActivate = function (list, lastIndex) {
+                var toRemoveAt = lastIndex - 1;
+
+                if (toRemoveAt == -1 && list.length > 1) {
+                    return list[1];
+                }
+
+                if (toRemoveAt > -1 && toRemoveAt < list.length - 1) {
+                    return list[toRemoveAt];
+                }
+
+                return null;
+            };
+
+            settings.beforeActivate = function (newItem) {
+                var currentItem = computed();
+
+                if (!newItem) {
+                    newItem = settings.determineNextItemToActivate(items, currentItem ? items.indexOf(currentItem) : 0);
+                } else {
+                    var index = items.indexOf(newItem);
+
+                    if (index == -1) {
+                        items.push(newItem);
+                    } else {
+                        newItem = items()[index];
+                    }
+                }
+
+                return newItem;
+            };
+
+            settings.afterDeactivate = function (oldItem, close) {
+                if (close) {
+                    items.remove(oldItem);
+                }
+            };
+
+            var originalCanDeactivate = computed.canDeactivate;
+            computed.canDeactivate = function (close) {
+                if (close) {
+                    return system.defer(function (dfd) {
+                        var list = items();
+                        var results = [];
+
+                        function finish() {
+                            for (var j = 0; j < results.length; j++) {
+                                if (!results[j]) {
+                                    dfd.resolve(false);
+                                    return;
+                                }
+                            }
+
+                            dfd.resolve(true);
+                        }
+
+                        for (var i = 0; i < list.length; i++) {
+                            computed.canDeactivateItem(list[i], close).then(function (result) {
+                                results.push(result);
+                                if (results.length == list.length) {
+                                    finish();
+                                }
+                            });
+                        }
+                    }).promise();
+                } else {
+                    return originalCanDeactivate();
+                }
+            };
+
+            var originalDeactivate = computed.deactivate;
+            computed.deactivate = function (close) {
+                if (close) {
+                    return system.defer(function (dfd) {
+                        var list = items();
+                        var results = 0;
+                        var listLength = list.length;
+
+                        function doDeactivate(item) {
+                            computed.deactivateItem(item, close).then(function () {
+                                results++;
+                                items.remove(item);
+                                if (results == listLength) {
+                                    dfd.resolve();
+                                }
+                            });
+                        }
+
+                        for (var i = 0; i < listLength; i++) {
+                            doDeactivate(list[i]);
+                        }
+                    }).promise();
+                } else {
+                    return originalDeactivate();
+                }
+            };
+
+            return computed;
+        };
+
+        return computed;
+    }
+
+    /**
+     * @class ActivatorSettings
+     * @static
+     */
+    var activatorSettings = {
+        /**
+         * The default value passed to an object's deactivate function as its close parameter.
+         * @property {boolean} closeOnDeactivate
+         * @default true
+         */
+        closeOnDeactivate: true,
+        /**
+         * Lower-cased words which represent a truthy value.
+         * @property {string[]} affirmations
+         * @default ['yes', 'ok', 'true']
+         */
+        affirmations: ['yes', 'ok', 'true'],
+        /**
+         * Interprets the response of a `canActivate` or `canDeactivate` call using the known affirmative values in the `affirmations` array.
+         * @method interpretResponse
+         * @param {object} value
+         * @return {boolean}
+         */
+        interpretResponse: function(value) {
+            if(system.isObject(value)) {
+                value = value.can || false;
+            }
+
+            if(system.isString(value)) {
+                return ko.utils.arrayIndexOf(this.affirmations, value.toLowerCase()) !== -1;
+            }
+
+            return value;
+        },
+        /**
+         * Determines whether or not the current item and the new item are the same.
+         * @method areSameItem
+         * @param {object} currentItem
+         * @param {object} newItem
+         * @param {object} currentActivationData
+         * @param {object} newActivationData
+         * @return {boolean}
+         */
+        areSameItem: function(currentItem, newItem, currentActivationData, newActivationData) {
+            return currentItem == newItem;
+        },
+        /**
+         * Called immediately before the new item is activated.
+         * @method beforeActivate
+         * @param {object} newItem
+         */
+        beforeActivate: function(newItem) {
+            return newItem;
+        },
+        /**
+         * Called immediately after the old item is deactivated.
+         * @method afterDeactivate
+         * @param {object} oldItem The previous item.
+         * @param {boolean} close Whether or not the previous item was closed.
+         * @param {function} setter The activate item setter function.
+         */
+        afterDeactivate: function(oldItem, close, setter) {
+            if(close && setter) {
+                setter(null);
+            }
+        }
+    };
+
+    /**
+     * @class ActivatorModule
+     * @static
+     */
+    activator = {
+        /**
+         * The default settings used by activators.
+         * @property {ActivatorSettings} defaults
+         */
+        defaults: activatorSettings,
+        /**
+          * Creates a new activator.
+          * @method create
+          * @param {object} [initialActiveItem] The item which should be immediately activated upon creation of the ativator.
+          * @param {ActivatorSettings} [settings] Per activator overrides of the default activator settings.
+          * @return {Activator} The created activator.
+          */
+        create: createActivator,
+        /**
+         * Determines whether or not the provided object is an activator or not.
+         * @method isActivator
+         * @param {object} object Any object you wish to verify as an activator or not.
+         * @return {boolean} True if the object is an activator; false otherwise.
+         */
+        isActivator:function(object){
+            return object && object.__activator__;
+        }
+    };
+
+    return activator;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The composition module encapsulates all functionality related to visual composition.
+ * @module composition
+ * @requires system
+ * @requires viewLocator
+ * @requires binder
+ * @requires viewEngine
+ * @requires activator
+ * @requires jquery
+ * @requires knockout
+ */
+define('durandal/composition',['durandal/system', 'durandal/viewLocator', 'durandal/binder', 'durandal/viewEngine', 'durandal/activator', 'jquery', 'knockout'], function (system, viewLocator, binder, viewEngine, activator, $, ko) {
+    var dummyModel = {},
+        activeViewAttributeName = 'data-active-view',
+        composition,
+        compositionCompleteCallbacks = [],
+        compositionCount = 0,
+        compositionDataKey = 'durandal-composition-data',
+        partAttributeName = 'data-part',
+        partAttributeSelector = '[' + partAttributeName + ']',
+        bindableSettings = ['model', 'view', 'transition', 'area', 'strategy', 'activationData'];
+
+    function getHostState(parent) {
+        var elements = [];
+        var state = {
+            childElements: elements,
+            activeView: null
+        };
+
+        var child = ko.virtualElements.firstChild(parent);
+
+        while (child) {
+            if (child.nodeType == 1) {
+                elements.push(child);
+                if (child.getAttribute(activeViewAttributeName)) {
+                    state.activeView = child;
+                }
+            }
+
+            child = ko.virtualElements.nextSibling(child);
+        }
+
+        if(!state.activeView){
+            state.activeView = elements[0];
+        }
+
+        return state;
+    }
+
+    function endComposition() {
+        compositionCount--;
+
+        if (compositionCount === 0) {
+            setTimeout(function(){
+                var i = compositionCompleteCallbacks.length;
+
+                while(i--) {
+                    compositionCompleteCallbacks[i]();
+                }
+
+                compositionCompleteCallbacks = [];
+            }, 1);
+        }
+    }
+
+    function tryActivate(context, successCallback, skipActivation) {
+        if(skipActivation){
+            successCallback();
+        } else if (context.activate && context.model && context.model.activate) {
+            var result;
+
+            if(system.isArray(context.activationData)) {
+                result = context.model.activate.apply(context.model, context.activationData);
+            } else {
+                result = context.model.activate(context.activationData);
+            }
+
+            if(result && result.then) {
+                result.then(successCallback);
+            } else if(result || result === undefined) {
+                successCallback();
+            } else {
+                endComposition();
+            }
+        } else {
+            successCallback();
+        }
+    }
+
+    function triggerAttach() {
+        var context = this;
+
+        if (context.activeView) {
+            context.activeView.removeAttribute(activeViewAttributeName);
+        }
+
+        if (context.child) {
+            if (context.model && context.model.attached) {
+                if (context.composingNewView || context.alwaysTriggerAttach) {
+                    context.model.attached(context.child, context.parent, context);
+                }
+            }
+
+            if (context.attached) {
+                context.attached(context.child, context.parent, context);
+            }
+
+            context.child.setAttribute(activeViewAttributeName, true);
+
+            if (context.composingNewView && context.model) {
+                if (context.model.compositionComplete) {
+                    composition.current.complete(function () {
+                        context.model.compositionComplete(context.child, context.parent, context);
+                    });
+                }
+
+                if (context.model.detached) {
+                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, function () {
+                        context.model.detached(context.child, context.parent, context);
+                    });
+                }
+            }
+
+            if (context.compositionComplete) {
+                composition.current.complete(function () {
+                    context.compositionComplete(context.child, context.parent, context);
+                });
+            }
+        }
+
+        endComposition();
+        context.triggerAttach = system.noop;
+    }
+
+    function shouldTransition(context) {
+        if (system.isString(context.transition)) {
+            if (context.activeView) {
+                if (context.activeView == context.child) {
+                    return false;
+                }
+
+                if (!context.child) {
+                    return true;
+                }
+
+                if (context.skipTransitionOnSameViewId) {
+                    var currentViewId = context.activeView.getAttribute('data-view');
+                    var newViewId = context.child.getAttribute('data-view');
+                    return currentViewId != newViewId;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function cloneNodes(nodesArray) {
+        for (var i = 0, j = nodesArray.length, newNodesArray = []; i < j; i++) {
+            var clonedNode = nodesArray[i].cloneNode(true);
+            newNodesArray.push(clonedNode);
+        }
+        return newNodesArray;
+    }
+
+    function replaceParts(context){
+        var parts = cloneNodes(context.parts);
+        var replacementParts = composition.getParts(parts);
+        var standardParts = composition.getParts(context.child);
+
+        for (var partId in replacementParts) {
+            $(standardParts[partId]).replaceWith(replacementParts[partId]);
+        }
+    }
+
+    function removePreviousView(parent){
+        var children = ko.virtualElements.childNodes(parent), i, len;
+
+        if(!system.isArray(children)){
+            var arrayChildren = [];
+
+            for(i = 0, len = children.length; i < len; i++){
+                arrayChildren[i] = children[i];
+            }
+
+            children = arrayChildren;
+        }
+
+        for(i = 1,len = children.length; i < len; i++){
+            ko.removeNode(children[i]);
+        }
+    }
+
+    /**
+     * @class CompositionTransaction
+     * @static
+     */
+    var compositionTransaction = {
+        /**
+         * Registers a callback which will be invoked when the current composition transaction has completed. The transaction includes all parent and children compositions.
+         * @method complete
+         * @param {function} callback The callback to be invoked when composition is complete.
+         */
+        complete: function (callback) {
+            compositionCompleteCallbacks.push(callback);
+        }
+    };
+
+    /**
+     * @class CompositionModule
+     * @static
+     */
+    composition = {
+        /**
+         * Converts a transition name to its moduleId.
+         * @method convertTransitionToModuleId
+         * @param {string} name The name of the transtion.
+         * @return {string} The moduleId.
+         */
+        convertTransitionToModuleId: function (name) {
+            return 'transitions/' + name;
+        },
+        /**
+         * The name of the transition to use in all compositions.
+         * @property {string} defaultTransitionName
+         * @default null
+         */
+        defaultTransitionName: null,
+        /**
+         * Represents the currently executing composition transaction.
+         * @property {CompositionTransaction} current
+         */
+        current: compositionTransaction,
+        /**
+         * Registers a binding handler that will be invoked when the current composition transaction is complete.
+         * @method addBindingHandler
+         * @param {string} name The name of the binding handler.
+         * @param {object} [config] The binding handler instance. If none is provided, the name will be used to look up an existing handler which will then be converted to a composition handler.
+         * @param {function} [initOptionsFactory] If the registered binding needs to return options from its init call back to knockout, this function will server as a factory for those options. It will receive the same parameters that the init function does.
+         */
+        addBindingHandler:function(name, config, initOptionsFactory){
+            var key,
+                dataKey = 'composition-handler-' + name,
+                handler;
+
+            config = config || ko.bindingHandlers[name];
+            initOptionsFactory = initOptionsFactory || function(){ return undefined;  };
+
+            handler = ko.bindingHandlers[name] = {
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var data = {
+                        trigger:ko.observable(null)
+                    };
+
+                    composition.current.complete(function(){
+                        if(config.init){
+                            config.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                        }
+
+                        if(config.update){
+                            ko.utils.domData.set(element, dataKey, config);
+                            data.trigger('trigger');
+                        }
+                    });
+
+                    ko.utils.domData.set(element, dataKey, data);
+
+                    return initOptionsFactory(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                },
+                update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var data = ko.utils.domData.get(element, dataKey);
+
+                    if(data.update){
+                        return data.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                    }
+
+                    data.trigger();
+                }
+            };
+
+            for (key in config) {
+                if (key !== "init" && key !== "update") {
+                    handler[key] = config[key];
+                }
+            }
+        },
+        /**
+         * Gets an object keyed with all the elements that are replacable parts, found within the supplied elements. The key will be the part name and the value will be the element itself.
+         * @method getParts
+         * @param {DOMElement\DOMElement[]} elements The element(s) to search for parts.
+         * @return {object} An object keyed by part.
+         */
+        getParts: function(elements) {
+            var parts = {};
+
+            if (!system.isArray(elements)) {
+                elements = [elements];
+            }
+
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+
+                if (element.getAttribute) {
+                    var id = element.getAttribute(partAttributeName);
+                    if (id) {
+                        parts[id] = element;
+                    }
+
+                    var childParts = $(partAttributeSelector, element)
+                        .not($('[data-bind] ' + partAttributeSelector, element));
+
+                    for (var j = 0; j < childParts.length; j++) {
+                        var part = childParts.get(j);
+                        parts[part.getAttribute(partAttributeName)] = part;
+                    }
+                }
+            }
+
+            return parts;
+        },
+        cloneNodes:cloneNodes,
+        finalize: function (context) {
+            context.transition = context.transition || this.defaultTransitionName;
+
+            if(!context.child && !context.activeView){
+                if (!context.cacheViews) {
+                    ko.virtualElements.emptyNode(context.parent);
+                }
+
+                context.triggerAttach();
+            }else if (shouldTransition(context)) {
+                var transitionModuleId = this.convertTransitionToModuleId(context.transition);
+
+                system.acquire(transitionModuleId).then(function (transition) {
+                    context.transition = transition;
+
+                    transition(context).then(function () {
+                        if (!context.cacheViews) {
+                            if(!context.child){
+                                ko.virtualElements.emptyNode(context.parent);
+                            }else{
+                                removePreviousView(context.parent);
+                            }
+                        }else if(context.activeView){
+                            var instruction = binder.getBindingInstruction(context.activeView);
+                            if(instruction.cacheViews != undefined && !instruction.cacheViews){
+                                ko.removeNode(context.activeView);
+                            }
+                        }
+
+                        context.triggerAttach();
+                    });
+                }).fail(function(err){
+                    system.error('Failed to load transition (' + transitionModuleId + '). Details: ' + err.message);
+                });
+            } else {
+                if (context.child != context.activeView) {
+                    if (context.cacheViews && context.activeView) {
+                        var instruction = binder.getBindingInstruction(context.activeView);
+                        if(instruction.cacheViews != undefined && !instruction.cacheViews){
+                            ko.removeNode(context.activeView);
+                        }else{
+                            $(context.activeView).hide();
+                        }
+                    }
+
+                    if (!context.child) {
+                        if (!context.cacheViews) {
+                            ko.virtualElements.emptyNode(context.parent);
+                        }
+                    } else {
+                        if (!context.cacheViews) {
+                            removePreviousView(context.parent);
+                        }
+
+                        $(context.child).show();
+                    }
+                }
+
+                context.triggerAttach();
+            }
+        },
+        bindAndShow: function (child, context, skipActivation) {
+            context.child = child;
+
+            if (context.cacheViews) {
+                context.composingNewView = (ko.utils.arrayIndexOf(context.viewElements, child) == -1);
+            } else {
+                context.composingNewView = true;
+            }
+
+            tryActivate(context, function () {
+                if (context.binding) {
+                    context.binding(context.child, context.parent, context);
+                }
+
+                if (context.preserveContext && context.bindingContext) {
+                    if (context.composingNewView) {
+                        if(context.parts){
+                            replaceParts(context);
+                        }
+
+                        $(child).hide();
+                        ko.virtualElements.prepend(context.parent, child);
+
+                        binder.bindContext(context.bindingContext, child, context.model);
+                    }
+                } else if (child) {
+                    var modelToBind = context.model || dummyModel;
+                    var currentModel = ko.dataFor(child);
+
+                    if (currentModel != modelToBind) {
+                        if (!context.composingNewView) {
+                            $(child).remove();
+                            viewEngine.createView(child.getAttribute('data-view')).then(function(recreatedView) {
+                                composition.bindAndShow(recreatedView, context, true);
+                            });
+                            return;
+                        }
+
+                        if(context.parts){
+                            replaceParts(context);
+                        }
+
+                        $(child).hide();
+                        ko.virtualElements.prepend(context.parent, child);
+
+                        binder.bind(modelToBind, child);
+                    }
+                }
+
+                composition.finalize(context);
+            }, skipActivation);
+        },
+        /**
+         * Eecutes the default view location strategy.
+         * @method defaultStrategy
+         * @param {object} context The composition context containing the model and possibly existing viewElements.
+         * @return {promise} A promise for the view.
+         */
+        defaultStrategy: function (context) {
+            return viewLocator.locateViewForObject(context.model, context.area, context.viewElements);
+        },
+        getSettings: function (valueAccessor, element) {
+            var value = valueAccessor(),
+                settings = ko.utils.unwrapObservable(value) || {},
+                activatorPresent = activator.isActivator(value),
+                moduleId;
+
+            if (system.isString(settings)) {
+                if (viewEngine.isViewUrl(settings)) {
+                    settings = {
+                        view: settings
+                    };
+                } else {
+                    settings = {
+                        model: settings,
+                        activate: true
+                    };
+                }
+
+                return settings;
+            }
+
+            moduleId = system.getModuleId(settings);
+            if (moduleId) {
+                settings = {
+                    model: settings,
+                    activate: true
+                };
+
+                return settings;
+            }
+
+            if(!activatorPresent && settings.model) {
+                activatorPresent = activator.isActivator(settings.model);
+            }
+
+            for (var attrName in settings) {
+                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+                    settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
+                } else {
+                    settings[attrName] = settings[attrName];
+                }
+            }
+
+            if (activatorPresent) {
+                settings.activate = false;
+            } else if (settings.activate === undefined) {
+                settings.activate = true;
+            }
+
+            return settings;
+        },
+        executeStrategy: function (context) {
+            context.strategy(context).then(function (child) {
+                composition.bindAndShow(child, context);
+            });
+        },
+        inject: function (context) {
+            if (!context.model) {
+                this.bindAndShow(null, context);
+                return;
+            }
+
+            if (context.view) {
+                viewLocator.locateView(context.view, context.area, context.viewElements).then(function (child) {
+                    composition.bindAndShow(child, context);
+                });
+                return;
+            }
+
+            if (!context.strategy) {
+                context.strategy = this.defaultStrategy;
+            }
+
+            if (system.isString(context.strategy)) {
+                system.acquire(context.strategy).then(function (strategy) {
+                    context.strategy = strategy;
+                    composition.executeStrategy(context);
+                }).fail(function(err){
+                    system.error('Failed to load view strategy (' + context.strategy + '). Details: ' + err.message);
+                });
+            } else {
+                this.executeStrategy(context);
+            }
+        },
+        /**
+         * Initiates a composition.
+         * @method compose
+         * @param {DOMElement} element The DOMElement or knockout virtual element that serves as the parent for the composition.
+         * @param {object} settings The composition settings.
+         * @param {object} [bindingContext] The current binding context.
+         */
+        compose: function (element, settings, bindingContext, fromBinding) {
+            compositionCount++;
+
+            if(!fromBinding){
+                settings = composition.getSettings(function() { return settings; }, element);
+            }
+
+            var hostState = getHostState(element);
+
+            settings.activeView = hostState.activeView;
+            settings.parent = element;
+            settings.triggerAttach = triggerAttach;
+            settings.bindingContext = bindingContext;
+
+            if (settings.cacheViews && !settings.viewElements) {
+                settings.viewElements = hostState.childElements;
+            }
+
+            if (!settings.model) {
+                if (!settings.view) {
+                    this.bindAndShow(null, settings);
+                } else {
+                    settings.area = settings.area || 'partial';
+                    settings.preserveContext = true;
+
+                    viewLocator.locateView(settings.view, settings.area, settings.viewElements).then(function (child) {
+                        composition.bindAndShow(child, settings);
+                    });
+                }
+            } else if (system.isString(settings.model)) {
+                system.acquire(settings.model).then(function (module) {
+                    settings.model = system.resolveObject(module);
+                    composition.inject(settings);
+                }).fail(function(err){
+                    system.error('Failed to load composed module (' + settings.model + '). Details: ' + err.message);
+                });
+            } else {
+                composition.inject(settings);
+            }
+        }
+    };
+
+    ko.bindingHandlers.compose = {
+        init: function() {
+            return { controlsDescendantBindings: true };
+        },
+        update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var settings = composition.getSettings(valueAccessor, element);
+            if(settings.mode){
+                var data = ko.utils.domData.get(element, compositionDataKey);
+                if(!data){
+                    var childNodes = ko.virtualElements.childNodes(element);
+                    data = {};
+
+                    if(settings.mode === 'inline'){
+                        data.view = viewEngine.ensureSingleElement(childNodes);
+                    }else if(settings.mode === 'templated'){
+                        data.parts = cloneNodes(childNodes);
+                    }
+
+                    ko.virtualElements.emptyNode(element);
+                    ko.utils.domData.set(element, compositionDataKey, data);
+                }
+
+                if(settings.mode === 'inline'){
+                    settings.view = data.view.cloneNode(true);
+                }else if(settings.mode === 'templated'){
+                    settings.parts = data.parts;
+                }
+
+                settings.preserveContext = true;
+            }
+
+            composition.compose(element, settings, bindingContext, true);
+        }
+    };
+
+    ko.virtualElements.allowedBindings.compose = true;
+
+    return composition;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Durandal events originate from backbone.js but also combine some ideas from signals.js as well as some additional improvements.
+ * Events can be installed into any object and are installed into the `app` module by default for convenient app-wide eventing.
+ * @module events
+ * @requires system
+ */
+define('durandal/events',['durandal/system'], function (system) {
+    var eventSplitter = /\s+/;
+    var Events = function() { };
+
+    /**
+     * Represents an event subscription.
+     * @class Subscription
+     */
+    var Subscription = function(owner, events) {
+        this.owner = owner;
+        this.events = events;
+    };
+
+    /**
+     * Attaches a callback to the event subscription.
+     * @method then
+     * @param {function} callback The callback function to invoke when the event is triggered.
+     * @param {object} [context] An object to use as `this` when invoking the `callback`.
+     * @chainable
+     */
+    Subscription.prototype.then = function (callback, context) {
+        this.callback = callback || this.callback;
+        this.context = context || this.context;
+        
+        if (!this.callback) {
+            return this;
+        }
+
+        this.owner.on(this.events, this.callback, this.context);
+        return this;
+    };
+
+    /**
+     * Attaches a callback to the event subscription.
+     * @method on
+     * @param {function} [callback] The callback function to invoke when the event is triggered. If `callback` is not provided, the previous callback will be re-activated.
+     * @param {object} [context] An object to use as `this` when invoking the `callback`.
+     * @chainable
+     */
+    Subscription.prototype.on = Subscription.prototype.then;
+
+    /**
+     * Cancels the subscription.
+     * @method off
+     * @chainable
+     */
+    Subscription.prototype.off = function () {
+        this.owner.off(this.events, this.callback, this.context);
+        return this;
+    };
+
+    /**
+     * Creates an object with eventing capabilities.
+     * @class Events
+     */
+
+    /**
+     * Creates a subscription or registers a callback for the specified event.
+     * @method on
+     * @param {string} events One or more events, separated by white space.
+     * @param {function} [callback] The callback function to invoke when the event is triggered. If `callback` is not provided, a subscription instance is returned.
+     * @param {object} [context] An object to use as `this` when invoking the `callback`.
+     * @return {Subscription|Events} A subscription is returned if no callback is supplied, otherwise the events object is returned for chaining.
+     */
+    Events.prototype.on = function(events, callback, context) {
+        var calls, event, list;
+
+        if (!callback) {
+            return new Subscription(this, events);
+        } else {
+            calls = this.callbacks || (this.callbacks = {});
+            events = events.split(eventSplitter);
+
+            while (event = events.shift()) {
+                list = calls[event] || (calls[event] = []);
+                list.push(callback, context);
+            }
+
+            return this;
+        }
+    };
+
+    /**
+     * Removes the callbacks for the specified events.
+     * @method off
+     * @param {string} [events] One or more events, separated by white space to turn off. If no events are specified, then the callbacks will be removed.
+     * @param {function} [callback] The callback function to remove. If `callback` is not provided, all callbacks for the specified events will be removed.
+     * @param {object} [context] The object that was used as `this`. Callbacks with this context will be removed.
+     * @chainable
+     */
+    Events.prototype.off = function(events, callback, context) {
+        var event, calls, list, i;
+
+        // No events
+        if (!(calls = this.callbacks)) {
+            return this;
+        }
+
+        //removing all
+        if (!(events || callback || context)) {
+            delete this.callbacks;
+            return this;
+        }
+
+        events = events ? events.split(eventSplitter) : system.keys(calls);
+
+        // Loop through the callback list, splicing where appropriate.
+        while (event = events.shift()) {
+            if (!(list = calls[event]) || !(callback || context)) {
+                delete calls[event];
+                continue;
+            }
+
+            for (i = list.length - 2; i >= 0; i -= 2) {
+                if (!(callback && list[i] !== callback || context && list[i + 1] !== context)) {
+                    list.splice(i, 2);
+                }
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Triggers the specified events.
+     * @method trigger
+     * @param {string} [events] One or more events, separated by white space to trigger.
+     * @chainable
+     */
+    Events.prototype.trigger = function(events) {
+        var event, calls, list, i, length, args, all, rest;
+        if (!(calls = this.callbacks)) {
+            return this;
+        }
+
+        rest = [];
+        events = events.split(eventSplitter);
+        for (i = 1, length = arguments.length; i < length; i++) {
+            rest[i - 1] = arguments[i];
+        }
+
+        // For each event, walk through the list of callbacks twice, first to
+        // trigger the event, then to trigger any `"all"` callbacks.
+        while (event = events.shift()) {
+            // Copy callback lists to prevent modification.
+            if (all = calls.all) {
+                all = all.slice();
+            }
+
+            if (list = calls[event]) {
+                list = list.slice();
+            }
+
+            // Execute event callbacks.
+            if (list) {
+                for (i = 0, length = list.length; i < length; i += 2) {
+                    list[i].apply(list[i + 1] || this, rest);
+                }
+            }
+
+            // Execute "all" callbacks.
+            if (all) {
+                args = [event].concat(rest);
+                for (i = 0, length = all.length; i < length; i += 2) {
+                    all[i].apply(all[i + 1] || this, args);
+                }
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Creates a function that will trigger the specified events when called. Simplifies proxying jQuery (or other) events through to the events object.
+     * @method proxy
+     * @param {string} events One or more events, separated by white space to trigger by invoking the returned function.
+     * @return {function} Calling the function will invoke the previously specified events on the events object.
+     */
+    Events.prototype.proxy = function(events) {
+        var that = this;
+        return (function(arg) {
+            that.trigger(events, arg);
+        });
+    };
+
+    /**
+     * Creates an object with eventing capabilities.
+     * @class EventsModule
+     * @static
+     */
+
+    /**
+     * Adds eventing capabilities to the specified object.
+     * @method includeIn
+     * @param {object} targetObject The object to add eventing capabilities to.
+     */
+    Events.includeIn = function(targetObject) {
+        targetObject.on = Events.prototype.on;
+        targetObject.off = Events.prototype.off;
+        targetObject.trigger = Events.prototype.trigger;
+        targetObject.proxy = Events.prototype.proxy;
+    };
+
+    return Events;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The app module controls app startup, plugin loading/configuration and root visual display.
+ * @module app
+ * @requires system
+ * @requires viewEngine
+ * @requires composition
+ * @requires events
+ * @requires jquery
+ */
+define('durandal/app',['durandal/system', 'durandal/viewEngine', 'durandal/composition', 'durandal/events', 'jquery'], function(system, viewEngine, composition, Events, $) {
+    var app,
+        allPluginIds = [],
+        allPluginConfigs = [];
+
+    function loadPlugins(){
+        return system.defer(function(dfd){
+            if(allPluginIds.length == 0){
+                dfd.resolve();
+                return;
+            }
+
+            system.acquire(allPluginIds).then(function(loaded){
+                for(var i = 0; i < loaded.length; i++){
+                    var currentModule = loaded[i];
+
+                    if(currentModule.install){
+                        var config = allPluginConfigs[i];
+                        if(!system.isObject(config)){
+                            config = {};
+                        }
+
+                        currentModule.install(config);
+                        system.log('Plugin:Installed ' + allPluginIds[i]);
+                    }else{
+                        system.log('Plugin:Loaded ' + allPluginIds[i]);
+                    }
+                }
+
+                dfd.resolve();
+            }).fail(function(err){
+                system.error('Failed to load plugin(s). Details: ' + err.message);
+            });
+        }).promise();
+    }
+
+    /**
+     * @class AppModule
+     * @static
+     * @uses Events
+     */
+    app = {
+        /**
+         * The title of your application.
+         * @property {string} title
+         */
+        title: 'Application',
+        /**
+         * Configures one or more plugins to be loaded and installed into the application.
+         * @method configurePlugins
+         * @param {object} config Keys are plugin names. Values can be truthy, to simply install the plugin, or a configuration object to pass to the plugin.
+         * @param {string} [baseUrl] The base url to load the plugins from.
+         */
+        configurePlugins:function(config, baseUrl){
+            var pluginIds = system.keys(config);
+            baseUrl = baseUrl || 'plugins/';
+
+            if(baseUrl.indexOf('/', baseUrl.length - 1) === -1){
+                baseUrl += '/';
+            }
+
+            for(var i = 0; i < pluginIds.length; i++){
+                var key = pluginIds[i];
+                allPluginIds.push(baseUrl + key);
+                allPluginConfigs.push(config[key]);
+            }
+        },
+        /**
+         * Starts the application.
+         * @method start
+         * @return {promise}
+         */
+        start: function() {
+            system.log('Application:Starting');
+
+            if (this.title) {
+                document.title = this.title;
+            }
+
+            return system.defer(function (dfd) {
+                $(function() {
+                    loadPlugins().then(function(){
+                        dfd.resolve();
+                        system.log('Application:Started');
+                    });
+                });
+            }).promise();
+        },
+        /**
+         * Sets the root module/view for the application.
+         * @method setRoot
+         * @param {string} root The root view or module.
+         * @param {string} [transition] The transition to use from the previous root (or splash screen) into the new root.
+         * @param {string} [applicationHost] The application host element or id. By default the id 'applicationHost' will be used.
+         */
+        setRoot: function(root, transition, applicationHost) {
+            var hostElement, settings = { activate:true, transition: transition };
+
+            if (!applicationHost || system.isString(applicationHost)) {
+                hostElement = document.getElementById(applicationHost || 'applicationHost');
+            } else {
+                hostElement = applicationHost;
+            }
+
+            if (system.isString(root)) {
+                if (viewEngine.isViewUrl(root)) {
+                    settings.view = root;
+                } else {
+                    settings.model = root;
+                }
+            } else {
+                settings.model = root;
+            }
+
+            composition.compose(hostElement, settings);
+        }
+    };
+
+    Events.includeIn(app);
+
+    return app;
+});
+
+requirejs.config({
+    urlArgs: "version=2019.02",
+    paths: {
+        'text': '../Scripts/text',
+        'durandal': '../Scripts/durandal',
+        'plugins': '../Scripts/durandal/plugins',
+        'transitions': '../Scripts/durandal/transitions'
+    }
+});
+
+define('jquery', [],function() { return jQuery; });
+define('knockout', ko);
+
+define('main',['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (system, app, viewLocator) {
+    
+    app.title = 'IARC - New';
+    app.version = "2019.02";
+
+    app.configurePlugins({
+        router: true,
+        dialog: true,
+        widget: true
+    });
+
+    
+
+    app.start().then(function () {
+        //Replace 'viewmodels' in the moduleId with 'views' to locate the view.
+        //Look for partial views in a 'views' folder in the root.
+        viewLocator.useConvention();
+
+        //Show the app by setting the root view model for our application with a transition.
+        app.setRoot('viewmodels/shell', 'entrance');
+    });
+});
+define('services/cachingService',['require'],function (require) {
+
+    var addToCach = function (key, value) {
+        amplify.store(key, value);
+    };
+
+    var getFromCach = function (key) {
+        return amplify.store(key);
+    };
+
+    var cachingService = {
+        add: addToCach,
+        get: getFromCach
+    };
+
+    return cachingService;
+
+});
+define('services/displayService',['require'],function (require) {
+    
+    var display = function (message, type) {
+        toastr.options = {
+            "positionClass": "toast-top-full-width",
+            "fadeIn": 300,
+            "fadeOut": 1000,
+            "timeOut": 0,
+            "extendedTimeOut": 0
+        };
+
+        switch (type) {
+            case 'error':
+                toastr.error(message, 'Error!');
+                break;
+            case 'info':
+                toastr.info(message, 'Info!');
+                break;
+            case 'warning':
+                toastr.warning(message, 'Warning!');
+                break;
+            case 'Success':
+                toastr.warning(message, 'O.K.!');
+                break;
+            default:
+                toastr.success(message, 'O.K.!');
+        }
+    };
+
+    return {
+        display: display
+    };
+
+});
+define('services/enums',[],function () {
+
+    var StatusEnum = {
+        'Status':
+            {
+                OK: '0',
+                INFO: '1',
+                ERROR: '2'
+            }
+    };
+   
+
+    return StatusEnum;
+
+});
+define('services/holylandUtility',[],function () {
+
+    var Area = function (name, poly) {
+        this.name = name;
+        this.poly = poly;
+    }
+
+
+    //google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
+    //    //debugger;
+    //    var coordinates = (polygon.getPath().getArray());
+    //    console.log(coordinates);
+    //    //ko.utils.arrayForEach(coordinates, function (item) {
+    //    //    console.log('lat:' + item.lat() + ' lon: ' + item.lng());
+    //    //});
+    //    for (var i=0; i<coordinates.length; i++)
+    //    {
+    //        console.log('lat:' + coordinates[i].lat() + ' lng: ' + coordinates[i].lng());
+    //    }
+    //});
+
+    ////**************************** Define coord and Areas *************************************//
+    var ZF_Coords = [
+        new google.maps.LatLng(32.88391197291899, 35.37494659423828),
+        new google.maps.LatLng(32.88448859695396, 35.385589599609375),
+        new google.maps.LatLng(32.887948262371275, 35.390052795410156),
+        new google.maps.LatLng(32.88881315761995, 35.39623260498047),
+        new google.maps.LatLng(32.88737166084861, 35.39966583251953),
+        new google.maps.LatLng(32.88564183376796, 35.4034423828125),
+        new google.maps.LatLng(32.88708335868024, 35.408935546875),
+        new google.maps.LatLng(32.89140779271051, 35.41374206542969),
+        new google.maps.LatLng(32.89342578969234, 35.42163848876953),
+        new google.maps.LatLng(32.894578910186176, 35.42987823486328),
+        new google.maps.LatLng(32.89947950482381, 35.43434143066406),
+        new google.maps.LatLng(32.901209061725034, 35.443267822265625),
+        new google.maps.LatLng(32.90265033334125, 35.44841766357422),
+        new google.maps.LatLng(32.90092080458707, 35.45459747314453),
+        new google.maps.LatLng(32.89803818160524, 35.46455383300781),
+        new google.maps.LatLng(32.90005602754379, 35.472450256347656),
+        new google.maps.LatLng(32.90178557318625, 35.47760009765625),
+        new google.maps.LatLng(32.901497317924765, 35.48412322998047),
+        new google.maps.LatLng(32.89890297835096, 35.49201965332031),
+        new google.maps.LatLng(32.896308562782686, 35.49510955810547),
+        new google.maps.LatLng(32.89429063146993, 35.499229431152344),
+        new google.maps.LatLng(32.894002351815516, 35.50334930419922),
+        new google.maps.LatLng(32.893714071222995, 35.507469177246094),
+        new google.maps.LatLng(32.89227265418851, 35.51158905029297),
+        new google.maps.LatLng(32.89083121370136, 35.518798828125),
+        new google.maps.LatLng(32.89025463093989, 35.522918701171875),
+        new google.maps.LatLng(32.887659962078956, 35.52806854248047),
+        new google.maps.LatLng(32.887659962078956, 35.53974151611328),
+        new google.maps.LatLng(32.891119503674965, 35.54248809814453),
+        new google.maps.LatLng(32.891119503674965, 35.54729461669922),
+        new google.maps.LatLng(32.892560939471615, 35.550384521484375),
+        new google.maps.LatLng(32.895732015669786, 35.54695129394531),
+        new google.maps.LatLng(32.89919124205649, 35.543174743652344),
+        new google.maps.LatLng(32.901497317924765, 35.540428161621094),
+        new google.maps.LatLng(32.904091581501, 35.540428161621094),
+        new google.maps.LatLng(32.904091581501, 35.54523468017578),
+        new google.maps.LatLng(32.90582104832939, 35.54798126220703),
+        new google.maps.LatLng(32.91158569379286, 35.56171417236328),
+        new google.maps.LatLng(32.91677355378147, 35.56549072265625),
+        new google.maps.LatLng(32.918502772875975, 35.57750701904297),
+        new google.maps.LatLng(32.91821457203976, 35.587806701660156),
+        new google.maps.LatLng(32.91965556683586, 35.596046447753906),
+        new google.maps.LatLng(32.92282567279776, 35.60222625732422),
+        new google.maps.LatLng(32.927148361544575, 35.60565948486328),
+        new google.maps.LatLng(32.92801287395171, 35.610809326171875),
+        new google.maps.LatLng(32.92945370919086, 35.61561584472656),
+        new google.maps.LatLng(32.931758996763335, 35.62419891357422),
+        new google.maps.LatLng(32.95106342152381, 35.62591552734375),
+        new google.maps.LatLng(32.960570021811456, 35.62488555908203),
+        new google.maps.LatLng(32.978428141403825, 35.626258850097656),
+        new google.maps.LatLng(32.99513085525829, 35.62694549560547),
+        new google.maps.LatLng(33.01384565773913, 35.629005432128906),
+        new google.maps.LatLng(33.05212664605825, 35.64067840576172),
+        new google.maps.LatLng(33.07226785340662, 35.64308166503906),
+        new google.maps.LatLng(33.090390998837975, 35.646514892578125),
+        new google.maps.LatLng(33.120875481115334, 35.652008056640625),
+        new google.maps.LatLng(33.16284622181141, 35.64960479736328),
+        new google.maps.LatLng(33.173192085918075, 35.64891815185547),
+        new google.maps.LatLng(33.19905140349983, 35.655269622802734),
+        new google.maps.LatLng(33.21226543987183, 35.65595626831055),
+        new google.maps.LatLng(33.22533388294235, 35.65286636352539),
+        new google.maps.LatLng(33.23567236670223, 35.652523040771484),
+        new google.maps.LatLng(33.24213329838942, 35.624027252197266),
+        new google.maps.LatLng(33.25002934422699, 35.61115264892578),
+        new google.maps.LatLng(33.25447952844022, 35.59896469116211),
+        new google.maps.LatLng(33.26208738291049, 35.59398651123047),
+        new google.maps.LatLng(33.267254604316584, 35.58488845825195),
+        new google.maps.LatLng(33.27213447716171, 35.58694839477539),
+        new google.maps.LatLng(33.28275443418201, 35.58523178100586),
+        new google.maps.LatLng(33.284189464417864, 35.582313537597656),
+        new google.maps.LatLng(33.287059454104856, 35.57870864868164),
+        new google.maps.LatLng(33.288063928197495, 35.571842193603516),
+        new google.maps.LatLng(33.29165124128551, 35.568580627441406),
+        new google.maps.LatLng(33.288063928197495, 35.564117431640625),
+        new google.maps.LatLng(33.283184945730184, 35.562400817871094),
+        new google.maps.LatLng(33.274861346151496, 35.56428909301758),
+        new google.maps.LatLng(33.2694075230104, 35.55948257446289),
+        new google.maps.LatLng(33.266680483701144, 35.55845260620117),
+        new google.maps.LatLng(33.265101632548216, 35.55622100830078),
+        new google.maps.LatLng(33.258642398812924, 35.55570602416992),
+        new google.maps.LatLng(33.25476662931657, 35.54557800292969),
+        new google.maps.LatLng(33.23811321923412, 35.54574966430664),
+        new google.maps.LatLng(33.2335186167059, 35.537166595458984),
+        new google.maps.LatLng(33.20853124049305, 35.536651611328125),
+        new google.maps.LatLng(33.19847683493303, 35.54180145263672),
+        new google.maps.LatLng(33.13927608513229, 35.52583694458008),
+        new google.maps.LatLng(33.13510753620141, 35.52824020385742),
+        new google.maps.LatLng(33.133813808346105, 35.53150177001953),
+        new google.maps.LatLng(33.11641850474211, 35.51931381225586),
+        new google.maps.LatLng(33.11613095011279, 35.503692626953125),
+        new google.maps.LatLng(33.11383047918907, 35.50180435180664),
+        new google.maps.LatLng(33.0905348183885, 35.50334930419922),
+        new google.maps.LatLng(33.09297971475382, 35.49013137817383),
+        new google.maps.LatLng(33.09369878898088, 35.46335220336914),
+        new google.maps.LatLng(33.0909662756286, 35.44532775878906),
+        new google.maps.LatLng(33.06651369304211, 35.43073654174805),
+        new google.maps.LatLng(33.0614784940697, 35.396575927734375),
+        new google.maps.LatLng(33.06277328703267, 35.382328033447266),
+        new google.maps.LatLng(33.06234169149467, 35.380096435546875),
+        new google.maps.LatLng(33.05759400090168, 35.37443161010742),
+        new google.maps.LatLng(33.04320549616557, 35.37614822387695),
+        new google.maps.LatLng(33.03572254463766, 35.36481857299805),
+        new google.maps.LatLng(33.02867072021502, 35.3730583190918),
+        new google.maps.LatLng(33.00117761021751, 35.36619186401367),
+        new google.maps.LatLng(33.01312593106509, 35.41837692260742),
+        new google.maps.LatLng(33.00405687168937, 35.430049896240234),
+        new google.maps.LatLng(32.98044415387331, 35.43296813964844),
+        new google.maps.LatLng(32.95826548534384, 35.442237854003906),
+        new google.maps.LatLng(32.947894327523066, 35.438804626464844),
+        new google.maps.LatLng(32.93896263320926, 35.412025451660156),
+        new google.maps.LatLng(32.934784595531966, 35.40464401245117),
+        new google.maps.LatLng(32.941699861217685, 35.3924560546875),
+        new google.maps.LatLng(32.936513462647135, 35.38644790649414),
+        new google.maps.LatLng(32.917205861722465, 35.40447235107422),
+        new google.maps.LatLng(32.91691765666308, 35.36773681640625),
+    ];
+    var ZF_Area = new google.maps.Polygon({
+        paths: ZF_Coords
+    });
+
+    //---------------------------------------------------------------------------------------------------------//
+
+    var SM_Coords = [
+        new google.maps.LatLng(32.229356720329406, 35.423526763916016),
+new google.maps.LatLng(32.20641036078661, 35.42472839355469),
+new google.maps.LatLng(32.19275598198777, 35.42095184326172),
+new google.maps.LatLng(32.17706544297099, 35.4144287109375),
+new google.maps.LatLng(32.1605002739009, 35.403785705566406),
+new google.maps.LatLng(32.14480417752976, 35.40069580078125),
+new google.maps.LatLng(32.12590714393767, 35.40412902832031),
+new google.maps.LatLng(32.11311308402619, 35.407562255859375),
+new google.maps.LatLng(32.099735558532124, 35.408935546875),
+new google.maps.LatLng(32.081701880269065, 35.407562255859375),
+new google.maps.LatLng(32.07035629148888, 35.40515899658203),
+new google.maps.LatLng(32.06133699866369, 35.404815673828125),
+new google.maps.LatLng(32.057263478112894, 35.410308837890625),
+new google.maps.LatLng(32.050570872022476, 35.408592224121094),
+new google.maps.LatLng(32.04213167101658, 35.39417266845703),
+new google.maps.LatLng(32.03863936024243, 35.38078308105469),
+new google.maps.LatLng(32.03994899239455, 35.34421920776367),
+new google.maps.LatLng(32.04416879077791, 35.32310485839844),
+new google.maps.LatLng(32.04576935307221, 35.305423736572266),
+new google.maps.LatLng(32.046060361391454, 35.28791427612305),
+new google.maps.LatLng(32.04402328372697, 35.27109146118164),
+new google.maps.LatLng(32.04635136878548, 35.25632858276367),
+new google.maps.LatLng(32.05086186507475, 35.217018127441406),
+new google.maps.LatLng(32.0520258280307, 35.19847869873047),
+new google.maps.LatLng(32.053626252920814, 35.18577575683594),
+new google.maps.LatLng(32.05915477806914, 35.20362854003906),
+new google.maps.LatLng(32.06526486454641, 35.21615982055664),
+new google.maps.LatLng(32.075447434961156, 35.229549407958984),
+new google.maps.LatLng(32.092609772316635, 35.23263931274414),
+new google.maps.LatLng(32.10497047581683, 35.23143768310547),
+new google.maps.LatLng(32.131140560580995, 35.2166748046875),
+new google.maps.LatLng(32.16515045002057, 35.18817901611328),
+new google.maps.LatLng(32.23197049507261, 35.165863037109375),
+new google.maps.LatLng(32.25026481308558, 35.16242980957031),
+new google.maps.LatLng(32.25491040237429, 35.16345977783203),
+new google.maps.LatLng(32.28190818349018, 35.17547607421875),
+new google.maps.LatLng(32.29061543148475, 35.17993927001953),
+new google.maps.LatLng(32.299031643087915, 35.17890930175781),
+new google.maps.LatLng(32.30222379480205, 35.17444610595703),
+new google.maps.LatLng(32.31063892854106, 35.179595947265625),
+new google.maps.LatLng(32.30541583408083, 35.31898498535156),
+    ];
+    var SM_Area = new google.maps.Polygon({
+        paths: SM_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var YN_Coords = [
+        new google.maps.LatLng(32.04213167101658, 35.39348602294922),
+new google.maps.LatLng(32.03456482930134, 35.39039611816406),
+new google.maps.LatLng(32.01651829873178, 35.375633239746094),
+new google.maps.LatLng(32.004291209867134, 35.36327362060547),
+new google.maps.LatLng(31.983326691811396, 35.352630615234375),
+new google.maps.LatLng(31.971386422339652, 35.34645080566406),
+new google.maps.LatLng(31.94691858024963, 35.34507751464844),
+new google.maps.LatLng(31.928854801809585, 35.336151123046875),
+new google.maps.LatLng(31.92098720813286, 35.34198760986328),
+new google.maps.LatLng(31.916907450132463, 35.34954071044922),
+new google.maps.LatLng(31.913993226490213, 35.35606384277344),
+new google.maps.LatLng(31.91195321501266, 35.372886657714844),
+new google.maps.LatLng(31.91574177175371, 35.38249969482422),
+new google.maps.LatLng(31.919821581454634, 35.392799377441406),
+new google.maps.LatLng(31.922152820038836, 35.401039123535156),
+new google.maps.LatLng(31.92098720813286, 35.40790557861328),
+new google.maps.LatLng(31.917490283782648, 35.409278869628906),
+new google.maps.LatLng(31.91195321501266, 35.407562255859375),
+new google.maps.LatLng(31.876391466606282, 35.400352478027344),
+new google.maps.LatLng(31.86443730407827, 35.39451599121094),
+new google.maps.LatLng(31.84664897336452, 35.385589599609375),
+new google.maps.LatLng(31.8311907528247, 35.380096435546875),
+new google.maps.LatLng(31.822439668935843, 35.37666320800781),
+new google.maps.LatLng(31.812520771059095, 35.37769317626953),
+new google.maps.LatLng(31.798807599289702, 35.391082763671875),
+new google.maps.LatLng(31.785384226419538, 35.41271209716797),
+new google.maps.LatLng(31.775753214756303, 35.43983459472656),
+new google.maps.LatLng(31.766413094137064, 35.447044372558594),
+new google.maps.LatLng(31.739554995617915, 35.447731018066406),
+new google.maps.LatLng(31.715901742760696, 35.44670104980469),
+new google.maps.LatLng(31.692534580591307, 35.443267822265625),
+new google.maps.LatLng(31.68084879226893, 35.43571472167969),
+new google.maps.LatLng(31.662148471209694, 35.42335510253906),
+new google.maps.LatLng(31.646367146916386, 35.41099548339844),
+new google.maps.LatLng(31.625905886872008, 35.40550231933594),
+new google.maps.LatLng(31.60310089533651, 35.40000915527344),
+new google.maps.LatLng(31.58964917898045, 35.39726257324219),
+new google.maps.LatLng(31.574440551990754, 35.388336181640625),
+new google.maps.LatLng(31.5668353078939, 35.39176940917969),
+new google.maps.LatLng(31.553378356555264, 35.38421630859375),
+new google.maps.LatLng(31.535822894163246, 35.382843017578125),
+new google.maps.LatLng(31.503043865128223, 35.37322998046875),
+new google.maps.LatLng(31.478452047933082, 35.37803649902344),
+new google.maps.LatLng(31.49191979634118, 35.39863586425781),
+new google.maps.LatLng(31.49777473435026, 35.429534912109375),
+new google.maps.LatLng(31.49660377607412, 35.45768737792969),
+new google.maps.LatLng(31.492505306637387, 35.47966003417969),
+new google.maps.LatLng(31.568590419282312, 35.484466552734375),
+new google.maps.LatLng(31.638767775839142, 35.50163269042969),
+new google.maps.LatLng(31.71940630930742, 35.533905029296875),
+new google.maps.LatLng(31.758531633937167, 35.56068420410156),
+new google.maps.LatLng(31.82273138509748, 35.5572509765625),
+new google.maps.LatLng(31.878723805312543, 35.553131103515625),
+new google.maps.LatLng(31.89854630009035, 35.5352783203125),
+new google.maps.LatLng(31.918947351751875, 35.53459167480469),
+new google.maps.LatLng(31.93235129404254, 35.544891357421875),
+new google.maps.LatLng(31.94575328232356, 35.550384521484375),
+new google.maps.LatLng(31.96090100253141, 35.55107116699219),
+new google.maps.LatLng(31.976046224524243, 35.55244445800781),
+new google.maps.LatLng(31.984782715952374, 35.54695129394531),
+new google.maps.LatLng(32.0074937003197, 35.539398193359375),
+new google.maps.LatLng(32.02088472086091, 35.5352783203125),
+new google.maps.LatLng(32.043004727893994, 35.533905029296875),
+new google.maps.LatLng(32.06744693937369, 35.54557800292969),
+new google.maps.LatLng(32.086646952664736, 35.55381774902344),
+new google.maps.LatLng(32.10351636222566, 35.5462646484375),
+new google.maps.LatLng(32.12445336381827, 35.55656433105469),
+new google.maps.LatLng(32.1407343780354, 35.56068420410156),
+new google.maps.LatLng(32.15468722002481, 35.5682373046875),
+new google.maps.LatLng(32.16863792635911, 35.5682373046875),
+new google.maps.LatLng(32.18084304210396, 35.57029724121094),
+new google.maps.LatLng(32.198276083995, 35.5792236328125),
+new google.maps.LatLng(32.224419385153006, 35.57853698730469),
+new google.maps.LatLng(32.24707083257868, 35.57853698730469),
+new google.maps.LatLng(32.2720389584545, 35.57098388671875),
+new google.maps.LatLng(32.29061543148475, 35.572357177734375),
+new google.maps.LatLng(32.2999022410693, 35.56549072265625),
+new google.maps.LatLng(32.314991277245554, 35.57029724121094),
+new google.maps.LatLng(32.3271767410611, 35.562744140625),
+new google.maps.LatLng(32.3434214752644, 35.564117431640625),
+new google.maps.LatLng(32.358503260304744, 35.562744140625),
+new google.maps.LatLng(32.365463235972015, 35.57029724121094),
+new google.maps.LatLng(32.38576010445448, 35.56343078613281),
+new google.maps.LatLng(32.39213817866891, 35.55107116699219),
+new google.maps.LatLng(32.390978562311886, 35.54283142089844),
+new google.maps.LatLng(32.3973562680131, 35.531158447265625),
+new google.maps.LatLng(32.40547269651596, 35.49201965332031),
+new google.maps.LatLng(32.4153273786237, 35.48240661621094),
+new google.maps.LatLng(32.41706632846282, 35.46112060546875),
+new google.maps.LatLng(32.41358839527031, 35.446014404296875),
+new google.maps.LatLng(32.407211836256685, 35.4364013671875),
+new google.maps.LatLng(32.346322013829464, 35.410308837890625),
+new google.maps.LatLng(32.33413912701808, 35.40962219238281),
+new google.maps.LatLng(32.31789272687268, 35.41511535644531),
+new google.maps.LatLng(32.28887404877279, 35.429534912109375),
+new google.maps.LatLng(32.27378066442218, 35.43365478515625),
+new google.maps.LatLng(32.25055516937943, 35.43296813964844),
+new google.maps.LatLng(32.23197049507261, 35.42266845703125),
+new google.maps.LatLng(32.20757234095538, 35.42198181152344),
+new google.maps.LatLng(32.18432991758738, 35.41648864746094),
+new google.maps.LatLng(32.15584986046307, 35.40069580078125),
+new google.maps.LatLng(32.13666439690465, 35.399322509765625),
+new google.maps.LatLng(32.12038265626624, 35.404815673828125),
+new google.maps.LatLng(32.10235305468224, 35.40687561035156),
+new google.maps.LatLng(32.083156341101464, 35.40687561035156),
+new google.maps.LatLng(32.06570128367684, 35.4034423828125),
+new google.maps.LatLng(32.0598821907181, 35.40412902832031),
+    ];
+    var YN_Area = new google.maps.Polygon({
+        paths: YN_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var HF_Coords = [
+        new google.maps.LatLng(32.76880048488168, 35.168609619140625),
+new google.maps.LatLng(32.76360396952606, 35.16105651855469),
+new google.maps.LatLng(32.7537875018279, 35.157623291015625),
+new google.maps.LatLng(32.74570253945518, 35.15419006347656),
+new google.maps.LatLng(32.73819441736631, 35.15556335449219),
+new google.maps.LatLng(32.73126328163474, 35.15144348144531),
+new google.maps.LatLng(32.72490926707168, 35.14457702636719),
+new google.maps.LatLng(32.71913249723242, 35.135650634765625),
+new google.maps.LatLng(32.713355353177555, 35.13427734375),
+new google.maps.LatLng(32.701222132744036, 35.130157470703125),
+new google.maps.LatLng(32.70468893551646, 35.119171142578125),
+new google.maps.LatLng(32.70815560360234, 35.11024475097656),
+new google.maps.LatLng(32.704111144407406, 35.108184814453125),
+new google.maps.LatLng(32.69891085607356, 35.1068115234375),
+new google.maps.LatLng(32.69255453660822, 35.110931396484375),
+new google.maps.LatLng(32.68677567160618, 35.11299133300781),
+new google.maps.LatLng(32.679840539897484, 35.123291015625),
+new google.maps.LatLng(32.657875736955305, 35.10955810546875),
+new google.maps.LatLng(32.650938361757355, 35.099945068359375),
+new google.maps.LatLng(32.64515680456839, 35.08552551269531),
+new google.maps.LatLng(32.637061996573436, 35.07591247558594),
+new google.maps.LatLng(32.63417081619418, 35.0518798828125),
+new google.maps.LatLng(32.67752870965116, 35.036773681640625),
+new google.maps.LatLng(32.699488680852674, 35.04432678222656),
+new google.maps.LatLng(32.71046664083005, 35.023040771484375),
+new google.maps.LatLng(32.7295304134847, 35.01411437988281),
+new google.maps.LatLng(32.73588409867885, 35.036773681640625),
+new google.maps.LatLng(32.751477587458865, 35.01686096191406),
+new google.maps.LatLng(32.76244914714216, 35.0079345703125),
+new google.maps.LatLng(32.760139457437795, 34.995574951171875),
+new google.maps.LatLng(32.74859011025593, 34.99351501464844),
+new google.maps.LatLng(32.743969952049575, 34.98870849609375),
+new google.maps.LatLng(32.749745112369105, 34.98252868652344),
+new google.maps.LatLng(32.74108223150125, 34.9749755859375),
+new google.maps.LatLng(32.753643133934936, 34.962615966796875),
+new google.maps.LatLng(32.75970638394809, 34.95025634765625),
+new google.maps.LatLng(32.79405700144505, 34.954891204833984),
+new google.maps.LatLng(32.803003304205006, 34.95643615722656),
+new google.maps.LatLng(32.80603329943089, 34.953861236572266),
+new google.maps.LatLng(32.807331837195626, 34.9555778503418),
+new google.maps.LatLng(32.81454559041408, 34.95351791381836),
+new google.maps.LatLng(32.82536512222338, 34.95454788208008),
+new google.maps.LatLng(32.826951876079946, 34.95626449584961),
+new google.maps.LatLng(32.82637487795752, 34.95832443237305),
+new google.maps.LatLng(32.83156772610805, 34.963645935058594),
+new google.maps.LatLng(32.83228893100241, 34.969482421875),
+new google.maps.LatLng(32.83719296893632, 34.98046875),
+new google.maps.LatLng(32.836471803875156, 34.98647689819336),
+new google.maps.LatLng(32.83286589070039, 34.9888801574707),
+new google.maps.LatLng(32.82752887045379, 35.00141143798828),
+new google.maps.LatLng(32.8219030154127, 35.01617431640625),
+new google.maps.LatLng(32.818296510663295, 35.03265380859375),
+new google.maps.LatLng(32.821325984491764, 35.03746032714844),
+new google.maps.LatLng(32.84079870636961, 35.05582809448242),
+new google.maps.LatLng(32.86300681878146, 35.06715774536133),
+new google.maps.LatLng(32.89227265418851, 35.078487396240234),
+new google.maps.LatLng(32.88881315761995, 35.090675354003906),
+new google.maps.LatLng(32.88492106251796, 35.0984001159668),
+new google.maps.LatLng(32.8787221877715, 35.10732650756836),
+new google.maps.LatLng(32.86156490232035, 35.11127471923828),
+new google.maps.LatLng(32.8468560155417, 35.10758399963379),
+new google.maps.LatLng(32.83445251053944, 35.14698028564453),
+new google.maps.LatLng(32.82774524237756, 35.15719413757324),
+new google.maps.LatLng(32.789727822117364, 35.136680603027344),
+new google.maps.LatLng(32.78193476829083, 35.15453338623047),
+new google.maps.LatLng(32.7702439075344, 35.169124603271484),
+    ];
+    var HF_Area = new google.maps.Polygon({
+        paths: HF_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var AK_Coords = [
+        new google.maps.LatLng(33.09326734515043, 35.10337829589844),
+new google.maps.LatLng(33.096718836507335, 35.110931396484375),
+new google.maps.LatLng(33.09326734515043, 35.15556335449219),
+new google.maps.LatLng(33.086363955913264, 35.15556335449219),
+new google.maps.LatLng(33.09614359735857, 35.17616271972656),
+new google.maps.LatLng(33.0909662756286, 35.18852233886719),
+new google.maps.LatLng(33.086939259051256, 35.193328857421875),
+new google.maps.LatLng(33.090390998837975, 35.20637512207031),
+new google.maps.LatLng(33.097294071891696, 35.20500183105469),
+new google.maps.LatLng(33.10419660287101, 35.21324157714844),
+new google.maps.LatLng(33.097294071891696, 35.23384094238281),
+new google.maps.LatLng(33.09326734515043, 35.23933410644531),
+new google.maps.LatLng(33.110523446688916, 35.292205810546875),
+new google.maps.LatLng(33.10304621868762, 35.3045654296875),
+new google.maps.LatLng(33.10764766506478, 35.31898498535156),
+new google.maps.LatLng(33.0955683544455, 35.327911376953125),
+new google.maps.LatLng(33.08808985403573, 35.32447814941406),
+new google.maps.LatLng(33.063924198120645, 35.349884033203125),
+new google.maps.LatLng(33.06162236089505, 35.35675048828125),
+new google.maps.LatLng(33.05759400090168, 35.374603271484375),
+new google.maps.LatLng(33.04320549616557, 35.3759765625),
+new google.maps.LatLng(33.03572254463766, 35.36430358886719),
+new google.maps.LatLng(33.02881464063999, 35.37322998046875),
+new google.maps.LatLng(33.0178760185549, 35.37117004394531),
+new google.maps.LatLng(33.00117761021751, 35.366363525390625),
+new google.maps.LatLng(33.01326987686982, 35.418548583984375),
+new google.maps.LatLng(33.00405687168937, 35.43022155761719),
+new google.maps.LatLng(32.98044415387331, 35.43296813964844),
+new google.maps.LatLng(32.95797741405952, 35.44258117675781),
+new google.maps.LatLng(32.948182431672386, 35.43914794921875),
+new google.maps.LatLng(32.93896263320926, 35.41236877441406),
+new google.maps.LatLng(32.93492866908233, 35.404815673828125),
+new google.maps.LatLng(32.941843923502645, 35.39176940917969),
+new google.maps.LatLng(32.936657533381286, 35.38627624511719),
+new google.maps.LatLng(32.91706175931007, 35.404815673828125),
+new google.maps.LatLng(32.91706175931007, 35.36773681640625),
+new google.maps.LatLng(32.88420028540548, 35.374603271484375),
+new google.maps.LatLng(32.877280526855394, 35.38352966308594),
+new google.maps.LatLng(32.872090353419075, 35.38764953613281),
+new google.maps.LatLng(32.866323137679224, 35.382843017578125),
+new google.maps.LatLng(32.86170909502134, 35.377349853515625),
+new google.maps.LatLng(32.85767161078748, 35.37803649902344),
+new google.maps.LatLng(32.85132662142229, 35.38421630859375),
+new google.maps.LatLng(32.847865526878856, 35.3924560546875),
+new google.maps.LatLng(32.84094293282064, 35.393829345703125),
+new google.maps.LatLng(32.83286589070039, 35.396575927734375),
+new google.maps.LatLng(32.821325984491764, 35.3924560546875),
+new google.maps.LatLng(32.80689899338195, 35.408935546875),
+new google.maps.LatLng(32.80401331408953, 35.40138244628906),
+new google.maps.LatLng(32.80805323886752, 35.386962890625),
+new google.maps.LatLng(32.809784578989934, 35.369110107421875),
+new google.maps.LatLng(32.811515885384395, 35.34233093261719),
+new google.maps.LatLng(32.80401331408953, 35.32997131347656),
+new google.maps.LatLng(32.79708730158076, 35.319671630859375),
+new google.maps.LatLng(32.79477851084408, 35.29975891113281),
+new google.maps.LatLng(32.79304687845155, 35.267486572265625),
+new google.maps.LatLng(32.79477851084408, 35.24070739746094),
+new google.maps.LatLng(32.80574473290688, 35.22216796875),
+new google.maps.LatLng(32.79477851084408, 35.2166748046875),
+new google.maps.LatLng(32.783233658006516, 35.21873474121094),
+new google.maps.LatLng(32.76418137510082, 35.21461486816406),
+new google.maps.LatLng(32.758984590117905, 35.2056884765625),
+new google.maps.LatLng(32.759562025650126, 35.19401550292969),
+new google.maps.LatLng(32.76418137510082, 35.176849365234375),
+new google.maps.LatLng(32.77399669688296, 35.163116455078125),
+new google.maps.LatLng(32.7815018008381, 35.15419006347656),
+new google.maps.LatLng(32.78958351251041, 35.13633728027344),
+new google.maps.LatLng(32.82767311846154, 35.15693664550781),
+new google.maps.LatLng(32.834019798849624, 35.14732360839844),
+new google.maps.LatLng(32.84036602561058, 35.127410888671875),
+new google.maps.LatLng(32.84671179869895, 35.10749816894531),
+new google.maps.LatLng(32.8622858634811, 35.110931396484375),
+new google.maps.LatLng(32.8788663525735, 35.10698318481445),
+new google.maps.LatLng(32.88261455512238, 35.10200500488281),
+new google.maps.LatLng(32.887659962078956, 35.09359359741211),
+new google.maps.LatLng(32.88996633815205, 35.08604049682617),
+new google.maps.LatLng(32.89184022450486, 35.07831573486328),
+new google.maps.LatLng(32.90452395137483, 35.08089065551758),
+new google.maps.LatLng(32.91187391621322, 35.081748962402344),
+new google.maps.LatLng(32.91879097277371, 35.07917404174805),
+new google.maps.LatLng(32.92037605543544, 35.07453918457031),
+new google.maps.LatLng(32.92167292013293, 35.071964263916016),
+new google.maps.LatLng(32.91907917173292, 35.069732666015625),
+new google.maps.LatLng(32.91835867257519, 35.065956115722656),
+new google.maps.LatLng(32.92052015245145, 35.0657844543457),
+new google.maps.LatLng(32.93219123149512, 35.070247650146484),
+new google.maps.LatLng(32.93536088832532, 35.07179260253906),
+new google.maps.LatLng(32.95509664956795, 35.073509216308594),
+new google.maps.LatLng(32.97986815500754, 35.07865905761719),
+new google.maps.LatLng(33.005208549965474, 35.08552551269531),
+new google.maps.LatLng(33.04435666306044, 35.098228454589844),
+new google.maps.LatLng(33.0509755807245, 35.10028839111328),
+new google.maps.LatLng(33.06219782584503, 35.102691650390625),
+new google.maps.LatLng(33.08262439377602, 35.105438232421875),
+new google.maps.LatLng(33.0909662756286, 35.104408264160156),
+    ];
+    var AK_Area = new google.maps.Polygon({
+        paths: AK_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var HD_Coords = [
+        new google.maps.LatLng(32.633881693017706, 35.051536560058594),
+new google.maps.LatLng(32.62491841117469, 35.060462951660156),
+new google.maps.LatLng(32.61855682784329, 35.05359649658203),
+new google.maps.LatLng(32.617255539195966, 35.05720138549805),
+new google.maps.LatLng(32.60106014282726, 35.05084991455078),
+new google.maps.LatLng(32.59122579488824, 35.05205154418945),
+new google.maps.LatLng(32.5851510996314, 35.05754470825195),
+new google.maps.LatLng(32.579654592037826, 35.0599479675293),
+new google.maps.LatLng(32.574013089115475, 35.05891799926758),
+new google.maps.LatLng(32.569673229973986, 35.05411148071289),
+new google.maps.LatLng(32.56735855256776, 35.04415512084961),
+new google.maps.LatLng(32.56547783319517, 35.034542083740234),
+new google.maps.LatLng(32.56084820214486, 35.02870559692383),
+new google.maps.LatLng(32.55737582208488, 35.030250549316406),
+new google.maps.LatLng(32.55390330765706, 35.03643035888672),
+new google.maps.LatLng(32.553179850239374, 35.041751861572266),
+new google.maps.LatLng(32.548260185149985, 35.05033493041992),
+new google.maps.LatLng(32.54883898327313, 35.0544548034668),
+new google.maps.LatLng(32.547247279454616, 35.05943298339844),
+new google.maps.LatLng(32.544642612331046, 35.06183624267578),
+new google.maps.LatLng(32.54088018196837, 35.07213592529297),
+new google.maps.LatLng(32.538854192626104, 35.08157730102539),
+new google.maps.LatLng(32.53682815757515, 35.086727142333984),
+new google.maps.LatLng(32.532920675187846, 35.09084701538086),
+new google.maps.LatLng(32.532341774450515, 35.10183334350586),
+new google.maps.LatLng(32.53089450628447, 35.109214782714844),
+new google.maps.LatLng(32.53089450628447, 35.11556625366211),
+new google.maps.LatLng(32.52481572536378, 35.11796951293945),
+new google.maps.LatLng(32.52163143788113, 35.12105941772461),
+new google.maps.LatLng(32.52307885527122, 35.124664306640625),
+new google.maps.LatLng(32.52467098747173, 35.12775421142578),
+new google.maps.LatLng(32.527855167237206, 35.13101577758789),
+new google.maps.LatLng(32.538709477352576, 35.1397705078125),
+new google.maps.LatLng(32.545366138556574, 35.147666931152344),
+new google.maps.LatLng(32.552022306241454, 35.14749526977539),
+new google.maps.LatLng(32.55853329703501, 35.14629364013672),
+new google.maps.LatLng(32.5611375610844, 35.15625),
+new google.maps.LatLng(32.56880523294623, 35.16294479370117),
+new google.maps.LatLng(32.5722771706588, 35.17152786254883),
+new google.maps.LatLng(32.573868430527426, 35.18028259277344),
+new google.maps.LatLng(32.57213250927074, 35.18199920654297),
+new google.maps.LatLng(32.56952856438602, 35.180625915527344),
+new google.maps.LatLng(32.56634586242051, 35.184574127197266),
+new google.maps.LatLng(32.562150310024094, 35.18989562988281),
+new google.maps.LatLng(32.556507706074605, 35.19144058227539),
+new google.maps.LatLng(32.5529628118769, 35.19444465637207),
+new google.maps.LatLng(32.54956247567908, 35.199294090270996),
+new google.maps.LatLng(32.547319630240445, 35.20066738128662),
+new google.maps.LatLng(32.544389376774575, 35.19478797912598),
+new google.maps.LatLng(32.538130613926434, 35.198307037353516),
+new google.maps.LatLng(32.52872356031481, 35.19195556640625),
+new google.maps.LatLng(32.523657815699146, 35.18697738647461),
+new google.maps.LatLng(32.52467098747173, 35.1807975769043),
+new google.maps.LatLng(32.52148669485984, 35.17822265625),
+new google.maps.LatLng(32.51888128060975, 35.17753601074219),
+new google.maps.LatLng(32.50918268597245, 35.16448974609375),
+new google.maps.LatLng(32.504115839852815, 35.16105651855469),
+new google.maps.LatLng(32.502233795716045, 35.15470504760742),
+new google.maps.LatLng(32.4967322100924, 35.14148712158203),
+new google.maps.LatLng(32.49267819482123, 35.138397216796875),
+new google.maps.LatLng(32.482831968568554, 35.12432098388672),
+new google.maps.LatLng(32.477908451417896, 35.11402130126953),
+new google.maps.LatLng(32.47732919639942, 35.10509490966797),
+new google.maps.LatLng(32.47703956749234, 35.09479522705078),
+new google.maps.LatLng(32.47182608781553, 35.08689880371094),
+new google.maps.LatLng(32.46603297853121, 35.07865905761719),
+new google.maps.LatLng(32.45966012786285, 35.07110595703125),
+new google.maps.LatLng(32.45531474387748, 35.07213592529297),
+new google.maps.LatLng(32.45299712004732, 35.07041931152344),
+new google.maps.LatLng(32.45067943659943, 35.06561279296875),
+new google.maps.LatLng(32.443726028572186, 35.065956115722656),
+new google.maps.LatLng(32.43966962613718, 35.063209533691406),
+new google.maps.LatLng(32.42807889910622, 35.058746337890625),
+new google.maps.LatLng(32.42373199235633, 35.05565643310547),
+new google.maps.LatLng(32.420254316120676, 35.057373046875),
+new google.maps.LatLng(32.41706632846282, 35.05359649658203),
+new google.maps.LatLng(32.409240790268115, 35.054969787597656),
+new google.maps.LatLng(32.39880568376252, 35.051536560058594),
+new google.maps.LatLng(32.385470181289065, 35.04364013671875),
+new google.maps.LatLng(32.38025140520136, 35.04020690917969),
+new google.maps.LatLng(32.377931852397595, 35.041236877441406),
+new google.maps.LatLng(32.374307431937574, 35.02235412597656),
+new google.maps.LatLng(32.37648210165771, 35.01188278198242),
+new google.maps.LatLng(32.38054134511501, 35.00415802001953),
+new google.maps.LatLng(32.3818460632124, 34.99866485595703),
+new google.maps.LatLng(32.38576010445448, 34.992828369140625),
+new google.maps.LatLng(32.38749962390624, 34.9859619140625),
+new google.maps.LatLng(32.390108840272994, 34.974117279052734),
+new google.maps.LatLng(32.3956169384015, 34.95248794555664),
+new google.maps.LatLng(32.39996519960948, 34.94373321533203),
+new google.maps.LatLng(32.40344365780038, 34.93377685546875),
+new google.maps.LatLng(32.40996540564691, 34.930686950683594),
+new google.maps.LatLng(32.410979857403035, 34.923133850097656),
+new google.maps.LatLng(32.40909586649421, 34.9171257019043),
+new google.maps.LatLng(32.40619734214692, 34.913692474365234),
+new google.maps.LatLng(32.403588590649726, 34.907684326171875),
+new google.maps.LatLng(32.40474804506751, 34.90201950073242),
+new google.maps.LatLng(32.40634227057499, 34.89309310913086),
+new google.maps.LatLng(32.40706690922483, 34.88759994506836),
+new google.maps.LatLng(32.408371244133996, 34.881591796875),
+new google.maps.LatLng(32.410400172081545, 34.87833023071289),
+new google.maps.LatLng(32.41155953900097, 34.873695373535156),
+new google.maps.LatLng(32.41170445881864, 34.86957550048828),
+new google.maps.LatLng(32.41938487611333, 34.87180709838867),
+new google.maps.LatLng(32.433005140150016, 34.87489700317383),
+new google.maps.LatLng(32.43604768399796, 34.876956939697266),
+new google.maps.LatLng(32.439959375222, 34.877986907958984),
+new google.maps.LatLng(32.44227733437236, 34.87678527832031),
+new google.maps.LatLng(32.44459523391549, 34.878501892089844),
+new google.maps.LatLng(32.44647848340221, 34.87730026245117),
+new google.maps.LatLng(32.447782248455646, 34.87833023071289),
+new google.maps.LatLng(32.46313628412808, 34.88330841064453),
+new google.maps.LatLng(32.47240537824467, 34.879188537597656),
+new google.maps.LatLng(32.477618824374616, 34.885711669921875),
+new google.maps.LatLng(32.48674162855308, 34.88811492919922),
+new google.maps.LatLng(32.4932573510458, 34.88759994506836),
+new google.maps.LatLng(32.49470522529474, 34.88880157470703),
+new google.maps.LatLng(32.50194424696818, 34.88880157470703),
+new google.maps.LatLng(32.507735044788404, 34.89326477050781),
+new google.maps.LatLng(32.51135410404299, 34.8951530456543),
+new google.maps.LatLng(32.51555203025782, 34.89686965942383),
+new google.maps.LatLng(32.52467098747173, 34.898414611816406),
+new google.maps.LatLng(32.53349957219424, 34.9009895324707),
+new google.maps.LatLng(32.53928833704742, 34.900474548339844),
+new google.maps.LatLng(32.54015661959339, 34.90184783935547),
+new google.maps.LatLng(32.55028596225381, 34.904422760009766),
+new google.maps.LatLng(32.55578426965102, 34.90425109863281),
+new google.maps.LatLng(32.55911202891133, 34.907169342041016),
+new google.maps.LatLng(32.60424161253153, 34.916439056396484),
+new google.maps.LatLng(32.60988121294625, 34.912147521972656),
+new google.maps.LatLng(32.63648376797194, 34.920387268066406),
+new google.maps.LatLng(32.65007115200838, 34.921417236328125),
+new google.maps.LatLng(32.657875736955305, 34.926910400390625),
+new google.maps.LatLng(32.66018807572586, 34.92347717285156),
+new google.maps.LatLng(32.66307841506968, 34.925880432128906),
+new google.maps.LatLng(32.67550580910239, 34.92897033691406),
+new google.maps.LatLng(32.68273024355948, 34.925537109375),
+new google.maps.LatLng(32.69891085607356, 34.92622375488281),
+new google.maps.LatLng(32.69891085607356, 34.93171691894531),
+new google.maps.LatLng(32.702666650266885, 34.93446350097656),
+new google.maps.LatLng(32.704977829668, 34.9310302734375),
+new google.maps.LatLng(32.70815560360234, 34.93206024169922),
+new google.maps.LatLng(32.70700006253934, 34.93721008300781),
+new google.maps.LatLng(32.711333264356284, 34.940643310546875),
+new google.maps.LatLng(32.73357372010094, 34.94682312011719),
+new google.maps.LatLng(32.75985074201205, 34.9500846862793),
+new google.maps.LatLng(32.7537875018279, 34.96295928955078),
+new google.maps.LatLng(32.74108223150125, 34.97480392456055),
+new google.maps.LatLng(32.750033860557416, 34.982872009277344),
+new google.maps.LatLng(32.74425871895697, 34.9885368347168),
+new google.maps.LatLng(32.74873448633905, 34.99351501464844),
+new google.maps.LatLng(32.760139457437795, 34.99540328979492),
+new google.maps.LatLng(32.76259350075932, 35.008277893066406),
+new google.maps.LatLng(32.75191070096623, 35.016517639160156),
+new google.maps.LatLng(32.73588409867885, 35.036773681640625),
+new google.maps.LatLng(32.72938600628502, 35.01445770263672),
+new google.maps.LatLng(32.71003332590989, 35.02338409423828),
+new google.maps.LatLng(32.69977759183938, 35.04518508911133),
+new google.maps.LatLng(32.67767320079454, 35.03711700439453),
+    ];
+    var HD_Area = new google.maps.Polygon({
+        paths: HD_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var KN_Coords = [
+        new google.maps.LatLng(32.803147592033966, 35.401039123535156),
+new google.maps.LatLng(32.798530265348575, 35.404815673828125),
+new google.maps.LatLng(32.78294501748632, 35.40721893310547),
+new google.maps.LatLng(32.77313068261673, 35.40687561035156),
+new google.maps.LatLng(32.765047476441374, 35.39176940917969),
+new google.maps.LatLng(32.76244914714216, 35.383872985839844),
+new google.maps.LatLng(32.75349876580794, 35.37425994873047),
+new google.maps.LatLng(32.74281487506093, 35.370140075683594),
+new google.maps.LatLng(32.73155208971808, 35.370140075683594),
+new google.maps.LatLng(32.72433160692846, 35.375633239746094),
+new google.maps.LatLng(32.71913249723242, 35.37803649902344),
+new google.maps.LatLng(32.71306648615227, 35.3759765625),
+new google.maps.LatLng(32.709022249578155, 35.37254333496094),
+new google.maps.LatLng(32.70179994255902, 35.37117004394531),
+new google.maps.LatLng(32.696599519547924, 35.37494659423828),
+new google.maps.LatLng(32.6960216760644, 35.38318634033203),
+new google.maps.LatLng(32.6960216760644, 35.39314270019531),
+new google.maps.LatLng(32.69197666693998, 35.402069091796875),
+new google.maps.LatLng(32.69631059827375, 35.41339874267578),
+new google.maps.LatLng(32.69428812316933, 35.417518615722656),
+new google.maps.LatLng(32.68966515086213, 35.417518615722656),
+new google.maps.LatLng(32.68590880959562, 35.41786193847656),
+new google.maps.LatLng(32.68157437331439, 35.416831970214844),
+new google.maps.LatLng(32.677817691704206, 35.41065216064453),
+new google.maps.LatLng(32.67521681957013, 35.40687561035156),
+new google.maps.LatLng(32.67059285991286, 35.41374206542969),
+new google.maps.LatLng(32.66828079034104, 35.424041748046875),
+new google.maps.LatLng(32.66885881334276, 35.429534912109375),
+new google.maps.LatLng(32.66510159699591, 35.43296813964844),
+new google.maps.LatLng(32.65874287100405, 35.43743133544922),
+new google.maps.LatLng(32.6541180588781, 35.443267822265625),
+new google.maps.LatLng(32.655274284339875, 35.44670104980469),
+new google.maps.LatLng(32.65758669040313, 35.452537536621094),
+new google.maps.LatLng(32.65758669040313, 35.458717346191406),
+new google.maps.LatLng(32.656430494848316, 35.462493896484375),
+new google.maps.LatLng(32.65036022285923, 35.46455383300781),
+new google.maps.LatLng(32.640820391386406, 35.466957092285156),
+new google.maps.LatLng(32.63330344386202, 35.470733642578125),
+new google.maps.LatLng(32.62723160211139, 35.470733642578125),
+new google.maps.LatLng(32.62405094916023, 35.474510192871094),
+new google.maps.LatLng(32.621159348395096, 35.477943420410156),
+new google.maps.LatLng(32.62087018318113, 35.48412322998047),
+new google.maps.LatLng(32.62260516045382, 35.48961639404297),
+new google.maps.LatLng(32.621448512675016, 35.494422912597656),
+new google.maps.LatLng(32.61826765422287, 35.50128936767578),
+new google.maps.LatLng(32.61653259288591, 35.50849914550781),
+new google.maps.LatLng(32.615665049608346, 35.51227569580078),
+new google.maps.LatLng(32.613640749271326, 35.51605224609375),
+new google.maps.LatLng(32.61306236934077, 35.51982879638672),
+new google.maps.LatLng(32.61277317797456, 35.52497863769531),
+new google.maps.LatLng(32.61161640317033, 35.530128479003906),
+new google.maps.LatLng(32.60901360522645, 35.533905029296875),
+new google.maps.LatLng(32.60583230501211, 35.537681579589844),
+new google.maps.LatLng(32.60149398625833, 35.54454803466797),
+new google.maps.LatLng(32.601783214045184, 35.55381774902344),
+new google.maps.LatLng(32.60091552788334, 35.56205749511719),
+new google.maps.LatLng(32.59802317998301, 35.5682373046875),
+new google.maps.LatLng(32.60409700272347, 35.567893981933594),
+new google.maps.LatLng(32.605253874651204, 35.57201385498047),
+new google.maps.LatLng(32.60988121294625, 35.57373046875),
+new google.maps.LatLng(32.61653259288591, 35.572357177734375),
+new google.maps.LatLng(32.623472636479974, 35.567893981933594),
+new google.maps.LatLng(32.62578586478203, 35.56377410888672),
+new google.maps.LatLng(32.63243606312154, 35.56995391845703),
+new google.maps.LatLng(32.6361946522697, 35.565147399902344),
+new google.maps.LatLng(32.64110949213927, 35.568580627441406),
+new google.maps.LatLng(32.64255498188792, 35.572357177734375),
+new google.maps.LatLng(32.640820391386406, 35.57853698730469),
+new google.maps.LatLng(32.64342226452444, 35.58025360107422),
+new google.maps.LatLng(32.63937487360669, 35.58643341064453),
+new google.maps.LatLng(32.6442895387513, 35.59398651123047),
+new google.maps.LatLng(32.648625783736726, 35.592613220214844),
+new google.maps.LatLng(32.65036022285923, 35.596046447753906),
+new google.maps.LatLng(32.650649292775554, 35.606689453125),
+new google.maps.LatLng(32.657875736955305, 35.60943603515625),
+new google.maps.LatLng(32.66307841506968, 35.606689453125),
+new google.maps.LatLng(32.66741374882766, 35.599822998046875),
+new google.maps.LatLng(32.669436832605314, 35.601539611816406),
+new google.maps.LatLng(32.669436832605314, 35.604286193847656),
+new google.maps.LatLng(32.67319386666782, 35.608062744140625),
+new google.maps.LatLng(32.67897361056713, 35.61664581298828),
+new google.maps.LatLng(32.67752870965116, 35.6231689453125),
+new google.maps.LatLng(32.67839565300552, 35.63037872314453),
+new google.maps.LatLng(32.685041939169665, 35.6341552734375),
+new google.maps.LatLng(32.68215231030691, 35.641021728515625),
+new google.maps.LatLng(32.67752870965116, 35.64308166503906),
+new google.maps.LatLng(32.67752870965116, 35.64857482910156),
+new google.maps.LatLng(32.68301920878329, 35.65235137939453),
+new google.maps.LatLng(32.68822042292262, 35.65509796142578),
+new google.maps.LatLng(32.695443828840105, 35.65509796142578),
+new google.maps.LatLng(32.70151103811915, 35.65132141113281),
+new google.maps.LatLng(32.71624397197978, 35.65784454345703),
+new google.maps.LatLng(32.72433160692846, 35.65818786621094),
+new google.maps.LatLng(32.737616843309304, 35.66333770751953),
+new google.maps.LatLng(32.752343812367535, 35.666770935058594),
+new google.maps.LatLng(32.76158302052429, 35.664710998535156),
+new google.maps.LatLng(32.77890395187418, 35.668487548828125),
+new google.maps.LatLng(32.787851778963635, 35.659217834472656),
+new google.maps.LatLng(32.79333548619193, 35.650291442871094),
+new google.maps.LatLng(32.80257043931297, 35.64857482910156),
+new google.maps.LatLng(32.815844003804756, 35.65338134765625),
+new google.maps.LatLng(32.847865526878856, 35.653038024902344),
+new google.maps.LatLng(32.86199747972006, 35.64857482910156),
+new google.maps.LatLng(32.876703855923736, 35.636558532714844),
+new google.maps.LatLng(32.88420028540548, 35.62385559082031),
+new google.maps.LatLng(32.88650675152939, 35.61767578125),
+new google.maps.LatLng(32.89169608080795, 35.620079040527344),
+new google.maps.LatLng(32.894578910186176, 35.61286926269531),
+new google.maps.LatLng(32.901497317924765, 35.61389923095703),
+new google.maps.LatLng(32.90812695155533, 35.62660217285156),
+new google.maps.LatLng(32.91446787576817, 35.624542236328125),
+new google.maps.LatLng(32.93233530926969, 35.62488555908203),
+new google.maps.LatLng(32.927724704087936, 35.60462951660156),
+new google.maps.LatLng(32.921961109706956, 35.601539611816406),
+new google.maps.LatLng(32.91907917173292, 35.59123992919922),
+new google.maps.LatLng(32.917926370265064, 35.565147399902344),
+new google.maps.LatLng(32.91273857784389, 35.56205749511719),
+new google.maps.LatLng(32.90553280620375, 35.54729461669922),
+new google.maps.LatLng(32.90553280620375, 35.540428161621094),
+new google.maps.LatLng(32.901497317924765, 35.53871154785156),
+new google.maps.LatLng(32.89227265418851, 35.55072784423828),
+new google.maps.LatLng(32.89169608080795, 35.541114807128906),
+new google.maps.LatLng(32.887948262371275, 35.54008483886719),
+new google.maps.LatLng(32.888236561725535, 35.52875518798828),
+new google.maps.LatLng(32.89140779271051, 35.52223205566406),
+new google.maps.LatLng(32.894578910186176, 35.50712585449219),
+new google.maps.LatLng(32.89486718796429, 35.49888610839844),
+new google.maps.LatLng(32.89890297835096, 35.49339294433594),
+new google.maps.LatLng(32.90207382750951, 35.48377990722656),
+new google.maps.LatLng(32.901497317924765, 35.47588348388672),
+new google.maps.LatLng(32.89832644812533, 35.465240478515625),
+new google.maps.LatLng(32.90265033334125, 35.448760986328125),
+new google.maps.LatLng(32.89976776665289, 35.43365478515625),
+new google.maps.LatLng(32.894578910186176, 35.430908203125),
+new google.maps.LatLng(32.89169608080795, 35.4144287109375),
+new google.maps.LatLng(32.88708335868024, 35.408935546875),
+new google.maps.LatLng(32.88621844654692, 35.403785705566406),
+new google.maps.LatLng(32.88910145416005, 35.39726257324219),
+new google.maps.LatLng(32.88881315761995, 35.39039611816406),
+new google.maps.LatLng(32.88420028540548, 35.38593292236328),
+new google.maps.LatLng(32.88420028540548, 35.37528991699219),
+new google.maps.LatLng(32.87468547812003, 35.385589599609375),
+new google.maps.LatLng(32.872090353419075, 35.387306213378906),
+new google.maps.LatLng(32.86199747972006, 35.37769317626953),
+new google.maps.LatLng(32.857094812323695, 35.378379821777344),
+new google.maps.LatLng(32.85103820203316, 35.38421630859375),
+new google.maps.LatLng(32.848442385344136, 35.3924560546875),
+new google.maps.LatLng(32.83286589070039, 35.39588928222656),
+new google.maps.LatLng(32.82103746762573, 35.392799377441406),
+new google.maps.LatLng(32.80689899338195, 35.408592224121094),
+new google.maps.LatLng(32.805167597048346, 35.401039123535156),
+    ];
+    var KN_Area = new google.maps.Polygon({
+        paths: KN_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var HG_Coords = [
+        new google.maps.LatLng(32.931470839102126, 35.6231689453125),
+new google.maps.LatLng(32.91389144688043, 35.621795654296875),
+new google.maps.LatLng(32.908415185236095, 35.624542236328125),
+new google.maps.LatLng(32.901497317924765, 35.612525939941406),
+new google.maps.LatLng(32.891119503674965, 35.611839294433594),
+new google.maps.LatLng(32.88650675152939, 35.61389923095703),
+new google.maps.LatLng(32.88362365949454, 35.623512268066406),
+new google.maps.LatLng(32.87382044499353, 35.63758850097656),
+new google.maps.LatLng(32.86084393529929, 35.64685821533203),
+new google.maps.LatLng(32.847865526878856, 35.652008056640625),
+new google.maps.LatLng(32.835462162948076, 35.65132141113281),
+new google.maps.LatLng(32.815555469135404, 35.65166473388672),
+new google.maps.LatLng(32.799107444298684, 35.64720153808594),
+new google.maps.LatLng(32.79333548619193, 35.648231506347656),
+new google.maps.LatLng(32.787851778963635, 35.658531188964844),
+new google.maps.LatLng(32.77976990995682, 35.66814422607422),
+new google.maps.LatLng(32.77139862880317, 35.666770935058594),
+new google.maps.LatLng(32.76273785414244, 35.664024353027344),
+new google.maps.LatLng(32.7537875018279, 35.66539764404297),
+new google.maps.LatLng(32.74310364571194, 35.662994384765625),
+new google.maps.LatLng(32.732418508353746, 35.65990447998047),
+new google.maps.LatLng(32.7231762754146, 35.65681457519531),
+new google.maps.LatLng(32.71508853568461, 35.657501220703125),
+new google.maps.LatLng(32.703533349557105, 35.652008056640625),
+new google.maps.LatLng(32.700066501890824, 35.65166473388672),
+new google.maps.LatLng(32.69255453660822, 35.655784606933594),
+new google.maps.LatLng(32.683886098844695, 35.65338134765625),
+new google.maps.LatLng(32.68446402087723, 35.65990447998047),
+new google.maps.LatLng(32.67723972666319, 35.65990447998047),
+new google.maps.LatLng(32.685041939169665, 35.6781005859375),
+new google.maps.LatLng(32.69110985542416, 35.677757263183594),
+new google.maps.LatLng(32.693999194413706, 35.675697326660156),
+new google.maps.LatLng(32.704977829668, 35.68016052246094),
+new google.maps.LatLng(32.711333264356284, 35.71208953857422),
+new google.maps.LatLng(32.73328491856776, 35.754661560058594),
+new google.maps.LatLng(32.74714633655501, 35.765647888183594),
+new google.maps.LatLng(32.78756315342785, 35.80272674560547),
+new google.maps.LatLng(32.84757709624005, 35.85010528564453),
+new google.maps.LatLng(32.88881315761995, 35.85662841796875),
+new google.maps.LatLng(32.93867449901647, 35.89439392089844),
+new google.maps.LatLng(32.947894327523066, 35.898170471191406),
+new google.maps.LatLng(32.96085808464397, 35.89061737060547),
+new google.maps.LatLng(32.98073215189709, 35.872764587402344),
+new google.maps.LatLng(33.00261725269998, 35.86864471435547),
+new google.maps.LatLng(33.05040004241502, 35.864524841308594),
+new google.maps.LatLng(33.100745405144245, 35.85182189941406),
+new google.maps.LatLng(33.10851040943536, 35.84083557128906),
+new google.maps.LatLng(33.116849834921005, 35.811309814453125),
+new google.maps.LatLng(33.131226295431865, 35.807533264160156),
+new google.maps.LatLng(33.1366887332403, 35.826759338378906),
+new google.maps.LatLng(33.15623572499535, 35.83946228027344),
+new google.maps.LatLng(33.16773192090341, 35.843238830566406),
+new google.maps.LatLng(33.1869846718891, 35.837745666503906),
+new google.maps.LatLng(33.19589122972613, 35.836029052734375),
+new google.maps.LatLng(33.20278600728194, 35.8209228515625),
+new google.maps.LatLng(33.20853124049305, 35.81474304199219),
+new google.maps.LatLng(33.22375428474926, 35.81439971923828),
+new google.maps.LatLng(33.251608467792614, 35.81165313720703),
+new google.maps.LatLng(33.26251799637015, 35.79414367675781),
+new google.maps.LatLng(33.268833416548325, 35.78075408935547),
+new google.maps.LatLng(33.278018667005334, 35.77903747558594),
+new google.maps.LatLng(33.31216783738619, 35.81371307373047),
+new google.maps.LatLng(33.3184796651575, 35.81268310546875),
+new google.maps.LatLng(33.33339671392772, 35.780067443847656),
+new google.maps.LatLng(33.33511774753217, 35.76873779296875),
+new google.maps.LatLng(33.329380836623415, 35.74676513671875),
+new google.maps.LatLng(33.32651223950189, 35.74230194091797),
+new google.maps.LatLng(33.32852026740331, 35.73371887207031),
+new google.maps.LatLng(33.332823028503604, 35.723419189453125),
+new google.maps.LatLng(33.32708596648145, 35.712432861328125),
+new google.maps.LatLng(33.32278292205773, 35.70934295654297),
+new google.maps.LatLng(33.31130709819114, 35.711402893066406),
+new google.maps.LatLng(33.30729020292566, 35.71037292480469),
+new google.maps.LatLng(33.30298618122413, 35.70350646972656),
+new google.maps.LatLng(33.30126451306708, 35.69664001464844),
+new google.maps.LatLng(33.29868194710951, 35.692176818847656),
+new google.maps.LatLng(33.29954281092482, 35.68737030029297),
+new google.maps.LatLng(33.29294263789357, 35.683250427246094),
+new google.maps.LatLng(33.29581233969934, 35.67741394042969),
+new google.maps.LatLng(33.293229612321824, 35.67157745361328),
+new google.maps.LatLng(33.28863790820217, 35.66814422607422),
+new google.maps.LatLng(33.28261092986074, 35.666770935058594),
+new google.maps.LatLng(33.27945377510022, 35.66059112548828),
+new google.maps.LatLng(33.2757224449812, 35.65956115722656),
+new google.maps.LatLng(33.2817498989783, 35.644798278808594),
+new google.maps.LatLng(33.28117587367123, 35.64136505126953),
+new google.maps.LatLng(33.274000238828876, 35.622825622558594),
+new google.maps.LatLng(33.27170391111521, 35.61836242675781),
+new google.maps.LatLng(33.26481456563577, 35.62145233154297),
+new google.maps.LatLng(33.25907302925473, 35.62042236328125),
+new google.maps.LatLng(33.256202119547524, 35.618019104003906),
+new google.maps.LatLng(33.25246979589199, 35.61973571777344),
+new google.maps.LatLng(33.24959866921125, 35.62248229980469),
+new google.maps.LatLng(33.246153192679756, 35.624542236328125),
+new google.maps.LatLng(33.24299471987176, 35.62248229980469),
+new google.maps.LatLng(33.23552878501954, 35.653038024902344),
+new google.maps.LatLng(33.22461588729967, 35.65269470214844),
+new google.maps.LatLng(33.21169095802982, 35.655784606933594),
+new google.maps.LatLng(33.19847683493303, 35.65544128417969),
+new google.maps.LatLng(33.173479453602404, 35.64857482910156),
+new google.maps.LatLng(33.12145055836598, 35.65269470214844),
+new google.maps.LatLng(33.061334627009195, 35.64136505126953),
+new google.maps.LatLng(33.0509755807245, 35.639991760253906),
+new google.maps.LatLng(33.01326987686982, 35.628318786621094),
+new google.maps.LatLng(32.99225130249218, 35.62591552734375),
+new google.maps.LatLng(32.95884162509528, 35.62385559082031),
+new google.maps.LatLng(32.94991103685064, 35.625572204589844),
+    ];
+    var HG_Area = new google.maps.Polygon({
+        paths: HG_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var JN_Coords = [
+        new google.maps.LatLng(32.22892108389671, 35.424041748046875),
+new google.maps.LatLng(32.253168334244684, 35.4334831237793),
+new google.maps.LatLng(32.27668343339889, 35.435028076171875),
+new google.maps.LatLng(32.29641979896909, 35.42747497558594),
+new google.maps.LatLng(32.320213819653574, 35.41511535644531),
+new google.maps.LatLng(32.34168110749222, 35.41099548339844),
+new google.maps.LatLng(32.358503260304744, 35.41717529296875),
+new google.maps.LatLng(32.385180257193184, 35.43022155761719),
+new google.maps.LatLng(32.40605241348611, 35.43983459472656),
+new google.maps.LatLng(32.41648668224032, 35.419921875),
+new google.maps.LatLng(32.43561304116276, 35.41236877441406),
+new google.maps.LatLng(32.45879106783458, 35.419921875),
+new google.maps.LatLng(32.465743313283596, 35.42060852050781),
+new google.maps.LatLng(32.47964619410741, 35.410308837890625),
+new google.maps.LatLng(32.502233795716045, 35.40618896484375),
+new google.maps.LatLng(32.50686644888966, 35.386962890625),
+new google.maps.LatLng(32.5178680435577, 35.369110107421875),
+new google.maps.LatLng(32.52018399717684, 35.3485107421875),
+new google.maps.LatLng(32.51671004436773, 35.33409118652344),
+new google.maps.LatLng(32.510919824624686, 35.30731201171875),
+new google.maps.LatLng(32.51265692971026, 35.283966064453125),
+new google.maps.LatLng(32.52192092322431, 35.255126953125),
+new google.maps.LatLng(32.537551746769, 35.237274169921875),
+new google.maps.LatLng(32.554337379308535, 35.22491455078125),
+new google.maps.LatLng(32.54623436233052, 35.21186828613281),
+new google.maps.LatLng(32.537551746769, 35.19813537597656),
+new google.maps.LatLng(32.52423677239668, 35.18714904785156),
+new google.maps.LatLng(32.5265525618821, 35.179595947265625),
+new google.maps.LatLng(32.5178680435577, 35.17478942871094),
+new google.maps.LatLng(32.50281289041497, 35.160369873046875),
+new google.maps.LatLng(32.49586350791503, 35.13908386230469),
+new google.maps.LatLng(32.47848770270873, 35.116424560546875),
+new google.maps.LatLng(32.479066950271914, 35.097198486328125),
+new google.maps.LatLng(32.45994981267565, 35.071449279785156),
+new google.maps.LatLng(32.45270741287661, 35.07007598876953),
+new google.maps.LatLng(32.44314655368639, 35.07659912109375),
+new google.maps.LatLng(32.43387444886875, 35.09136199951172),
+new google.maps.LatLng(32.42807889910622, 35.092735290527344),
+new google.maps.LatLng(32.39706638207117, 35.1123046875),
+new google.maps.LatLng(32.374452411547, 35.13530731201172),
+new google.maps.LatLng(32.350382611597084, 35.148353576660156),
+new google.maps.LatLng(32.33936056505929, 35.16242980957031),
+new google.maps.LatLng(32.30831759039775, 35.180625915527344),
+new google.maps.LatLng(32.3051256533381, 35.31726837158203),
+    ];
+    var JN_Area = new google.maps.Polygon({
+        paths: JN_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var PT_Coords = [
+        new google.maps.LatLng(32.017537149173535, 34.99917984008789),
+new google.maps.LatLng(32.005746901214636, 34.967079162597656),
+new google.maps.LatLng(31.989150649732125, 34.96330261230469),
+new google.maps.LatLng(31.986093117922948, 34.93875503540039),
+new google.maps.LatLng(32.020593632526015, 34.86494064331055),
+new google.maps.LatLng(32.0464968721355, 34.8651123046875),
+new google.maps.LatLng(32.0530442834722, 34.85258102416992),
+new google.maps.LatLng(32.050425375149366, 34.84245300292969),
+new google.maps.LatLng(32.05435370952644, 34.83369827270508),
+new google.maps.LatLng(32.10918727429358, 34.842796325683594),
+new google.maps.LatLng(32.112240696452, 34.864253997802734),
+new google.maps.LatLng(32.18738082408719, 34.883995056152344),
+new google.maps.LatLng(32.18970525564707, 34.872493743896484),
+new google.maps.LatLng(32.19885712788491, 34.861507415771484),
+new google.maps.LatLng(32.1994381680643, 34.86665725708008),
+new google.maps.LatLng(32.20655560911948, 34.871978759765625),
+new google.maps.LatLng(32.20742709424606, 34.88382339477539),
+new google.maps.LatLng(32.22659765432214, 34.88262176513672),
+new google.maps.LatLng(32.23501980392184, 34.88485336303711),
+new google.maps.LatLng(32.22877587128842, 34.89927291870117),
+new google.maps.LatLng(32.2292115084172, 34.90184783935547),
+new google.maps.LatLng(32.23458419463704, 34.9116325378418),
+new google.maps.LatLng(32.23516500655268, 34.92982864379883),
+new google.maps.LatLng(32.23356776485105, 34.93635177612305),
+new google.maps.LatLng(32.22892108389671, 34.939613342285156),
+new google.maps.LatLng(32.22616200466447, 34.94527816772461),
+new google.maps.LatLng(32.22093404590531, 34.949398040771484),
+new google.maps.LatLng(32.21904609801856, 34.95832443237305),
+new google.maps.LatLng(32.22078882053671, 34.9669075012207),
+new google.maps.LatLng(32.22645243800159, 34.9720573425293),
+new google.maps.LatLng(32.230808826690094, 34.97051239013672),
+new google.maps.LatLng(32.236907420023044, 34.97102737426758),
+new google.maps.LatLng(32.24837747454558, 34.97669219970703),
+new google.maps.LatLng(32.2466352810787, 35.00175476074219),
+new google.maps.LatLng(32.24721601594782, 35.013084411621094),
+new google.maps.LatLng(32.249103378626025, 35.02063751220703),
+new google.maps.LatLng(32.256362100282246, 35.024757385253906),
+new google.maps.LatLng(32.25810410713092, 35.0273323059082),
+new google.maps.LatLng(32.25360385441068, 35.02939224243164),
+new google.maps.LatLng(32.24271522358435, 35.01943588256836),
+new google.maps.LatLng(32.23443899107804, 35.01995086669922),
+new google.maps.LatLng(32.23342255966773, 35.017032623291016),
+new google.maps.LatLng(32.235600613052945, 35.01394271850586),
+new google.maps.LatLng(32.23211570257628, 35.00999450683594),
+new google.maps.LatLng(32.22892108389671, 35.00947952270508),
+new google.maps.LatLng(32.21323678170093, 34.99128341674805),
+new google.maps.LatLng(32.20858906142631, 34.98991012573242),
+new google.maps.LatLng(32.19754977391484, 34.96124267578125),
+new google.maps.LatLng(32.187816659526, 34.956607818603516),
+new google.maps.LatLng(32.175612478499325, 34.95952606201172),
+new google.maps.LatLng(32.173142385696316, 34.96450424194336),
+new google.maps.LatLng(32.16805668957401, 34.9639892578125),
+new google.maps.LatLng(32.158611072062605, 34.9778938293457),
+new google.maps.LatLng(32.15207122481357, 34.97428894042969),
+new google.maps.LatLng(32.14887379537526, 34.98098373413086),
+new google.maps.LatLng(32.14843777358073, 34.986820220947266),
+new google.maps.LatLng(32.14160649321828, 34.990596771240234),
+new google.maps.LatLng(32.128087770687586, 34.98544692993164),
+new google.maps.LatLng(32.11631176714, 34.98767852783203),
+new google.maps.LatLng(32.110205093026245, 34.99523162841797),
+new google.maps.LatLng(32.10235305468224, 34.99042510986328),
+new google.maps.LatLng(32.08984656280848, 34.982872009277344),
+new google.maps.LatLng(32.088101334800335, 34.98664855957031),
+new google.maps.LatLng(32.03194539223801, 35.00450134277344),
+new google.maps.LatLng(32.01942926993813, 35.00587463378906),
+    ];
+    var PT_Area = new google.maps.Polygon({
+        paths: PT_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var YZ_Coords = [
+        new google.maps.LatLng(32.59816779959566, 35.5682373046875),
+new google.maps.LatLng(32.60098783538449, 35.56205749511719),
+new google.maps.LatLng(32.60192782758844, 35.5543327331543),
+new google.maps.LatLng(32.60163860026847, 35.54420471191406),
+new google.maps.LatLng(32.612050195473046, 35.52978515625),
+new google.maps.LatLng(32.61291777377439, 35.525665283203125),
+new google.maps.LatLng(32.613785343670244, 35.5158805847168),
+new google.maps.LatLng(32.615665049608346, 35.51279067993164),
+new google.maps.LatLng(32.61855682784329, 35.50111770629883),
+new google.maps.LatLng(32.621593094464686, 35.49476623535156),
+new google.maps.LatLng(32.622749740375305, 35.489959716796875),
+new google.maps.LatLng(32.62087018318113, 35.483951568603516),
+new google.maps.LatLng(32.62130393065182, 35.47760009765625),
+new google.maps.LatLng(32.62737617455987, 35.470733642578125),
+new google.maps.LatLng(32.63330344386202, 35.47107696533203),
+new google.maps.LatLng(32.640820391386406, 35.467472076416016),
+new google.maps.LatLng(32.656719545138934, 35.46283721923828),
+new google.maps.LatLng(32.65758669040313, 35.458717346191406),
+new google.maps.LatLng(32.65758669040313, 35.453224182128906),
+new google.maps.LatLng(32.65426258787858, 35.44395446777344),
+new google.maps.LatLng(32.65932095569672, 35.43691635131836),
+new google.maps.LatLng(32.66914782344145, 35.429534912109375),
+new google.maps.LatLng(32.66828079034104, 35.42387008666992),
+new google.maps.LatLng(32.67059285991286, 35.41425704956055),
+new google.maps.LatLng(32.67521681957013, 35.407047271728516),
+new google.maps.LatLng(32.68157437331439, 35.41717529296875),
+new google.maps.LatLng(32.68547537543456, 35.418033599853516),
+new google.maps.LatLng(32.694721514549315, 35.417518615722656),
+new google.maps.LatLng(32.69631059827375, 35.41374206542969),
+new google.maps.LatLng(32.692121134707726, 35.40224075317383),
+new google.maps.LatLng(32.69587721460903, 35.39365768432617),
+new google.maps.LatLng(32.696599519547924, 35.37580490112305),
+new google.maps.LatLng(32.70165549045599, 35.37117004394531),
+new google.maps.LatLng(32.709166689755655, 35.37254333496094),
+new google.maps.LatLng(32.71321091978183, 35.37649154663086),
+new google.maps.LatLng(32.71869922440848, 35.37820816040039),
+new google.maps.LatLng(32.72433160692846, 35.37580490112305),
+new google.maps.LatLng(32.73155208971808, 35.37031173706055),
+new google.maps.LatLng(32.74281487506093, 35.3704833984375),
+new google.maps.LatLng(32.753210028851896, 35.37477493286133),
+new google.maps.LatLng(32.76259350075932, 35.38421630859375),
+new google.maps.LatLng(32.76461442682433, 35.39228439331055),
+new google.maps.LatLng(32.77284200932199, 35.407047271728516),
+new google.maps.LatLng(32.78337797791542, 35.40773391723633),
+new google.maps.LatLng(32.798385970025585, 35.40515899658203),
+new google.maps.LatLng(32.80444617195561, 35.4008674621582),
+new google.maps.LatLng(32.80834179789677, 35.387821197509766),
+new google.maps.LatLng(32.81166015939479, 35.34198760986328),
+new google.maps.LatLng(32.79752019316996, 35.319156646728516),
+new google.maps.LatLng(32.79550001438897, 35.30473709106445),
+new google.maps.LatLng(32.79362409299568, 35.268001556396484),
+new google.maps.LatLng(32.79477851084408, 35.24139404296875),
+new google.maps.LatLng(32.80603329943089, 35.221824645996094),
+new google.maps.LatLng(32.79420130379319, 35.216331481933594),
+new google.maps.LatLng(32.78337797791542, 35.21839141845703),
+new google.maps.LatLng(32.764325725909366, 35.2140998840332),
+new google.maps.LatLng(32.759056769764186, 35.2056884765625),
+new google.maps.LatLng(32.75970638394809, 35.194101333618164),
+new google.maps.LatLng(32.764325725909366, 35.1767635345459),
+new google.maps.LatLng(32.76995522487643, 35.169081687927246),
+new google.maps.LatLng(32.76858396946491, 35.16848087310791),
+new google.maps.LatLng(32.76371223335658, 35.16105651855469),
+new google.maps.LatLng(32.75104447184547, 35.15633583068848),
+new google.maps.LatLng(32.74591911051183, 35.1536750793457),
+new google.maps.LatLng(32.73819441736631, 35.155391693115234),
+new google.maps.LatLng(32.7316242915927, 35.151615142822266),
+new google.maps.LatLng(32.72469264495655, 35.14431953430176),
+new google.maps.LatLng(32.71913249723242, 35.13547897338867),
+new google.maps.LatLng(32.701438811863056, 35.130157470703125),
+new google.maps.LatLng(32.70483338270915, 35.118913650512695),
+new google.maps.LatLng(32.70808338272434, 35.110158920288086),
+new google.maps.LatLng(32.704183368500644, 35.10809898376465),
+new google.maps.LatLng(32.69912754080412, 35.1068115234375),
+new google.maps.LatLng(32.6914710279119, 35.11136054992676),
+new google.maps.LatLng(32.68670343342672, 35.112905502319336),
+new google.maps.LatLng(32.679768296108016, 35.12320518493652),
+new google.maps.LatLng(32.657153118822464, 35.108699798583984),
+new google.maps.LatLng(32.65050475793421, 35.09925842285156),
+new google.maps.LatLng(32.64530134805362, 35.08535385131836),
+new google.maps.LatLng(32.637061996573436, 35.07556915283203),
+new google.maps.LatLng(32.63431537743207, 35.05213737487793),
+new google.maps.LatLng(32.63380941207763, 35.05179405212402),
+new google.maps.LatLng(32.62513527536472, 35.06037712097168),
+new google.maps.LatLng(32.618665267710156, 35.053510665893555),
+new google.maps.LatLng(32.61721939201909, 35.05711555480957),
+new google.maps.LatLng(32.60120475753773, 35.050764083862305),
+new google.maps.LatLng(32.5907195860086, 35.05205154418945),
+new google.maps.LatLng(32.58450021500699, 35.05780220031738),
+new google.maps.LatLng(32.57950994255046, 35.059776306152344),
+new google.maps.LatLng(32.57394075985061, 35.0588321685791),
+new google.maps.LatLng(32.569745562680495, 35.05393981933594),
+new google.maps.LatLng(32.56555016928474, 35.03445625305176),
+new google.maps.LatLng(32.560992881731266, 35.02861976623535),
+new google.maps.LatLng(32.557014108101185, 35.030250549316406),
+new google.maps.LatLng(32.55368627104408, 35.03634452819824),
+new google.maps.LatLng(32.55310750417685, 35.04183769226074),
+new google.maps.LatLng(32.5481154850361, 35.05033493041992),
+new google.maps.LatLng(32.54883898327313, 35.05411148071289),
+new google.maps.LatLng(32.547174928610474, 35.05934715270996),
+new google.maps.LatLng(32.54457025938778, 35.061750411987305),
+new google.maps.LatLng(32.540228976093275, 35.073509216308594),
+new google.maps.LatLng(32.538854192626104, 35.08114814758301),
+new google.maps.LatLng(32.53675579833513, 35.08664131164551),
+new google.maps.LatLng(32.53270358784857, 35.090932846069336),
+new google.maps.LatLng(32.532197048683244, 35.10174751281738),
+new google.maps.LatLng(32.530749778185395, 35.10912895202637),
+new google.maps.LatLng(32.530749778185395, 35.11556625366211),
+new google.maps.LatLng(32.524960463022666, 35.11771202087402),
+new google.maps.LatLng(32.52141432326176, 35.120887756347656),
+new google.maps.LatLng(32.524888094222355, 35.12826919555664),
+new google.maps.LatLng(32.538202972058755, 35.13951301574707),
+new google.maps.LatLng(32.545366138556574, 35.1478385925293),
+new google.maps.LatLng(32.55303515805604, 35.147666931152344),
+new google.maps.LatLng(32.55846095528802, 35.146379470825195),
+new google.maps.LatLng(32.561065221437005, 35.15650749206543),
+new google.maps.LatLng(32.56858823237687, 35.162858963012695),
+new google.maps.LatLng(32.57216867463962, 35.17144203186035),
+new google.maps.LatLng(32.573796101145916, 35.18019676208496),
+new google.maps.LatLng(32.57216867463962, 35.181870460510254),
+new google.maps.LatLng(32.56934773207293, 35.18054008483887),
+new google.maps.LatLng(32.562150310024094, 35.189852714538574),
+new google.maps.LatLng(32.55603747306264, 35.19144058227539),
+new google.maps.LatLng(32.55285429249884, 35.19440174102783),
+new google.maps.LatLng(32.549417777664395, 35.19925117492676),
+new google.maps.LatLng(32.54735580561151, 35.20062446594238),
+new google.maps.LatLng(32.544389376774575, 35.19478797912598),
+new google.maps.LatLng(32.538130613926434, 35.19813537597656),
+new google.maps.LatLng(32.538130613926434, 35.200066566467285),
+new google.maps.LatLng(32.541241960969494, 35.20444393157959),
+new google.maps.LatLng(32.542616707880256, 35.209808349609375),
+new google.maps.LatLng(32.544063787152474, 35.21161079406738),
+new google.maps.LatLng(32.54435320020821, 35.21435737609863),
+new google.maps.LatLng(32.545727899482785, 35.215816497802734),
+new google.maps.LatLng(32.54768138329493, 35.216073989868164),
+new google.maps.LatLng(32.55194995924591, 35.22414207458496),
+new google.maps.LatLng(32.535019159084484, 35.2371883392334),
+new google.maps.LatLng(32.52322359572793, 35.25195121765137),
+new google.maps.LatLng(32.514538755672866, 35.27503967285156),
+new google.maps.LatLng(32.51012364024236, 35.29126167297363),
+new google.maps.LatLng(32.51005125949434, 35.306968688964844),
+new google.maps.LatLng(32.511064584663885, 35.31100273132324),
+new google.maps.LatLng(32.51309120073676, 35.32301902770996),
+new google.maps.LatLng(32.51605866326671, 35.33400535583496),
+new google.maps.LatLng(32.51924314821702, 35.34250259399414),
+new google.maps.LatLng(32.51931552156364, 35.34482002258301),
+new google.maps.LatLng(32.518012792407376, 35.35031318664551),
+new google.maps.LatLng(32.51909840134896, 35.353660583496094),
+new google.maps.LatLng(32.51859178547481, 35.35769462585449),
+new google.maps.LatLng(32.51576915903987, 35.369367599487305),
+new google.maps.LatLng(32.51222265658579, 35.37520408630371),
+new google.maps.LatLng(32.50860363229594, 35.38172721862793),
+new google.maps.LatLng(32.50527400128179, 35.38447380065918),
+new google.maps.LatLng(32.50538257815097, 35.38863658905029),
+new google.maps.LatLng(32.5031748227081, 35.39567470550537),
+new google.maps.LatLng(32.50241476321004, 35.397348403930664),
+new google.maps.LatLng(32.501871859635514, 35.40236949920654),
+new google.maps.LatLng(32.501437534416105, 35.4028844833374),
+new google.maps.LatLng(32.49904870821525, 35.404300689697266),
+new google.maps.LatLng(32.49716655803491, 35.40451526641846),
+new google.maps.LatLng(32.49485001143792, 35.404043197631836),
+new google.maps.LatLng(32.49466902872255, 35.40447235107422),
+new google.maps.LatLng(32.49369171576737, 35.404086112976074),
+new google.maps.LatLng(32.476894752689354, 35.408935546875),
+new google.maps.LatLng(32.469798541961715, 35.41494369506836),
+new google.maps.LatLng(32.46342595776104, 35.41717529296875),
+new google.maps.LatLng(32.462267257639176, 35.41923522949219),
+new google.maps.LatLng(32.45937044211836, 35.420265197753906),
+new google.maps.LatLng(32.45676322849572, 35.41717529296875),
+new google.maps.LatLng(32.435757922340635, 35.411338806152344),
+new google.maps.LatLng(32.41677650581706, 35.419578552246094),
+new google.maps.LatLng(32.40634227057499, 35.43571472167969),
+new google.maps.LatLng(32.40518283663468, 35.44258117675781),
+new google.maps.LatLng(32.410400172081545, 35.44395446777344),
+new google.maps.LatLng(32.413008726705044, 35.45459747314453),
+new google.maps.LatLng(32.410979857403035, 35.47863006591797),
+new google.maps.LatLng(32.4048929758226, 35.488243103027344),
+new google.maps.LatLng(32.40257405581776, 35.490989685058594),
+new google.maps.LatLng(32.39445736671402, 35.525665283203125),
+new google.maps.LatLng(32.39242808043168, 35.534934997558594),
+new google.maps.LatLng(32.387209706323894, 35.53974151611328),
+new google.maps.LatLng(32.388659284930256, 35.554161071777344),
+new google.maps.LatLng(32.3964866073953, 35.547637939453125),
+new google.maps.LatLng(32.400834826722196, 35.54695129394531),
+new google.maps.LatLng(32.40286392407606, 35.551414489746094),
+new google.maps.LatLng(32.400544951948675, 35.55622100830078),
+new google.maps.LatLng(32.400544951948675, 35.55999755859375),
+new google.maps.LatLng(32.414168060111855, 35.563087463378906),
+new google.maps.LatLng(32.42199317099747, 35.55519104003906),
+new google.maps.LatLng(32.424311592027344, 35.56480407714844),
+new google.maps.LatLng(32.43010738389209, 35.55828094482422),
+new google.maps.LatLng(32.43648232473781, 35.56926727294922),
+new google.maps.LatLng(32.45183828577544, 35.5682373046875),
+new google.maps.LatLng(32.458501379295285, 35.57544708251953),
+new google.maps.LatLng(32.464005302231875, 35.5682373046875),
+new google.maps.LatLng(32.46342595776104, 35.56480407714844),
+new google.maps.LatLng(32.46950888882687, 35.568580627441406),
+new google.maps.LatLng(32.48138390324739, 35.57167053222656),
+new google.maps.LatLng(32.48659682936049, 35.584373474121094),
+new google.maps.LatLng(32.4999173796297, 35.57716369628906),
+new google.maps.LatLng(32.50310243636601, 35.565147399902344),
+new google.maps.LatLng(32.51063030384697, 35.56720733642578),
+new google.maps.LatLng(32.517289045827724, 35.562744140625),
+new google.maps.LatLng(32.51236741452707, 35.55999755859375),
+new google.maps.LatLng(32.51873653315885, 35.55828094482422),
+new google.maps.LatLng(32.52076297625624, 35.568580627441406),
+new google.maps.LatLng(32.52799989999971, 35.56995391845703),
+new google.maps.LatLng(32.532341774450515, 35.56377410888672),
+new google.maps.LatLng(32.538130613926434, 35.565834045410156),
+new google.maps.LatLng(32.53784118081413, 35.57270050048828),
+new google.maps.LatLng(32.54768138329493, 35.57476043701172),
+new google.maps.LatLng(32.552601080106484, 35.58128356933594),
+new google.maps.LatLng(32.56359707439351, 35.57373046875),
+new google.maps.LatLng(32.56533316084101, 35.5792236328125),
+new google.maps.LatLng(32.59686621467839, 35.580596923828125),
+new google.maps.LatLng(32.59918013034806, 35.57647705078125),
+    ];
+    var YZ_Area = new google.maps.Polygon({
+        paths: YZ_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var HS_Coords = [
+        new google.maps.LatLng(32.378076826192306, 35.04158020019531),
+new google.maps.LatLng(32.376192148718644, 35.048789978027344),
+new google.maps.LatLng(32.36792809887494, 35.05136489868164),
+new google.maps.LatLng(32.36473826350448, 35.05119323730469),
+new google.maps.LatLng(32.36024330444844, 35.04844665527344),
+new google.maps.LatLng(32.356038140451744, 35.041236877441406),
+new google.maps.LatLng(32.34719215726623, 35.041751861572266),
+new google.maps.LatLng(32.34545186202365, 35.037803649902344),
+new google.maps.LatLng(32.3470471339413, 35.028018951416016),
+new google.maps.LatLng(32.33907049307107, 35.0269889831543),
+new google.maps.LatLng(32.341391042942455, 35.02046585083008),
+new google.maps.LatLng(32.33907049307107, 35.0160026550293),
+new google.maps.LatLng(32.31208973467698, 35.015316009521484),
+new google.maps.LatLng(32.3055609241037, 35.011539459228516),
+new google.maps.LatLng(32.293372552377825, 35.01274108886719),
+new google.maps.LatLng(32.280892283431456, 35.00896453857422),
+new google.maps.LatLng(32.27929584606353, 35.014286041259766),
+new google.maps.LatLng(32.280602024181825, 35.0160026550293),
+new google.maps.LatLng(32.27798964913578, 35.0214958190918),
+new google.maps.LatLng(32.27102294786611, 35.02767562866211),
+new google.maps.LatLng(32.263184769505486, 35.03059387207031),
+new google.maps.LatLng(32.25912026235577, 35.028018951416016),
+new google.maps.LatLng(32.25505557320963, 35.02389907836914),
+new google.maps.LatLng(32.24895819827413, 35.02098083496094),
+new google.maps.LatLng(32.246780465144106, 35.01239776611328),
+new google.maps.LatLng(32.246490096781194, 35.00072479248047),
+new google.maps.LatLng(32.247941929312105, 34.976863861083984),
+new google.maps.LatLng(32.24329598351848, 34.974117279052734),
+new google.maps.LatLng(32.23632661924573, 34.971370697021484),
+new google.maps.LatLng(32.23095403605002, 34.970855712890625),
+new google.maps.LatLng(32.22674287041067, 34.97222900390625),
+new google.maps.LatLng(32.22354806286899, 34.97051239013672),
+new google.maps.LatLng(32.22035314303901, 34.967079162597656),
+new google.maps.LatLng(32.218465183089, 34.95866775512695),
+new google.maps.LatLng(32.22093404590531, 34.94922637939453),
+new google.maps.LatLng(32.22572635291873, 34.94476318359375),
+new google.maps.LatLng(32.22863065844813, 34.939613342285156),
+new google.maps.LatLng(32.23095403605002, 34.937896728515625),
+new google.maps.LatLng(32.23342255966773, 34.935665130615234),
+new google.maps.LatLng(32.23472939796403, 34.93034362792969),
+new google.maps.LatLng(32.23487460105895, 34.918155670166016),
+new google.maps.LatLng(32.23443899107804, 34.9116325378418),
+new google.maps.LatLng(32.233132148605, 34.910430908203125),
+new google.maps.LatLng(32.23051840727417, 34.905967712402344),
+new google.maps.LatLng(32.22892108389671, 34.90236282348633),
+new google.maps.LatLng(32.22863065844813, 34.899444580078125),
+new google.maps.LatLng(32.23443899107804, 34.885196685791016),
+new google.maps.LatLng(32.22630722144903, 34.88279342651367),
+new google.maps.LatLng(32.21991746345339, 34.883480072021484),
+new google.maps.LatLng(32.21163915464707, 34.88365173339844),
+new google.maps.LatLng(32.20735447080443, 34.8841667175293),
+new google.maps.LatLng(32.20582936513577, 34.871463775634766),
+new google.maps.LatLng(32.19951079782584, 34.8665714263916),
+new google.maps.LatLng(32.19878449760158, 34.86167907714844),
+new google.maps.LatLng(32.206918728936934, 34.853525161743164),
+new google.maps.LatLng(32.208298571022866, 34.84511375427246),
+new google.maps.LatLng(32.20641036078661, 34.834556579589844),
+new google.maps.LatLng(32.2091700394498, 34.81112480163574),
+new google.maps.LatLng(32.288293580436644, 34.83489990234375),
+new google.maps.LatLng(32.39213817866891, 34.86408233642578),
+new google.maps.LatLng(32.402284186628684, 34.86408233642578),
+new google.maps.LatLng(32.41126969866743, 34.86614227294922),
+new google.maps.LatLng(32.413008726705044, 34.870262145996094),
+new google.maps.LatLng(32.410110328024494, 34.88090515136719),
+new google.maps.LatLng(32.407211836256685, 34.88433837890625),
+new google.maps.LatLng(32.4048929758226, 34.90837097167969),
+new google.maps.LatLng(32.410690015207734, 34.918670654296875),
+new google.maps.LatLng(32.412429054416144, 34.925880432128906),
+new google.maps.LatLng(32.410400172081545, 34.93206024169922),
+new google.maps.LatLng(32.404023387801594, 34.934120178222656),
+new google.maps.LatLng(32.394167471465536, 34.958152770996094),
+new google.maps.LatLng(32.38691978781105, 34.99042510986328),
+new google.maps.LatLng(32.38199103072684, 34.999351501464844),
+new google.maps.LatLng(32.38112122215103, 35.004844665527344),
+new google.maps.LatLng(32.377351954892745, 35.01239776611328),
+new google.maps.LatLng(32.37561224004946, 35.02269744873047),
+    ];
+    var HS_Area = new google.maps.Polygon({
+        paths: HS_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var TA_Coords = [
+        new google.maps.LatLng(32.19856660640375, 34.861507415771484),
+new google.maps.LatLng(32.18999580541844, 34.87266540527344),
+new google.maps.LatLng(32.187671381278264, 34.88433837890625),
+new google.maps.LatLng(32.112240696452, 34.86442565917969),
+new google.maps.LatLng(32.108751062791974, 34.8431396484375),
+new google.maps.LatLng(32.05420821866798, 34.834041595458984),
+new google.maps.LatLng(32.050570872022476, 34.84193801879883),
+new google.maps.LatLng(32.05318977618135, 34.85240936279297),
+new google.maps.LatLng(32.04693338079779, 34.8651123046875),
+new google.maps.LatLng(32.032673021160385, 34.865970611572266),
+new google.maps.LatLng(32.020593632526015, 34.86528396606445),
+new google.maps.LatLng(32.01710050037138, 34.84880447387695),
+new google.maps.LatLng(32.021757980316536, 34.846229553222656),
+new google.maps.LatLng(32.02146689475617, 34.838504791259766),
+new google.maps.LatLng(32.028452692935645, 34.82837677001953),
+new google.maps.LatLng(31.977211138105698, 34.792327880859375),
+new google.maps.LatLng(31.997594731962774, 34.72984313964844),
+new google.maps.LatLng(32.02001145308173, 34.738426208496094),
+new google.maps.LatLng(32.02248569017118, 34.73705291748047),
+new google.maps.LatLng(32.0383483283312, 34.74357604980469),
+new google.maps.LatLng(32.04664237525425, 34.74409103393555),
+new google.maps.LatLng(32.05784542072537, 34.74958419799805),
+new google.maps.LatLng(32.05813639064348, 34.75627899169922),
+new google.maps.LatLng(32.083592674837845, 34.766578674316406),
+new google.maps.LatLng(32.08693783094361, 34.76554870605469),
+new google.maps.LatLng(32.10220764019743, 34.7743034362793),
+new google.maps.LatLng(32.109041870691286, 34.772586822509766),
+new google.maps.LatLng(32.109914288831845, 34.7772216796875),
+new google.maps.LatLng(32.11921956361475, 34.780311584472656),
+new google.maps.LatLng(32.122418032739795, 34.77928161621094),
+new google.maps.LatLng(32.12474412169509, 34.78202819824219),
+new google.maps.LatLng(32.15584986046307, 34.79301452636719),
+new google.maps.LatLng(32.15991898519912, 34.78889465332031),
+new google.maps.LatLng(32.1674754490803, 34.792327880859375),
+new google.maps.LatLng(32.17096283641326, 34.79747772216797),
+new google.maps.LatLng(32.2098962567604, 34.811553955078125),
+new google.maps.LatLng(32.20641036078661, 34.83386993408203),
+new google.maps.LatLng(32.20844381634056, 34.845542907714844),
+new google.maps.LatLng(32.20757234095538, 34.85343933105469),
+    ];
+    var TA_Area = new google.maps.Polygon({
+        paths: TA_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var TK_Coords = [
+        new google.maps.LatLng(32.30991351676043, 35.17976760864258),
+new google.maps.LatLng(32.30657654775904, 35.17770767211914),
+new google.maps.LatLng(32.30222379480205, 35.17599105834961),
+new google.maps.LatLng(32.2999022410693, 35.17890930175781),
+new google.maps.LatLng(32.29409809657151, 35.180110931396484),
+new google.maps.LatLng(32.28698751309372, 35.17873764038086),
+new google.maps.LatLng(32.281472799144076, 35.1756477355957),
+new google.maps.LatLng(32.27639316068085, 35.17341613769531),
+new google.maps.LatLng(32.25563625422983, 35.16397476196289),
+new google.maps.LatLng(32.24823229303319, 35.16294479370117),
+new google.maps.LatLng(32.24024695243935, 35.1643180847168),
+new google.maps.LatLng(32.23197049507261, 35.16620635986328),
+new google.maps.LatLng(32.22398372505503, 35.169124603271484),
+new google.maps.LatLng(32.21236535224182, 35.17375946044922),
+new google.maps.LatLng(32.204376859773525, 35.1753044128418),
+new google.maps.LatLng(32.16631295696736, 35.187835693359375),
+new google.maps.LatLng(32.15526854209781, 35.19641876220703),
+new google.maps.LatLng(32.14335069856222, 35.2056884765625),
+new google.maps.LatLng(32.13084982308751, 35.21736145019531),
+new google.maps.LatLng(32.118638011730695, 35.224571228027344),
+new google.maps.LatLng(32.10409801044057, 35.231781005859375),
+new google.maps.LatLng(32.091882620021785, 35.232810974121094),
+new google.maps.LatLng(32.07530197765318, 35.22972106933594),
+new google.maps.LatLng(32.06511939104014, 35.2166748046875),
+new google.maps.LatLng(32.058718327703446, 35.203285217285156),
+new google.maps.LatLng(32.053771744704605, 35.18543243408203),
+new google.maps.LatLng(32.049988883142014, 34.9969482421875),
+new google.maps.LatLng(32.08722870829662, 34.98664855957031),
+new google.maps.LatLng(32.08984656280848, 34.98218536376953),
+new google.maps.LatLng(32.11049589629439, 34.993858337402344),
+new google.maps.LatLng(32.116602550956046, 34.98699188232422),
+new google.maps.LatLng(32.13084982308751, 34.98424530029297),
+new google.maps.LatLng(32.14160649321828, 34.99042510986328),
+new google.maps.LatLng(32.14800174970085, 34.98664855957031),
+new google.maps.LatLng(32.14887379537526, 34.97943878173828),
+new google.maps.LatLng(32.15294323155951, 34.97394561767578),
+new google.maps.LatLng(32.15933769278929, 34.976348876953125),
+new google.maps.LatLng(32.1674754490803, 34.963645935058594),
+new google.maps.LatLng(32.1718346623851, 34.96330261230469),
+new google.maps.LatLng(32.17357828929423, 34.96278762817383),
+new google.maps.LatLng(32.175467180777176, 34.95918273925781),
+new google.maps.LatLng(32.187671381278264, 34.956607818603516),
+new google.maps.LatLng(32.197695036394656, 34.9610710144043),
+new google.maps.LatLng(32.20858906142631, 34.990081787109375),
+new google.maps.LatLng(32.213382019132254, 34.99094009399414),
+new google.maps.LatLng(32.22863065844813, 35.00913619995117),
+new google.maps.LatLng(32.232406116887525, 35.009307861328125),
+new google.maps.LatLng(32.23574581475559, 35.01411437988281),
+new google.maps.LatLng(32.23385817452153, 35.017032623291016),
+new google.maps.LatLng(32.23487460105895, 35.01943588256836),
+new google.maps.LatLng(32.24329598351848, 35.01909255981445),
+new google.maps.LatLng(32.25360385441068, 35.029048919677734),
+new google.maps.LatLng(32.25853960362009, 35.0269889831543),
+new google.maps.LatLng(32.263620241619456, 35.03042221069336),
+new google.maps.LatLng(32.271458382368515, 35.027503967285156),
+new google.maps.LatLng(32.278715316417774, 35.02063751220703),
+new google.maps.LatLng(32.2801666335657, 35.01565933227539),
+new google.maps.LatLng(32.27857018342579, 35.01325607299805),
+new google.maps.LatLng(32.281182541752244, 35.00810623168945),
+new google.maps.LatLng(32.293662770752114, 35.01239776611328),
+new google.maps.LatLng(32.30628637073342, 35.011024475097656),
+new google.maps.LatLng(32.3122348140127, 35.014801025390625),
+new google.maps.LatLng(32.339795671298255, 35.01565933227539),
+new google.maps.LatLng(32.34168110749222, 35.02098083496094),
+new google.maps.LatLng(32.33965063611772, 35.0269889831543),
+new google.maps.LatLng(32.34748220321868, 35.02767562866211),
+new google.maps.LatLng(32.34588693897268, 35.037288665771484),
+new google.maps.LatLng(32.34748220321868, 35.04140853881836),
+new google.maps.LatLng(32.35647316648509, 35.040550231933594),
+new google.maps.LatLng(32.35995329941639, 35.047760009765625),
+new google.maps.LatLng(32.365608229767886, 35.05136489868164),
+new google.maps.LatLng(32.375902194849225, 35.04861831665039),
+new google.maps.LatLng(32.377931852397595, 35.04140853881836),
+new google.maps.LatLng(32.379961464357315, 35.03986358642578),
+new google.maps.LatLng(32.3992405039502, 35.051536560058594),
+new google.maps.LatLng(32.40880601824827, 35.0547981262207),
+new google.maps.LatLng(32.41721123943659, 35.05342483520508),
+new google.maps.LatLng(32.420109410034684, 35.057029724121094),
+new google.maps.LatLng(32.42416669245876, 35.05531311035156),
+new google.maps.LatLng(32.42793400558988, 35.05840301513672),
+new google.maps.LatLng(32.44024912337551, 35.06303787231445),
+new google.maps.LatLng(32.44401576461801, 35.0654411315918),
+new google.maps.LatLng(32.451114006786995, 35.06561279296875),
+new google.maps.LatLng(32.45314197328334, 35.070247650146484),
+new google.maps.LatLng(32.44314655368639, 35.07728576660156),
+new google.maps.LatLng(32.43401933284037, 35.09204864501953),
+new google.maps.LatLng(32.42764421785883, 35.09359359741211),
+new google.maps.LatLng(32.39721132515847, 35.113162994384766),
+new google.maps.LatLng(32.37503232765891, 35.13530731201172),
+new google.maps.LatLng(32.35081766483307, 35.14904022216797),
+new google.maps.LatLng(32.34066587750003, 35.16191482543945),
+    ];
+    var TK_Area = new google.maps.Polygon({
+        paths: TK_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+
+    var RH_Coords = [
+    new google.maps.LatLng(32.00924046613807, 34.81550216674805),
+    new google.maps.LatLng(31.957551241076636, 34.853224754333496),
+    new google.maps.LatLng(31.950851351639255, 34.848246574401855),
+    new google.maps.LatLng(31.915158927025217, 34.800310134887695),
+    new google.maps.LatLng(31.901315279500793, 34.8445987701416),
+    new google.maps.LatLng(31.873184404478362, 34.82245445251465),
+    new google.maps.LatLng(31.850440216816747, 34.8610782623291),
+    new google.maps.LatLng(31.84941951275602, 34.84871864318848),
+    new google.maps.LatLng(31.834836792922044, 34.8526668548584),
+    new google.maps.LatLng(31.823023100337416, 34.84820365905762),
+    new google.maps.LatLng(31.820543491418945, 34.86777305603027),
+    new google.maps.LatLng(31.809165608610932, 34.87103462219238),
+    new google.maps.LatLng(31.810186757909364, 34.85867500305176),
+    new google.maps.LatLng(31.80756092262095, 34.848031997680664),
+    new google.maps.LatLng(31.803330253219116, 34.84013557434082),
+    new google.maps.LatLng(31.793555207271424, 34.82966423034668),
+    new google.maps.LatLng(31.789323896632943, 34.82125282287598),
+    new google.maps.LatLng(31.78334136836679, 34.81593132019043),
+    new google.maps.LatLng(31.775461350260947, 34.809579849243164),
+    new google.maps.LatLng(31.764004941401378, 34.794859886169434),
+    new google.maps.LatLng(31.761669703141145, 34.7916841506958),
+    new google.maps.LatLng(31.75488258247236, 34.800095558166504),
+    new google.maps.LatLng(31.748021976303317, 34.79340076446533),
+    new google.maps.LatLng(31.758020775392023, 34.78241443634033),
+    new google.maps.LatLng(31.77524245128506, 34.77769374847412),
+    new google.maps.LatLng(31.78735408251097, 34.77554798126221),
+    new google.maps.LatLng(31.793919966361674, 34.769368171691895),
+    new google.maps.LatLng(31.80033949073343, 34.76241588592529),
+    new google.maps.LatLng(31.80785268578335, 34.75632190704346),
+    new google.maps.LatLng(31.812739581768103, 34.741387367248535),
+    new google.maps.LatLng(31.809676184671194, 34.726881980895996),
+    new google.maps.LatLng(31.787937735515168, 34.7312593460083),
+    new google.maps.LatLng(31.776701768005832, 34.75194454193115),
+    new google.maps.LatLng(31.762983281913396, 34.74576473236084),
+    new google.maps.LatLng(31.76976980853248, 34.735379219055176),
+    new google.maps.LatLng(31.768967127038472, 34.72250461578369),
+    new google.maps.LatLng(31.768967127038472, 34.709715843200684),
+    new google.maps.LatLng(31.772688591623375, 34.698214530944824),
+    new google.maps.LatLng(31.776920663528124, 34.69057559967041),
+    new google.maps.LatLng(31.780787732333163, 34.688429832458496),
+    new google.maps.LatLng(31.78144438833414, 34.68551158905029),
+    new google.maps.LatLng(31.780641808144185, 34.68079090118408),
+    new google.maps.LatLng(31.781006618184914, 34.67426776885986),
+    new google.maps.LatLng(31.783779127463312, 34.67255115509033),
+    new google.maps.LatLng(31.794430626669744, 34.68302249908447),
+    new google.maps.LatLng(31.80289258670676, 34.68838691711426),
+    new google.maps.LatLng(31.807998567019013, 34.68890190124512),
+    new google.maps.LatLng(31.81295839195873, 34.68066215515137),
+    new google.maps.LatLng(31.82156451492074, 34.67362403869629),
+    new google.maps.LatLng(31.829732296454807, 34.67362403869629),
+    new google.maps.LatLng(31.835857658336558, 34.682722091674805),
+    new google.maps.LatLng(31.83614933209499, 34.693193435668945),
+    new google.maps.LatLng(31.834690954083786, 34.70778465270996),
+    new google.maps.LatLng(31.830169835785558, 34.71379280090332),
+    new google.maps.LatLng(31.83089906339438, 34.71945762634277),
+    new google.maps.LatLng(31.834982631529826, 34.72306251525879),
+    new google.maps.LatLng(31.84037849798919, 34.722890853881836),
+    new google.maps.LatLng(31.85598098460412, 34.72254753112793),
+    new google.maps.LatLng(31.85991764361354, 34.71928596496582),
+    new google.maps.LatLng(31.866332579615154, 34.718942642211914),
+    new google.maps.LatLng(31.872455511154488, 34.72134590148926),
+    new google.maps.LatLng(31.877849185217027, 34.72460746765137),
+    new google.maps.LatLng(31.88120185049087, 34.72958564758301),
+    new google.maps.LatLng(31.884845913480035, 34.729413986206055),
+    new google.maps.LatLng(31.88382559037508, 34.71980094909668),
+    new google.maps.LatLng(31.884408633533365, 34.71053123474121),
+    new google.maps.LatLng(31.88659501250599, 34.69988822937012),
+    new google.maps.LatLng(31.88921859876096, 34.68924522399902),
+    new google.maps.LatLng(31.891987858720142, 34.67860221862793),
+    new google.maps.LatLng(31.915450349851064, 34.687442779541016),
+    new google.maps.LatLng(31.93322539632358, 34.698429107666016),
+    new google.maps.LatLng(31.936721722335196, 34.70254898071289),
+    new google.maps.LatLng(31.95536654821663, 34.71250534057617),
+    new google.maps.LatLng(31.99788589334565, 34.72932815551758),
+    new google.maps.LatLng(31.99846821333791, 34.73276138305664),
+    new google.maps.LatLng(31.977211138105698, 34.79318618774414),
+    new google.maps.LatLng(31.978594453778623, 34.793057441711426),
+    new google.maps.LatLng(31.987476299697423, 34.79923725128174),
+    new google.maps.LatLng(32.01258834091205, 34.816575050354004),
+    ];
+    var RH_Area = new google.maps.Polygon({
+        paths: RH_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var RA_Coords = [
+
+        new google.maps.LatLng(31.802746697408622, 35.25332450866699),
+new google.maps.LatLng(31.806539744296064, 35.328168869018555),
+new google.maps.LatLng(31.810186757909364, 35.33949851989746),
+new google.maps.LatLng(31.814708854822385, 35.347394943237305),
+new google.maps.LatLng(31.817480353171682, 35.35820960998535),
+new google.maps.LatLng(31.8150005954075, 35.36593437194824),
+new google.maps.LatLng(31.81820968101838, 35.377092361450195),
+new google.maps.LatLng(31.822002092965203, 35.376577377319336),
+new google.maps.LatLng(31.874059068856333, 35.400352478027344),
+new google.maps.LatLng(31.916033192733178, 35.408592224121094),
+new google.maps.LatLng(31.921278612494262, 35.40945053100586),
+new google.maps.LatLng(31.922735620452148, 35.4005241394043),
+new google.maps.LatLng(31.919821581454634, 35.391597747802734),
+new google.maps.LatLng(31.91195321501266, 35.372371673583984),
+new google.maps.LatLng(31.914284653008707, 35.355892181396484),
+new google.maps.LatLng(31.92040439664025, 35.34318923950195),
+new google.maps.LatLng(31.92856342145468, 35.33597946166992),
+new google.maps.LatLng(31.946627257153615, 35.344905853271484),
+new google.maps.LatLng(31.97051268309372, 35.34696578979492),
+new google.maps.LatLng(32.00370892685605, 35.36378860473633),
+new google.maps.LatLng(32.0232133942454, 35.38267135620117),
+new google.maps.LatLng(32.03543795833829, 35.39194107055664),
+new google.maps.LatLng(32.04358676118635, 35.39400100708008),
+new google.maps.LatLng(32.03893039122854, 35.38198471069336),
+new google.maps.LatLng(32.04038553228215, 35.34524917602539),
+new google.maps.LatLng(32.04504182822618, 35.32087326049805),
+new google.maps.LatLng(32.04620586520412, 35.30027389526367),
+new google.maps.LatLng(32.0464968721355, 35.28413772583008),
+new google.maps.LatLng(32.04416879077791, 35.27212142944336),
+new google.maps.LatLng(32.048242894293644, 35.24362564086914),
+new google.maps.LatLng(32.05260780395669, 35.20586013793945),
+new google.maps.LatLng(32.053771744704605, 35.18766403198242),
+new google.maps.LatLng(32.05435370952644, 35.173587799072266),
+new google.maps.LatLng(32.0528987905317, 35.127925872802734),
+new google.maps.LatLng(32.05260780395669, 35.077457427978516),
+new google.maps.LatLng(32.050570872022476, 34.99849319458008),
+new google.maps.LatLng(32.043004727893994, 35.000553131103516),
+new google.maps.LatLng(32.02030254326629, 35.0053596496582),
+new google.maps.LatLng(32.017973795894896, 34.998836517333984),
+new google.maps.LatLng(32.005455764794334, 34.99814987182617),
+new google.maps.LatLng(31.992644847013356, 34.99917984008789),
+new google.maps.LatLng(31.976337454305813, 34.9943733215332),
+new google.maps.LatLng(31.972260153269048, 34.99197006225586),
+new google.maps.LatLng(31.971095176848408, 34.98613357543945),
+new google.maps.LatLng(31.96701764294695, 34.98613357543945),
+new google.maps.LatLng(31.955075251909054, 34.993343353271484),
+new google.maps.LatLng(31.949540446547825, 35.00123977661133),
+new google.maps.LatLng(31.946627257153615, 35.00638961791992),
+new google.maps.LatLng(31.943422642136195, 35.006046295166016),
+new google.maps.LatLng(31.93963522575865, 35.000553131103516),
+new google.maps.LatLng(31.93322539632358, 35.00089645385742),
+new google.maps.LatLng(31.930020313995197, 35.0053596496582),
+new google.maps.LatLng(31.925066785173286, 35.01943588256836),
+new google.maps.LatLng(31.925358176608505, 35.02836227416992),
+new google.maps.LatLng(31.920112989509068, 35.03557205200195),
+new google.maps.LatLng(31.909038834436902, 35.03934860229492),
+new google.maps.LatLng(31.895048522832873, 35.04037857055664),
+new google.maps.LatLng(31.88630349830843, 35.04037857055664),
+new google.maps.LatLng(31.85598098460412, 35.0324821472168),
+new google.maps.LatLng(31.85598098460412, 35.00810623168945),
+new google.maps.LatLng(31.85423130442635, 34.99814987182617),
+new google.maps.LatLng(31.85131509702077, 34.9940299987793),
+new google.maps.LatLng(31.84489911613476, 34.98922348022461),
+new google.maps.LatLng(31.837607687058213, 34.979610443115234),
+new google.maps.LatLng(31.8311907528247, 34.968624114990234),
+new google.maps.LatLng(31.825940202041995, 34.95798110961914),
+new google.maps.LatLng(31.827398718328755, 34.94596481323242),
+new google.maps.LatLng(31.827398718328755, 34.93669509887695),
+new google.maps.LatLng(31.822147951852507, 34.92502212524414),
+new google.maps.LatLng(31.81864727496152, 34.916439056396484),
+new google.maps.LatLng(31.81310426513118, 34.912662506103516),
+new google.maps.LatLng(31.808436209343757, 34.91334915161133),
+new google.maps.LatLng(31.806977393531774, 34.91849899291992),
+new google.maps.LatLng(31.806977393531774, 34.92570877075195),
+new google.maps.LatLng(31.809895002118832, 34.93703842163086),
+new google.maps.LatLng(31.813396010784928, 34.949398040771484),
+new google.maps.LatLng(31.81485472523014, 34.96072769165039),
+new google.maps.LatLng(31.81514646535446, 34.97617721557617),
+new google.maps.LatLng(31.8163134166359, 34.990596771240234),
+new google.maps.LatLng(31.8183555458965, 35.008792877197266),
+new google.maps.LatLng(31.817480353171682, 35.01943588256836),
+new google.maps.LatLng(31.817480353171682, 35.02973556518555),
+new google.maps.LatLng(31.820981074302225, 35.040035247802734),
+new google.maps.LatLng(31.827982118391024, 35.047245025634766),
+new google.maps.LatLng(31.834690954083786, 35.05170822143555),
+new google.maps.LatLng(31.844315823015002, 35.05582809448242),
+new google.maps.LatLng(31.84839879739921, 35.05960464477539),
+new google.maps.LatLng(31.84781552640937, 35.06406784057617),
+new google.maps.LatLng(31.838482688972906, 35.08054733276367),
+new google.maps.LatLng(31.83264918614865, 35.08981704711914),
+new google.maps.LatLng(31.828565514766165, 35.09359359741211),
+new google.maps.LatLng(31.824481662711353, 35.10526657104492),
+new google.maps.LatLng(31.823314814655653, 35.1152229309082),
+new google.maps.LatLng(31.82389824052695, 35.12277603149414),
+new google.maps.LatLng(31.820397629997018, 35.12758255004883),
+new google.maps.LatLng(31.8163134166359, 35.132389068603516),
+new google.maps.LatLng(31.81397949932771, 35.138912200927734),
+new google.maps.LatLng(31.81281251855591, 35.144405364990234),
+new google.maps.LatLng(31.81193727330082, 35.15024185180664),
+new google.maps.LatLng(31.809603245406805, 35.15642166137695),
+new google.maps.LatLng(31.808727969741742, 35.166378021240234),
+new google.maps.LatLng(31.80931148777328, 35.17324447631836),
+new google.maps.LatLng(31.814271242216744, 35.177364349365234),
+new google.maps.LatLng(31.819814182005135, 35.180110931396484),
+new google.maps.LatLng(31.824773372420967, 35.18217086791992),
+new google.maps.LatLng(31.826231907142883, 35.18766403198242),
+new google.maps.LatLng(31.826231907142883, 35.193843841552734),
+new google.maps.LatLng(31.823606528052164, 35.19693374633789),
+new google.maps.LatLng(31.823314814655653, 35.20071029663086),
+new google.maps.LatLng(31.826231907142883, 35.20345687866211),
+new google.maps.LatLng(31.830315681768234, 35.20448684692383),
+new google.maps.LatLng(31.83994100705821, 35.20551681518555),
+new google.maps.LatLng(31.84635733279808, 35.20551681518555),
+new google.maps.LatLng(31.851606721911097, 35.206546783447266),
+new google.maps.LatLng(31.85598098460412, 35.20963668823242),
+new google.maps.LatLng(31.856855812242912, 35.2137565612793),
+new google.maps.LatLng(31.852773212250856, 35.223026275634766),
+new google.maps.LatLng(31.847523889531306, 35.22714614868164),
+new google.maps.LatLng(31.841690958335214, 35.229549407958984),
+new google.maps.LatLng(31.83731601790945, 35.229549407958984),
+new google.maps.LatLng(31.83644100493149, 35.23469924926758),
+new google.maps.LatLng(31.838191022589953, 35.23916244506836),
+new google.maps.LatLng(31.837899355285046, 35.244998931884766),
+new google.maps.LatLng(31.835565983656227, 35.248775482177734),
+new google.maps.LatLng(31.830023989572435, 35.25083541870117),
+new google.maps.LatLng(31.82273138509748, 35.2522087097168),
+
+    ];
+    var RA_Area = new google.maps.Polygon({
+        paths: RA_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var RM_Coords = [
+
+        new google.maps.LatLng(32.017537149173535, 34.99926567077637),
+new google.maps.LatLng(32.01360723504821, 34.998579025268555),
+new google.maps.LatLng(32.00705700366404, 34.999094009399414),
+new google.maps.LatLng(31.995410992124047, 34.99926567077637),
+new google.maps.LatLng(31.988422675211265, 34.99789237976074),
+new google.maps.LatLng(31.975463762188678, 34.994802474975586),
+new google.maps.LatLng(31.972260153269048, 34.993085861206055),
+new google.maps.LatLng(31.970658306878924, 34.9874210357666),
+new google.maps.LatLng(31.96949331012912, 34.98673439025879),
+new google.maps.LatLng(31.96090100253141, 34.9899959564209),
+new google.maps.LatLng(31.953910057440805, 34.99566078186035),
+new google.maps.LatLng(31.948520840766903, 35.00338554382324),
+new google.maps.LatLng(31.946335933133938, 35.00699043273926),
+new google.maps.LatLng(31.943859641674045, 35.0064754486084),
+new google.maps.LatLng(31.94138328348212, 35.003042221069336),
+new google.maps.LatLng(31.9386155100657, 35.00046730041504),
+new google.maps.LatLng(31.934245171813757, 35.00046730041504),
+new google.maps.LatLng(31.931331497543805, 35.00287055969238),
+new google.maps.LatLng(31.928854801809585, 35.00836372375488),
+new google.maps.LatLng(31.926815119934417, 35.015058517456055),
+new google.maps.LatLng(31.925649567120374, 35.01969337463379),
+new google.maps.LatLng(31.925358176608505, 35.026044845581055),
+new google.maps.LatLng(31.925649567120374, 35.02896308898926),
+new google.maps.LatLng(31.922735620452148, 35.03342628479004),
+new google.maps.LatLng(31.917635991618184, 35.03720283508301),
+new google.maps.LatLng(31.908164502264, 35.03960609436035),
+new google.maps.LatLng(31.900295138882477, 35.04080772399902),
+new google.maps.LatLng(31.8924251026796, 35.04063606262207),
+new google.maps.LatLng(31.88601198318818, 35.04097938537598),
+new google.maps.LatLng(31.879744184929415, 35.03840446472168),
+new google.maps.LatLng(31.87041457917487, 35.03617286682129),
+new google.maps.LatLng(31.863125167416378, 35.03445625305176),
+new google.maps.LatLng(31.855251955231434, 35.03308296203613),
+new google.maps.LatLng(31.855397761567097, 35.00844955444336),
+new google.maps.LatLng(31.853648070322752, 34.99711990356445),
+new google.maps.LatLng(31.848982064700547, 34.99197006225586),
+new google.maps.LatLng(31.84344087642, 34.987850189208984),
+new google.maps.LatLng(31.837024347838707, 34.98098373413086),
+new google.maps.LatLng(31.832065815584627, 34.97102737426758),
+new google.maps.LatLng(31.82769041882079, 34.96347427368164),
+new google.maps.LatLng(31.825356789074995, 34.95420455932617),
+new google.maps.LatLng(31.826815314579356, 34.938411712646484),
+new google.maps.LatLng(31.824481662711353, 34.930171966552734),
+new google.maps.LatLng(31.817480353171682, 34.91678237915039),
+new google.maps.LatLng(31.812520771059095, 34.91231918334961),
+new google.maps.LatLng(31.811062019751912, 34.89927291870117),
+new google.maps.LatLng(31.81135377185641, 34.88107681274414),
+new google.maps.LatLng(31.809165608610932, 34.87103462219238),
+new google.maps.LatLng(31.820251768344665, 34.86811637878418),
+new google.maps.LatLng(31.823168957611745, 34.848031997680664),
+new google.maps.LatLng(31.834836792922044, 34.85232353210449),
+new google.maps.LatLng(31.84956532831343, 34.84854698181152),
+new google.maps.LatLng(31.850294402642543, 34.860734939575195),
+new google.maps.LatLng(31.87347596019353, 34.82159614562988),
+new google.maps.LatLng(31.901315279500793, 34.84391212463379),
+new google.maps.LatLng(31.915013215266125, 34.80048179626465),
+new google.maps.LatLng(31.920841505605924, 34.80751991271973),
+new google.maps.LatLng(31.950560041013226, 34.84768867492676),
+new google.maps.LatLng(31.957405596502664, 34.853010177612305),
+new google.maps.LatLng(32.009094903591254, 34.815073013305664),
+new google.maps.LatLng(32.02859822473254, 34.827775955200195),
+new google.maps.LatLng(32.021757980316536, 34.838247299194336),
+new google.maps.LatLng(32.021903522749895, 34.846487045288086),
+new google.maps.LatLng(32.017537149173535, 34.84889030456543),
+new google.maps.LatLng(32.02073917680909, 34.86519813537598),
+new google.maps.LatLng(31.985656319345722, 34.9390983581543),
+new google.maps.LatLng(31.989733025189313, 34.96347427368164),
+new google.maps.LatLng(32.005164627449425, 34.9665641784668),
+
+    ];
+    var RM_Area = new google.maps.Polygon({
+        paths: RM_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var HB_Coords = [
+        new google.maps.LatLng(31.599884357287426, 34.95772361755371),
+new google.maps.LatLng(31.594182039540698, 34.9515438079834),
+new google.maps.LatLng(31.577511724716405, 34.94622230529785),
+new google.maps.LatLng(31.565226426769065, 34.945363998413086),
+new google.maps.LatLng(31.551915527480222, 34.94175910949707),
+new google.maps.LatLng(31.54460103811182, 34.94175910949707),
+new google.maps.LatLng(31.53991946406062, 34.94158744812012),
+new google.maps.LatLng(31.527482892904917, 34.94193077087402),
+new google.maps.LatLng(31.523532106031112, 34.939870834350586),
+new google.maps.LatLng(31.50933715991989, 34.94467735290527),
+new google.maps.LatLng(31.50480017606385, 34.943647384643555),
+new google.maps.LatLng(31.493090813268065, 34.93969917297363),
+new google.maps.LatLng(31.491334282379498, 34.94021415710449),
+new google.maps.LatLng(31.482111954012925, 34.93523597717285),
+new google.maps.LatLng(31.46673938656549, 34.927167892456055),
+new google.maps.LatLng(31.457221770075776, 34.9185848236084),
+new google.maps.LatLng(31.449899868379653, 34.91086006164551),
+new google.maps.LatLng(31.44579935344329, 34.90828514099121),
+new google.maps.LatLng(31.440234081843446, 34.90279197692871),
+new google.maps.LatLng(31.437597785201056, 34.89884376525879),
+new google.maps.LatLng(31.424708156450638, 34.89386558532715),
+new google.maps.LatLng(31.418409170638487, 34.8911190032959),
+new google.maps.LatLng(31.406689001646452, 34.883737564086914),
+new google.maps.LatLng(31.396579180020808, 34.88116264343262),
+new google.maps.LatLng(31.391743663020442, 34.879961013793945),
+new google.maps.LatLng(31.387494063706352, 34.88184928894043),
+new google.maps.LatLng(31.383830461672204, 34.88579750061035),
+new google.maps.LatLng(31.37723561789299, 34.88802909851074),
+new google.maps.LatLng(31.37049374352203, 34.890947341918945),
+new google.maps.LatLng(31.365656883495785, 34.89523887634277),
+new google.maps.LatLng(31.35935393482094, 34.90588188171387),
+new google.maps.LatLng(31.354076722558787, 34.91086006164551),
+new google.maps.LatLng(31.350118618997662, 34.91137504577637),
+new google.maps.LatLng(31.346160348851598, 34.91583824157715),
+new google.maps.LatLng(31.34220191213246, 34.923906326293945),
+new google.maps.LatLng(31.34322818949811, 34.93094444274902),
+new google.maps.LatLng(31.34689337440921, 34.9434757232666),
+new google.maps.LatLng(31.34821280601745, 34.949655532836914),
+new google.maps.LatLng(31.3498254195143, 34.96201515197754),
+new google.maps.LatLng(31.3508516137071, 34.97677803039551),
+new google.maps.LatLng(31.35349034735801, 34.98501777648926),
+new google.maps.LatLng(31.354956278504087, 34.9954891204834),
+new google.maps.LatLng(31.358327833411312, 35.01042366027832),
+new google.maps.LatLng(31.359060764132366, 35.023298263549805),
+new google.maps.LatLng(31.357741484720663, 35.03840446472168),
+new google.maps.LatLng(31.358181246581474, 35.05660057067871),
+new google.maps.LatLng(31.35671536571315, 35.0862979888916),
+new google.maps.LatLng(31.35568923550721, 35.096940994262695),
+new google.maps.LatLng(31.356275596996106, 35.11479377746582),
+new google.maps.LatLng(31.354809686417862, 35.13333320617676),
+new google.maps.LatLng(31.35598241670874, 35.137624740600586),
+new google.maps.LatLng(31.3608197745508, 35.149126052856445),
+new google.maps.LatLng(31.36360480706991, 35.16045570373535),
+new google.maps.LatLng(31.36419111919158, 35.16371726989746),
+new google.maps.LatLng(31.36419111919158, 35.17504692077637),
+new google.maps.LatLng(31.371812843961937, 35.203800201416016),
+new google.maps.LatLng(31.37239910488052, 35.21100997924805),
+new google.maps.LatLng(31.372692233968184, 35.22439956665039),
+new google.maps.LatLng(31.375037233750135, 35.2305793762207),
+new google.maps.LatLng(31.387494063706352, 35.24491310119629),
+new google.maps.LatLng(31.394820839017864, 35.25637149810791),
+new google.maps.LatLng(31.401341188186898, 35.26529788970947),
+new google.maps.LatLng(31.40939942086384, 35.27493238449097),
+new google.maps.LatLng(31.414270653187202, 35.28351545333862),
+new google.maps.LatLng(31.41621175047934, 35.28737783432007),
+new google.maps.LatLng(31.422071423173335, 35.293192863464355),
+new google.maps.LatLng(31.43935532453555, 35.319457054138184),
+new google.maps.LatLng(31.467325054442888, 35.36215782165527),
+new google.maps.LatLng(31.47581682691747, 35.34893989562988),
+new google.maps.LatLng(31.505385605709815, 35.316152572631836),
+new google.maps.LatLng(31.516654411752928, 35.29829978942871),
+new google.maps.LatLng(31.52982402108432, 35.27083396911621),
+new google.maps.LatLng(31.540943578447695, 35.25143623352051),
+new google.maps.LatLng(31.548404644131857, 35.24422645568848),
+new google.maps.LatLng(31.562301117249707, 35.23135185241699),
+new google.maps.LatLng(31.57063800748382, 35.2291202545166),
+new google.maps.LatLng(31.592134968533564, 35.22294044494629),
+new google.maps.LatLng(31.60441671979008, 35.21847724914551),
+new google.maps.LatLng(31.609972218045684, 35.2181339263916),
+new google.maps.LatLng(31.61187270713691, 35.21641731262207),
+new google.maps.LatLng(31.614357903559373, 35.21195411682129),
+new google.maps.LatLng(31.614650275246916, 35.20766258239746),
+new google.maps.LatLng(31.614357903559373, 35.2016544342041),
+new google.maps.LatLng(31.614065530953464, 35.19787788391113),
+new google.maps.LatLng(31.612165086630373, 35.19564628601074),
+new google.maps.LatLng(31.609972218045684, 35.19169807434082),
+new google.maps.LatLng(31.607925494096836, 35.18380165100098),
+new google.maps.LatLng(31.606902115249365, 35.173845291137695),
+new google.maps.LatLng(31.6080716901568, 35.16440391540527),
+new google.maps.LatLng(31.609533638130237, 35.15582084655762),
+new google.maps.LatLng(31.61289603134632, 35.147409439086914),
+new google.maps.LatLng(31.627952215442463, 35.12801170349121),
+new google.maps.LatLng(31.640229241591097, 35.111188888549805),
+new google.maps.LatLng(31.65864174185037, 35.08715629577637),
+new google.maps.LatLng(31.66419400221431, 35.08011817932129),
+new google.maps.LatLng(31.667408317080916, 35.079946517944336),
+new google.maps.LatLng(31.669745930760243, 35.08166313171387),
+new google.maps.LatLng(31.674128797835984, 35.08076190948486),
+new google.maps.LatLng(31.677269725334405, 35.078444480895996),
+new google.maps.LatLng(31.68121399542306, 35.073723793029785),
+new google.maps.LatLng(31.684135568936938, 35.069947242736816),
+new google.maps.LatLng(31.663171242341786, 35.03497123718262),
+new google.maps.LatLng(31.65864174185037, 35.02621650695801),
+new google.maps.LatLng(31.655719366285815, 35.01626014709473),
+new google.maps.LatLng(31.65308914970076, 35.00716209411621),
+new google.maps.LatLng(31.64885142196549, 35.00218391418457),
+new google.maps.LatLng(31.640229241591097, 34.99218463897705),
+new google.maps.LatLng(31.63131394323651, 34.98497486114502),
+new google.maps.LatLng(31.622105442974345, 34.97742176055908),
+new google.maps.LatLng(31.612969125502246, 34.96978282928467),
+new google.maps.LatLng(31.60785239598076, 34.965577125549316),
+    ];
+    var HB_Area = new google.maps.Polygon({
+        paths: HB_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var BL_Coords = [
+        new google.maps.LatLng(31.683989492444987, 35.069947242736816),
+new google.maps.LatLng(31.679899257344882, 35.07518291473389),
+new google.maps.LatLng(31.677050594305346, 35.07835865020752),
+new google.maps.LatLng(31.672887006497955, 35.08084774017334),
+new google.maps.LatLng(31.66872323201452, 35.0813627243042),
+new google.maps.LatLng(31.666458644719125, 35.07964611053467),
+new google.maps.LatLng(31.664559270868608, 35.07913112640381),
+new google.maps.LatLng(31.61391934430613, 35.14607906341553),
+new google.maps.LatLng(31.60946054127679, 35.15346050262451),
+new google.maps.LatLng(31.608364081588007, 35.16067028045654),
+new google.maps.LatLng(31.606390421607475, 35.17294406890869),
+new google.maps.LatLng(31.60946054127679, 35.19165515899658),
+new google.maps.LatLng(31.61187270713691, 35.19697666168213),
+new google.maps.LatLng(31.613846250896362, 35.19852161407471),
+new google.maps.LatLng(31.6139924376585, 35.21139621734619),
+new google.maps.LatLng(31.610630084044825, 35.217833518981934),
+new google.maps.LatLng(31.605513225964707, 35.21817684173584),
+new google.maps.LatLng(31.561130967751275, 35.2316951751709),
+new google.maps.LatLng(31.541089879585808, 35.250749588012695),
+new google.maps.LatLng(31.527921858908762, 35.27358055114746),
+new google.maps.LatLng(31.515703201415246, 35.299458503723145),
+new google.maps.LatLng(31.50516607002222, 35.3161096572876),
+new google.maps.LatLng(31.484015048599076, 35.33846855163574),
+new google.maps.LatLng(31.475377616200426, 35.34893989562988),
+new google.maps.LatLng(31.467032220962164, 35.36267280578613),
+new google.maps.LatLng(31.47874484568745, 35.37825107574463),
+new google.maps.LatLng(31.502458420817202, 35.37344455718994),
+new google.maps.LatLng(31.51423978198768, 35.37670612335205),
+new google.maps.LatLng(31.53611551225996, 35.38297176361084),
+new google.maps.LatLng(31.55374406024056, 35.38425922393799),
+new google.maps.LatLng(31.56698156843796, 35.3918981552124),
+new google.maps.LatLng(31.574294303146736, 35.38846492767334),
+new google.maps.LatLng(31.589795403731287, 35.39747714996338),
+new google.maps.LatLng(31.646367146916386, 35.411338806152344),
+new google.maps.LatLng(31.690781806136822, 35.44361114501953),
+new google.maps.LatLng(31.71122878128754, 35.44567108154297),
+new google.maps.LatLng(31.731671248829198, 35.44910430908203),
+new google.maps.LatLng(31.757363953119533, 35.44841766357422),
+new google.maps.LatLng(31.767872550142034, 35.447731018066406),
+new google.maps.LatLng(31.777212523418644, 35.439491271972656),
+new google.maps.LatLng(31.783049527817784, 35.420780181884766),
+new google.maps.LatLng(31.789761627404793, 35.4060173034668),
+new google.maps.LatLng(31.799682968938473, 35.391597747802734),
+new google.maps.LatLng(31.811062019751912, 35.38026809692383),
+new google.maps.LatLng(31.81806381590986, 35.37752151489258),
+new google.maps.LatLng(31.817480353171682, 35.37271499633789),
+new google.maps.LatLng(31.814271242216744, 35.365848541259766),
+new google.maps.LatLng(31.817772085001568, 35.358638763427734),
+new google.maps.LatLng(31.81485472523014, 35.34730911254883),
+new google.maps.LatLng(31.811062019751912, 35.34078598022461),
+new google.maps.LatLng(31.806977393531774, 35.3294563293457),
+new google.maps.LatLng(31.805810324295997, 35.29306411743164),
+new google.maps.LatLng(31.80376791765831, 35.26834487915039),
+new google.maps.LatLng(31.80289258670676, 35.2522087097168),
+new google.maps.LatLng(31.79063708273051, 35.25358200073242),
+new google.maps.LatLng(31.7815903112567, 35.2522087097168),
+new google.maps.LatLng(31.77020763186669, 35.2522087097168),
+new google.maps.LatLng(31.75561240427337, 35.24843215942383),
+new google.maps.LatLng(31.738095093126777, 35.24534225463867),
+new google.maps.LatLng(31.727875131475486, 35.24019241333008),
+new google.maps.LatLng(31.723786831179385, 35.23710250854492),
+new google.maps.LatLng(31.720574468715053, 35.22783279418945),
+new google.maps.LatLng(31.72028243024323, 35.21547317504883),
+new google.maps.LatLng(31.723786831179385, 35.20002365112305),
+new google.maps.LatLng(31.729919213990538, 35.17770767211914),
+new google.maps.LatLng(31.7369271545675, 35.152645111083984),
+new google.maps.LatLng(31.735175219118705, 35.137882232666016),
+new google.maps.LatLng(31.730795235550936, 35.127925872802734),
+new google.maps.LatLng(31.727583116006834, 35.12346267700195),
+new google.maps.LatLng(31.71940630930742, 35.121402740478516),
+new google.maps.LatLng(31.71619379503302, 35.11453628540039),
+new google.maps.LatLng(31.712981169438624, 35.1042366027832),
+new google.maps.LatLng(31.7059714181356, 35.09702682495117),
+new google.maps.LatLng(31.699253242631475, 35.09016036987305),
+new google.maps.LatLng(31.693118831385902, 35.08501052856445),
+    ];
+    var BL_Area = new google.maps.Polygon({
+        paths: BL_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+    var JS_Coords = [
+        new google.maps.LatLng(31.812593708019694,34.91261959075928),
+new google.maps.LatLng(31.808436209343757,34.91485118865967),
+new google.maps.LatLng(31.807633863497934,34.92223262786865),
+new google.maps.LatLng(31.809457366705228,34.93502140045166),
+new google.maps.LatLng(31.81186433582184,34.94094371795654),
+new google.maps.LatLng(31.815438204557204,34.956865310668945),
+new google.maps.LatLng(31.815292335071042,34.97506141662598),
+new google.maps.LatLng(31.816167548532086,34.98295783996582),
+new google.maps.LatLng(31.818501410544197,35.00201225280762),
+new google.maps.LatLng(31.819668319431138,35.010080337524414),
+new google.maps.LatLng(31.8183555458965,35.015058517456055),
+new google.maps.LatLng(31.817772085001568,35.025272369384766),
+new google.maps.LatLng(31.820689352610472,35.03660202026367),
+new google.maps.LatLng(31.827398718328755,35.04690170288086),
+new google.maps.LatLng(31.83644100493149,35.05205154418945),
+new google.maps.LatLng(31.845482405566294,35.055484771728516),
+new google.maps.LatLng(31.849856958736677,35.05857467651367),
+new google.maps.LatLng(31.84781552640937,35.0654411315918),
+new google.maps.LatLng(31.841107644930872,35.07608413696289),
+new google.maps.LatLng(31.833815916214295,35.0877571105957),
+new google.maps.LatLng(31.830315681768234,35.091190338134766),
+new google.maps.LatLng(31.826523611321996,35.09908676147461),
+new google.maps.LatLng(31.824481662711353,35.10526657104492),
+new google.maps.LatLng(31.824189952080015,35.11178970336914),
+new google.maps.LatLng(31.825065081208855,35.118656158447266),
+new google.maps.LatLng(31.823314814655653,35.12552261352539),
+new google.maps.LatLng(31.81820968101838,35.130929946899414),
+new google.maps.LatLng(31.814271242216744,35.138139724731445),
+new google.maps.LatLng(31.81281251855591,35.14792442321777),
+new google.maps.LatLng(31.81033263545907,35.154619216918945),
+new google.maps.LatLng(31.808727969741742,35.16268730163574),
+new google.maps.LatLng(31.808727969741742,35.17075538635254),
+new google.maps.LatLng(31.811062019751912,35.17556190490723),
+new google.maps.LatLng(31.81412537088744,35.17727851867676),
+new google.maps.LatLng(31.817626219201827,35.1796817779541),
+new google.maps.LatLng(31.820105906461915,35.17951011657715),
+new google.maps.LatLng(31.824481662711353,35.18105506896973),
+new google.maps.LatLng(31.82696116586236,35.18551826477051),
+new google.maps.LatLng(31.8266694630659,35.192556381225586),
+new google.maps.LatLng(31.824773372420967,35.19598960876465),
+new google.maps.LatLng(31.82389824052695,35.19719123840332),
+new google.maps.LatLng(31.823460671469107,35.20010948181152),
+new google.maps.LatLng(31.8255026426624,35.20285606384277),
+new google.maps.LatLng(31.8291489074541,35.204057693481445),
+new google.maps.LatLng(31.836878512457638,35.20491600036621),
+new google.maps.LatLng(31.848982064700547,35.20525932312012),
+new google.maps.LatLng(31.853064832530322,35.20646095275879),
+new google.maps.LatLng(31.856855812242912,35.209550857543945),
+new google.maps.LatLng(31.85627259473929,35.2152156829834),
+new google.maps.LatLng(31.85379387919446,35.221052169799805),
+new google.maps.LatLng(31.849127880949563,35.22637367248535),
+new google.maps.LatLng(31.845190761311553,35.228776931762695),
+new google.maps.LatLng(31.841107644930872,35.22963523864746),
+new google.maps.LatLng(31.83746185259907,35.23032188415527),
+new google.maps.LatLng(31.838045189052764,35.23358345031738),
+new google.maps.LatLng(31.838336855896692,35.23821830749512),
+new google.maps.LatLng(31.838336855896692,35.24697303771973),
+new google.maps.LatLng(31.834399275715842,35.24937629699707),
+new google.maps.LatLng(31.830169835785558,35.25160789489746),
+new google.maps.LatLng(31.825648496019358,35.251779556274414),
+new google.maps.LatLng(31.819814182005135,35.25195121765137),
+new google.maps.LatLng(31.81135377185641,35.25263786315918),
+new google.maps.LatLng(31.803476141595862,35.25315284729004),
+new google.maps.LatLng(31.79720273339778,35.25383949279785),
+new google.maps.LatLng(31.791804343601445,35.254011154174805),
+new google.maps.LatLng(31.784070965709624,35.25280952453613),
+new google.maps.LatLng(31.773418273007145,35.25263786315918),
+new google.maps.LatLng(31.76889415564824,35.251779556274414),
+new google.maps.LatLng(31.763786015317773,35.25092124938965),
+new google.maps.LatLng(31.733277251661814,35.24405479431152),
+new google.maps.LatLng(31.724662910711018,35.23821830749512),
+new google.maps.LatLng(31.720428449594177,35.23066520690918),
+new google.maps.LatLng(31.719114267155366,35.21967887878418),
+new google.maps.LatLng(31.720574468715053,35.210580825805664),
+new google.maps.LatLng(31.725100947371363,35.19289970397949),
+new google.maps.LatLng(31.7369271545675,35.150413513183594),
+new google.maps.LatLng(31.733715247602944,35.13444900512695),
+new google.maps.LatLng(31.7296272049633,35.1262092590332),
+new google.maps.LatLng(31.72261871225556,35.122432708740234),
+new google.maps.LatLng(31.71940630930742,35.12105941772461),
+new google.maps.LatLng(31.71210497950279,35.103206634521484),
+new google.maps.LatLng(31.701005857062714,35.091190338134766),
+new google.maps.LatLng(31.69282670644841,35.08501052856445),
+new google.maps.LatLng(31.68698401458388,35.074710845947266),
+new google.maps.LatLng(31.67675841879551,35.058231353759766),
+new google.maps.LatLng(31.67237567582654,35.051021575927734),
+new google.maps.LatLng(31.66419400221431,35.03694534301758),
+new google.maps.LatLng(31.65864174185037,35.02595901489258),
+new google.maps.LatLng(31.655719366285815,35.01668930053711),
+new google.maps.LatLng(31.652796898818547,35.007076263427734),
+new google.maps.LatLng(31.6428598220613,34.995059967041016),
+new google.maps.LatLng(31.625905886872008,34.98064041137695),
+new google.maps.LatLng(31.6071945103536,34.96519088745117),
+new google.maps.LatLng(31.600176774428046,34.95798110961914),
+new google.maps.LatLng(31.608364081588007,34.948368072509766),
+new google.maps.LatLng(31.60982602497012,34.94047164916992),
+new google.maps.LatLng(31.612457465205498,34.930171966552734),
+new google.maps.LatLng(31.6133345954209,34.920902252197266),
+new google.maps.LatLng(31.644321223497375,34.869747161865234),
+new google.maps.LatLng(31.68128703588148,34.85678672790527),
+new google.maps.LatLng(31.686107579079483,34.86279487609863),
+new google.maps.LatLng(31.694579442278776,34.86416816711426),
+new google.maps.LatLng(31.702758438382748,34.86142158508301),
+new google.maps.LatLng(31.7059714181356,34.85541343688965),
+new google.maps.LatLng(31.70918428658835,34.85043525695801),
+new google.maps.LatLng(31.723786831179385,34.84665870666504),
+new google.maps.LatLng(31.72831315295311,34.852495193481445),
+new google.maps.LatLng(31.736343179765843,34.85592842102051),
+new google.maps.LatLng(31.75210920715378,34.84871864318848),
+new google.maps.LatLng(31.755320476243437,34.84305381774902),
+new google.maps.LatLng(31.759553342568687,34.83258247375488),
+new google.maps.LatLng(31.767872550142034,34.82949256896973),
+new google.maps.LatLng(31.77487761850741,34.82691764831543),
+new google.maps.LatLng(31.77648287196549,34.82159614562988),
+new google.maps.LatLng(31.782611765267234,34.814558029174805),
+new google.maps.LatLng(31.78961571737781,34.82125282287598),
+new google.maps.LatLng(31.79384701465877,34.82949256896973),
+new google.maps.LatLng(31.8044973537833,34.84133720397949),
+new google.maps.LatLng(31.80785268578335,34.84768867492676),
+new google.maps.LatLng(31.810624389867336,34.85918998718262),
+new google.maps.LatLng(31.80931148777328,34.87137794494629),
+new google.maps.LatLng(31.81208314808596,34.88133430480957),
+new google.maps.LatLng(31.81135377185641,34.89901542663574),
+    ];
+    var JS_Area = new google.maps.Polygon({
+        paths: JS_Coords
+    });
+    //---------------------------------------------------------------------------------------------------------//
+
+
+    var Areas = ko.observableArray([]);
+    Areas.push(new Area('ZF', ZF_Area));
+    Areas.push(new Area('SM', SM_Area));
+    Areas.push(new Area('YZ', YN_Area));
+    Areas.push(new Area('HF', HF_Area));
+    Areas.push(new Area('AK', AK_Area));
+    Areas.push(new Area('HD', HD_Area));
+    Areas.push(new Area('KN', KN_Area));
+    Areas.push(new Area('HG', HG_Area));
+    Areas.push(new Area('JN', JN_Area));
+    Areas.push(new Area('PT', PT_Area));
+    Areas.push(new Area('YZ', YZ_Area));
+    Areas.push(new Area('HS', HS_Area));
+    Areas.push(new Area('TA', TA_Area));
+    Areas.push(new Area('TK', TK_Area));
+    Areas.push(new Area('RH', RH_Area));
+    Areas.push(new Area('RA', RA_Area));
+    Areas.push(new Area('RM', RM_Area));
+    Areas.push(new Area('HB', HB_Area));
+    Areas.push(new Area('BL', BL_Area));
+    Areas.push(new Area('JS', JS_Area));
+
+    var Coords = ko.observableArray([]);
+    Coords.push(new Area('ZF', ZF_Coords));
+    Coords.push(new Area('SM', SM_Coords));
+    Coords.push(new Area('YZ', YN_Coords));
+    Coords.push(new Area('HF', HF_Coords));
+    Coords.push(new Area('AK', AK_Coords));
+    Coords.push(new Area('HD', HD_Coords));
+    Coords.push(new Area('KN', KN_Coords));
+    Coords.push(new Area('HG', HG_Coords));
+    Coords.push(new Area('JN', JN_Coords));
+    Coords.push(new Area('PT', PT_Coords));
+    Coords.push(new Area('YZ', YZ_Coords));
+    Coords.push(new Area('HS', HS_Coords));
+    Coords.push(new Area('TA', TA_Coords));
+    Coords.push(new Area('TK', TK_Coords));
+    Coords.push(new Area('RH', RH_Coords));
+    Coords.push(new Area('RA', RA_Coords));
+    Coords.push(new Area('RM', RM_Coords));
+    Coords.push(new Area('HB', HB_Coords));
+    Coords.push(new Area('BL', BL_Coords));
+    Coords.push(new Area('JS', JS_Coords));
+    //*****************************************************************************************//
+
+    var getAreaByPosition = function (position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        return getAreaByLatLng(lat, lng);
+    }
+
+    var getAreaByLatLng = function (lat, lng) {
+        
+        var latProjection = (lat - 33.365161) * (44 / (29.507063 - 33.365161));
+        latProjection = parseInt(latProjection);
+        if (latProjection < 10) {
+            latProjection = '0' + latProjection;
+        }
+        var lngProjection = (lng - 34.262562) * (9 / (35.204215 - 34.262562));
+        lngProjection = parseInt(lngProjection);
+        if (lngProjection > 7) lngProjection++;
+        lngProjection = String.fromCharCode(65 + lngProjection);
+        var square = lngProjection + '-' + latProjection;
+
+        var areaCode = 'XX';
+        ko.utils.arrayForEach(Areas(), function (item) {
+            if (google.maps.geometry.poly.containsLocation(new google.maps.LatLng(lat, lng), item.poly))
+                areaCode = item.name;
+        });
+        return square + '-' + areaCode;
+    }
+        
+    var coordinates = {
+        getAreaByPosition: getAreaByPosition,
+        getAreaByLatLng: getAreaByLatLng,
+        Areas: Areas,
+        Coords: Coords
+    };
+
+    return coordinates;
+
+});
+
+define('services/httpService',[],function () {
+    var httpGet = function (url, query, headers) {
+        return $.ajax({
+            type: 'GET',
+            url: url,
+            data: query,
+            contentType: 'application/json',
+            headers: headers
+        });
+    };
+
+    var httpPost = function (url, data, headers) {
+        return $.ajax({
+            url: url,
+            //data: ko.toJSON(data),
+            data: data,
+            type: 'POST',
+            //contentType: 'application/json',
+            //dataType: 'json',
+            headers: headers
+        });
+    };
+
+    var httpService = {
+        get: httpGet,
+        post: httpPost
+    };
+
+    return httpService;
+});
+define('services/themeManager',[],function () {
+
+    // *** TO BE CUSTOMISED ***
+
+    var style_cookie_name = "style";
+    var style_cookie_duration = 30;
+
+    // *** END OF CUSTOMISABLE SECTION ***
+
+    var switch_style = function (css_title) {
+        // You may use this script on your site free of charge provided
+        // you do not remove this notice or the URL below. Script from
+        // http://www.thesitewizard.com/javascripts/change-style-sheets.shtml
+        var i, link_tag;
+        for (i = 0, link_tag = document.getElementsByTagName("link") ;
+          i < link_tag.length ; i++) {
+            if ((link_tag[i].rel.indexOf("stylesheet") != -1) &&
+              link_tag[i].title) {
+                link_tag[i].disabled = true;
+                if (link_tag[i].title == css_title) {
+                    link_tag[i].disabled = false;
+                }
+            }
+            set_cookie(style_cookie_name, css_title, style_cookie_duration);
+        }
+    }
+    var set_style_from_cookie = function () {
+        var css_title = get_cookie(style_cookie_name);
+        if (css_title.length) {
+            switch_style(css_title);
+        }
+    }
+    var set_cookie = function (cookie_name, cookie_value, lifespan_in_days, valid_domain) {
+        // http://www.thesitewizard.com/javascripts/cookies.shtml
+        var domain_string = valid_domain ? ("; domain=" + valid_domain) : '';
+        document.cookie = cookie_name + "=" + encodeURIComponent(cookie_value) + "; max-age=" + 60 * 60 * 24 * lifespan_in_days + "; path=/" + domain_string;
+    }
+    var get_cookie = function (cookie_name) {
+        // http://www.thesitewizard.com/javascripts/cookies.shtml
+        var cookie_string = document.cookie;
+        if (cookie_string.length != 0) {
+            var cookie_value1 = cookie_string.match('(^|;)[\s]*' + cookie_name + '=([^;]*)');
+            var cookie_value = cookie_string.match( cookie_name + '=([^;]*)');
+            return decodeURIComponent(cookie_value[1]);
+        }
+        return '';
+    }
+
+    var themeManager = {
+        switch_style: switch_style,
+        set_style_from_cookie: set_style_from_cookie
+    }
+
+    return themeManager;
+});
+define('services/utilities',[],function () {
+
+    base64Keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+    base64Encode = function (input) {
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, output;
+        output = "";
+        i = 0;
+        input = utf8Encode(input);
+        while (i < input.length) {
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+            output = "" + output + (base64Keys.charAt(enc1)) + (base64Keys.charAt(enc2)) + (enc3 < 64 ? base64Keys.charAt(enc3) : '') + (enc4 < 64 ? base64Keys.charAt(enc4) : '');
+        }
+        return output;
+    };
+
+    utf8Encode = function (string) {
+        var c, s, utftext, _i, _len, _ref;
+        string = string.replace(/\r\n/g, "\n");
+        utftext = "";
+        _ref = string.split('');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            s = _ref[_i];
+            c = s.charCodeAt(0);
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if (c > 127 && c < 2048) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+        }
+        return utftext;
+    };
+    var applyRowSearch = function (searchItem, val) {
+        var lval = val.toLowerCase();
+        $(searchItem).each(function () {
+            if ($(this).text().toLowerCase().indexOf(lval) < 0)
+                $(this).hide();
+            else $(this).show();
+        });
+        //if ($(searchItem).children().length == 0)
+        //{
+        //    $(searchItem).parent().parent().hide();
+        //}
+    }
+
+    var handleError = function (xhr, ajaxOptions, thrownError) {
+        try
+        {
+            var err = jQuery.parseJSON(xhr.responseText).error;
+            alert("There was an error: " + err);
+        }
+        catch (ex)
+        {
+            alert(thrownError);
+        }
+        
+    }
+
+    var getBase64Auth = function (username, password) {
+        var tok = username + ':' + password;
+        var hash = base64Encode(tok);
+        return hash;
+    };
+
+    var utilities = {
+        base64Encode: base64Encode,
+        getBase64Auth: getBase64Auth,
+        applyRowSearch: applyRowSearch,
+        handleError: handleError
+    };
+    return utilities;
+});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * This module is based on Backbone's core history support. It abstracts away the low level details of working with browser history and url changes in order to provide a solid foundation for a router.
+ * @module history
+ * @requires system
+ * @requires jquery
+ */
+define('plugins/history',['durandal/system', 'jquery'], function (system, $) {
+    // Cached regex for stripping a leading hash/slash and trailing space.
+    var routeStripper = /^[#\/]|\s+$/g;
+
+    // Cached regex for stripping leading and trailing slashes.
+    var rootStripper = /^\/+|\/+$/g;
+
+    // Cached regex for detecting MSIE.
+    var isExplorer = /msie [\w.]+/;
+
+    // Cached regex for removing a trailing slash.
+    var trailingSlash = /\/$/;
+
+    // Update the hash location, either replacing the current entry, or adding
+    // a new one to the browser history.
+    function updateHash(location, fragment, replace) {
+        if (replace) {
+            var href = location.href.replace(/(javascript:|#).*$/, '');
+            location.replace(href + '#' + fragment);
+        } else {
+            // Some browsers require that `hash` contains a leading #.
+            location.hash = '#' + fragment;
+        }
+    };
+
+    /**
+     * @class HistoryModule
+     * @static
+     */
+    var history = {
+        /**
+         * The setTimeout interval used when the browser does not support hash change events.
+         * @property {string} interval
+         * @default 50
+         */
+        interval: 50,
+        /**
+         * Indicates whether or not the history module is actively tracking history.
+         * @property {string} active
+         */
+        active: false
+    };
+    
+    // Ensure that `History` can be used outside of the browser.
+    if (typeof window !== 'undefined') {
+        history.location = window.location;
+        history.history = window.history;
+    }
+
+    /**
+     * Gets the true hash value. Cannot use location.hash directly due to a bug in Firefox where location.hash will always be decoded.
+     * @method getHash
+     * @param {string} [window] The optional window instance
+     * @return {string} The hash.
+     */
+    history.getHash = function(window) {
+        var match = (window || history).location.href.match(/#(.*)$/);
+        return match ? match[1] : '';
+    };
+    
+    /**
+     * Get the cross-browser normalized URL fragment, either from the URL, the hash, or the override.
+     * @method getFragment
+     * @param {string} fragment The fragment.
+     * @param {boolean} forcePushState Should we force push state?
+     * @return {string} he fragment.
+     */
+    history.getFragment = function(fragment, forcePushState) {
+        if (fragment == null) {
+            if (history._hasPushState || !history._wantsHashChange || forcePushState) {
+                fragment = history.location.pathname;
+                var root = history.root.replace(trailingSlash, '');
+                if (!fragment.indexOf(root)) {
+                    fragment = fragment.substr(root.length);
+                }
+            } else {
+                fragment = history.getHash();
+            }
+        }
+        
+        return fragment.replace(routeStripper, '');
+    };
+
+    /**
+     * Activate the hash change handling, returning `true` if the current URL matches an existing route, and `false` otherwise.
+     * @method activate
+     * @param {HistoryOptions} options.
+     * @return {boolean|undefined} Returns true/false from loading the url unless the silent option was selected.
+     */
+    history.activate = function(options) {
+        if (history.active) {
+            system.error("History has already been activated.");
+        }
+
+        history.active = true;
+
+        // Figure out the initial configuration. Do we need an iframe?
+        // Is pushState desired ... is it available?
+        history.options = system.extend({}, { root: '/' }, history.options, options);
+        history.root = history.options.root;
+        history._wantsHashChange = history.options.hashChange !== false;
+        history._wantsPushState = !!history.options.pushState;
+        history._hasPushState = !!(history.options.pushState && history.history && history.history.pushState);
+
+        var fragment = history.getFragment();
+        var docMode = document.documentMode;
+        var oldIE = (isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
+
+        // Normalize root to always include a leading and trailing slash.
+        history.root = ('/' + history.root + '/').replace(rootStripper, '/');
+
+        if (oldIE && history._wantsHashChange) {
+            history.iframe = $('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo('body')[0].contentWindow;
+            history.navigate(fragment, false);
+        }
+
+        // Depending on whether we're using pushState or hashes, and whether
+        // 'onhashchange' is supported, determine how we check the URL state.
+        if (history._hasPushState) {
+            $(window).on('popstate', history.checkUrl);
+        } else if (history._wantsHashChange && ('onhashchange' in window) && !oldIE) {
+            $(window).on('hashchange', history.checkUrl);
+        } else if (history._wantsHashChange) {
+            history._checkUrlInterval = setInterval(history.checkUrl, history.interval);
+        }
+
+        // Determine if we need to change the base url, for a pushState link
+        // opened by a non-pushState browser.
+        history.fragment = fragment;
+        var loc = history.location;
+        var atRoot = loc.pathname.replace(/[^\/]$/, '$&/') === history.root;
+
+        // Transition from hashChange to pushState or vice versa if both are requested.
+        if (history._wantsHashChange && history._wantsPushState) {
+            // If we've started off with a route from a `pushState`-enabled
+            // browser, but we're currently in a browser that doesn't support it...
+            if (!history._hasPushState && !atRoot) {
+                history.fragment = history.getFragment(null, true);
+                history.location.replace(history.root + history.location.search + '#' + history.fragment);
+                // Return immediately as browser will do redirect to new url
+                return true;
+
+            // Or if we've started out with a hash-based route, but we're currently
+            // in a browser where it could be `pushState`-based instead...
+            } else if (history._hasPushState && atRoot && loc.hash) {
+                this.fragment = history.getHash().replace(routeStripper, '');
+                this.history.replaceState({}, document.title, history.root + history.fragment + loc.search);
+            }
+        }
+
+        if (!history.options.silent) {
+            return history.loadUrl();
+        }
+    };
+
+    /**
+     * Disable history, perhaps temporarily. Not useful in a real app, but possibly useful for unit testing Routers.
+     * @method deactivate
+     */
+    history.deactivate = function() {
+        $(window).off('popstate', history.checkUrl).off('hashchange', history.checkUrl);
+        clearInterval(history._checkUrlInterval);
+        history.active = false;
+    };
+
+    /**
+     * Checks the current URL to see if it has changed, and if it has, calls `loadUrl`, normalizing across the hidden iframe.
+     * @method checkUrl
+     * @return {boolean} Returns true/false from loading the url.
+     */
+    history.checkUrl = function() {
+        var current = history.getFragment();
+        if (current === history.fragment && history.iframe) {
+            current = history.getFragment(history.getHash(history.iframe));
+        }
+
+        if (current === history.fragment) {
+            return false;
+        }
+
+        if (history.iframe) {
+            history.navigate(current, false);
+        }
+        
+        history.loadUrl();
+    };
+    
+    /**
+     * Attempts to load the current URL fragment. A pass-through to options.routeHandler.
+     * @method loadUrl
+     * @return {boolean} Returns true/false from the route handler.
+     */
+    history.loadUrl = function(fragmentOverride) {
+        var fragment = history.fragment = history.getFragment(fragmentOverride);
+
+        return history.options.routeHandler ?
+            history.options.routeHandler(fragment) :
+            false;
+    };
+
+    /**
+     * Save a fragment into the hash history, or replace the URL state if the
+     * 'replace' option is passed. You are responsible for properly URL-encoding
+     * the fragment in advance.
+     * The options object can contain `trigger: false` if you wish to not have the
+     * route callback be fired, or `replace: true`, if
+     * you wish to modify the current URL without adding an entry to the history.
+     * @method navigate
+     * @param {string} fragment The url fragment to navigate to.
+     * @param {object|boolean} options An options object with optional trigger and replace flags. You can also pass a boolean directly to set the trigger option. Trigger is `true` by default.
+     * @return {boolean} Returns true/false from loading the url.
+     */
+    history.navigate = function(fragment, options) {
+        if (!history.active) {
+            return false;
+        }
+
+        if(options === undefined) {
+            options = {
+                trigger: true
+            };
+        }else if(system.isBoolean(options)) {
+            options = {
+                trigger: options
+            };
+        }
+
+        fragment = history.getFragment(fragment || '');
+
+        if (history.fragment === fragment) {
+            return;
+        }
+
+        history.fragment = fragment;
+        var url = history.root + fragment;
+
+        // If pushState is available, we use it to set the fragment as a real URL.
+        if (history._hasPushState) {
+            history.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
+
+            // If hash changes haven't been explicitly disabled, update the hash
+            // fragment to store history.
+        } else if (history._wantsHashChange) {
+            updateHash(history.location, fragment, options.replace);
+            
+            if (history.iframe && (fragment !== history.getFragment(history.getHash(history.iframe)))) {
+                // Opening and closing the iframe tricks IE7 and earlier to push a
+                // history entry on hash-tag change.  When replace is true, we don't
+                // want history.
+                if (!options.replace) {
+                    history.iframe.document.open().close();
+                }
+                
+                updateHash(history.iframe.location, fragment, options.replace);
+            }
+
+            // If you've told us that you explicitly don't want fallback hashchange-
+            // based history, then `navigate` becomes a page refresh.
+        } else {
+            return history.location.assign(url);
+        }
+
+        if (options.trigger) {
+            return history.loadUrl(fragment);
+        }
+    };
+
+    /**
+     * Navigates back in the browser history.
+     * @method navigateBack
+     */
+    history.navigateBack = function() {
+        history.history.back();
+    };
+
+    /**
+     * @class HistoryOptions
+     * @static
+     */
+
+    /**
+     * The function that will be called back when the fragment changes.
+     * @property {function} routeHandler
+     */
+
+    /**
+     * The url root used to extract the fragment when using push state.
+     * @property {string} root
+     */
+
+    /**
+     * Use hash change when present.
+     * @property {boolean} hashChange
+     * @default true
+     */
+
+    /**
+     * Use push state when present.
+     * @property {boolean} pushState
+     * @default false
+     */
+
+    /**
+     * Prevents loading of the current url when activating history.
+     * @property {boolean} silent
+     * @default false
+     */
+
+    return history;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Connects the history module's url and history tracking support to Durandal's activation and composition engine allowing you to easily build navigation-style applications.
+ * @module router
+ * @requires system
+ * @requires app
+ * @requires activator
+ * @requires events
+ * @requires composition
+ * @requires history
+ * @requires knockout
+ * @requires jquery
+ */
+define('plugins/router',['durandal/system', 'durandal/app', 'durandal/activator', 'durandal/events', 'durandal/composition', 'plugins/history', 'knockout', 'jquery'], function(system, app, activator, events, composition, history, ko, $) {
+    var optionalParam = /\((.*?)\)/g;
+    var namedParam = /(\(\?)?:\w+/g;
+    var splatParam = /\*\w+/g;
+    var escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+    var startDeferred, rootRouter;
+    var trailingSlash = /\/$/;
+
+    function routeStringToRegExp(routeString) {
+        routeString = routeString.replace(escapeRegExp, '\\$&')
+            .replace(optionalParam, '(?:$1)?')
+            .replace(namedParam, function(match, optional) {
+                return optional ? match : '([^\/]+)';
+            })
+            .replace(splatParam, '(.*?)');
+
+        return new RegExp('^' + routeString + '$');
+    }
+
+    function stripParametersFromRoute(route) {
+        var colonIndex = route.indexOf(':');
+        var length = colonIndex > 0 ? colonIndex - 1 : route.length;
+        return route.substring(0, length);
+    }
+
+    function hasChildRouter(instance) {
+        return instance.router && instance.router.loadUrl;
+    }
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+
+    function compareArrays(first, second) {
+        if (!first || !second){
+            return false;
+        }
+
+        if (first.length != second.length) {
+            return false;
+        }
+
+        for (var i = 0, len = first.length; i < len; i++) {
+            if (first[i] != second[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @class Router
+     * @uses Events
+     */
+
+    /**
+     * Triggered when the navigation logic has completed.
+     * @event router:navigation:complete
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the navigation has been cancelled.
+     * @event router:navigation:cancelled
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered right before a route is activated.
+     * @event router:route:activating
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered right before a route is configured.
+     * @event router:route:before-config
+     * @param {object} config The route config.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered just after a route is configured.
+     * @event router:route:after-config
+     * @param {object} config The route config.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the view for the activated instance is attached.
+     * @event router:navigation:attached
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the composition that the activated instance participates in is complete.
+     * @event router:navigation:composition-complete
+     * @param {object} instance The activated instance.
+     * @param {object} instruction The routing instruction.
+     * @param {Router} router The router.
+     */
+
+    /**
+     * Triggered when the router does not find a matching route.
+     * @event router:route:not-found
+     * @param {string} fragment The url fragment.
+     * @param {Router} router The router.
+     */
+
+    var createRouter = function() {
+        var queue = [],
+            isProcessing = ko.observable(false),
+            currentActivation,
+            currentInstruction,
+            activeItem = activator.create();
+
+        var router = {
+            /**
+             * The route handlers that are registered. Each handler consists of a `routePattern` and a `callback`.
+             * @property {object[]} handlers
+             */
+            handlers: [],
+            /**
+             * The route configs that are registered.
+             * @property {object[]} routes
+             */
+            routes: [],
+            /**
+             * The route configurations that have been designated as displayable in a nav ui (nav:true).
+             * @property {KnockoutObservableArray} navigationModel
+             */
+            navigationModel: ko.observableArray([]),
+            /**
+             * The active item/screen based on the current navigation state.
+             * @property {Activator} activeItem
+             */
+            activeItem: activeItem,
+            /**
+             * Indicates that the router (or a child router) is currently in the process of navigating.
+             * @property {KnockoutComputed} isNavigating
+             */
+            isNavigating: ko.computed(function() {
+                var current = activeItem();
+                var processing = isProcessing();
+                var currentRouterIsProcesing = current
+                    && current.router
+                    && current.router != router
+                    && current.router.isNavigating() ? true : false;
+                return  processing || currentRouterIsProcesing;
+            }),
+            /**
+             * An observable surfacing the active routing instruction that is currently being processed or has recently finished processing.
+             * The instruction object has `config`, `fragment`, `queryString`, `params` and `queryParams` properties.
+             * @property {KnockoutObservable} activeInstruction
+             */
+            activeInstruction:ko.observable(null),
+            __router__:true
+        };
+
+        events.includeIn(router);
+
+        activeItem.settings.areSameItem = function (currentItem, newItem, currentActivationData, newActivationData) {
+            if (currentItem == newItem) {
+                return compareArrays(currentActivationData, newActivationData);
+            }
+
+            return false;
+        };
+
+        function completeNavigation(instance, instruction) {
+            system.log('Navigation Complete', instance, instruction);
+
+            var fromModuleId = system.getModuleId(currentActivation);
+            if (fromModuleId) {
+                router.trigger('router:navigation:from:' + fromModuleId);
+            }
+
+            currentActivation = instance;
+            currentInstruction = instruction;
+
+            var toModuleId = system.getModuleId(currentActivation);
+            if (toModuleId) {
+                router.trigger('router:navigation:to:' + toModuleId);
+            }
+
+            if (!hasChildRouter(instance)) {
+                router.updateDocumentTitle(instance, instruction);
+            }
+
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.trigger('router:navigation:complete', instance, instruction, router);
+        }
+
+        function cancelNavigation(instance, instruction) {
+            system.log('Navigation Cancelled');
+
+            router.activeInstruction(currentInstruction);
+
+            if (currentInstruction) {
+                router.navigate(currentInstruction.fragment, false);
+            }
+
+            isProcessing(false);
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.trigger('router:navigation:cancelled', instance, instruction, router);
+        }
+
+        function redirect(url) {
+            system.log('Navigation Redirecting');
+
+            isProcessing(false);
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+            router.navigate(url, { trigger: true, replace: true });
+        }
+
+        function activateRoute(activator, instance, instruction) {
+            rootRouter.navigatingBack = !rootRouter.explicitNavigation && currentActivation != instruction.fragment;
+            router.trigger('router:route:activating', instance, instruction, router);
+
+            activator.activateItem(instance, instruction.params).then(function(succeeded) {
+                if (succeeded) {
+                    var previousActivation = currentActivation;
+                    completeNavigation(instance, instruction);
+
+                    if (hasChildRouter(instance)) {
+                        queueInstruction({
+                            router: instance.router,
+                            fragment: instruction.fragment,
+                            queryString: instruction.queryString
+                        });
+                    }
+
+                    if (previousActivation == instance) {
+                        router.attached();
+                    }
+                } else if(activator.settings.lifecycleData && activator.settings.lifecycleData.redirect){
+                    redirect(activator.settings.lifecycleData.redirect);
+                }else{
+                    cancelNavigation(instance, instruction);
+                }
+
+                if (startDeferred) {
+                    startDeferred.resolve();
+                    startDeferred = null;
+                }
+            });
+        }
+
+        /**
+         * Inspects routes and modules before activation. Can be used to protect access by cancelling navigation or redirecting.
+         * @method guardRoute
+         * @param {object} instance The module instance that is about to be activated by the router.
+         * @param {object} instruction The route instruction. The instruction object has config, fragment, queryString, params and queryParams properties.
+         * @return {Promise|Boolean|String} If a boolean, determines whether or not the route should activate or be cancelled. If a string, causes a redirect to the specified route. Can also be a promise for either of these value types.
+         */
+        function handleGuardedRoute(activator, instance, instruction) {
+            var resultOrPromise = router.guardRoute(instance, instruction);
+            if (resultOrPromise) {
+                if (resultOrPromise.then) {
+                    resultOrPromise.then(function(result) {
+                        if (result) {
+                            if (system.isString(result)) {
+                                redirect(result);
+                            } else {
+                                activateRoute(activator, instance, instruction);
+                            }
+                        } else {
+                            cancelNavigation(instance, instruction);
+                        }
+                    });
+                } else {
+                    if (system.isString(resultOrPromise)) {
+                        redirect(resultOrPromise);
+                    } else {
+                        activateRoute(activator, instance, instruction);
+                    }
+                }
+            } else {
+                cancelNavigation(instance, instruction);
+            }
+        }
+
+        function ensureActivation(activator, instance, instruction) {
+            if (router.guardRoute) {
+                handleGuardedRoute(activator, instance, instruction);
+            } else {
+                activateRoute(activator, instance, instruction);
+            }
+        }
+
+        function canReuseCurrentActivation(instruction) {
+            return currentInstruction
+                && currentInstruction.config.moduleId == instruction.config.moduleId
+                && currentActivation
+                && ((currentActivation.canReuseForRoute && currentActivation.canReuseForRoute.apply(currentActivation, instruction.params))
+                || (currentActivation.router && currentActivation.router.loadUrl));
+        }
+
+        function dequeueInstruction() {
+            if (isProcessing()) {
+                return;
+            }
+
+            var instruction = queue.shift();
+            queue = [];
+
+            if (!instruction) {
+                return;
+            }
+
+            if (instruction.router) {
+                var fullFragment = instruction.fragment;
+                if (instruction.queryString) {
+                    fullFragment += "?" + instruction.queryString;
+                }
+
+                instruction.router.loadUrl(fullFragment);
+                return;
+            }
+
+            isProcessing(true);
+            router.activeInstruction(instruction);
+
+            if (canReuseCurrentActivation(instruction)) {
+                ensureActivation(activator.create(), currentActivation, instruction);
+            } else {
+                system.acquire(instruction.config.moduleId).then(function(module) {
+                    var instance = system.resolveObject(module);
+                    ensureActivation(activeItem, instance, instruction);
+                }).fail(function(err){
+                        system.error('Failed to load routed module (' + instruction.config.moduleId + '). Details: ' + err.message);
+                    });
+            }
+        }
+
+        function queueInstruction(instruction) {
+            queue.unshift(instruction);
+            dequeueInstruction();
+        }
+
+        // Given a route, and a URL fragment that it matches, return the array of
+        // extracted decoded parameters. Empty or unmatched parameters will be
+        // treated as `null` to normalize cross-browser behavior.
+        function createParams(routePattern, fragment, queryString) {
+            var params = routePattern.exec(fragment).slice(1);
+
+            for (var i = 0; i < params.length; i++) {
+                var current = params[i];
+                params[i] = current ? decodeURIComponent(current) : null;
+            }
+
+            var queryParams = router.parseQueryString(queryString);
+            if (queryParams) {
+                params.push(queryParams);
+            }
+
+            return {
+                params:params,
+                queryParams:queryParams
+            };
+        }
+
+        function configureRoute(config){
+            router.trigger('router:route:before-config', config, router);
+
+            if (!system.isRegExp(config)) {
+                config.title = config.title || router.convertRouteToTitle(config.route);
+                config.moduleId = config.moduleId || router.convertRouteToModuleId(config.route);
+                config.hash = config.hash || router.convertRouteToHash(config.route);
+                config.routePattern = routeStringToRegExp(config.route);
+            }else{
+                config.routePattern = config.route;
+            }
+
+            router.trigger('router:route:after-config', config, router);
+
+            router.routes.push(config);
+
+            router.route(config.routePattern, function(fragment, queryString) {
+                var paramInfo = createParams(config.routePattern, fragment, queryString);
+                queueInstruction({
+                    fragment: fragment,
+                    queryString:queryString,
+                    config: config,
+                    params: paramInfo.params,
+                    queryParams:paramInfo.queryParams
+                });
+            });
+        };
+
+        function mapRoute(config) {
+            if(system.isArray(config.route)){
+                for(var i = 0, length = config.route.length; i < length; i++){
+                    var current = system.extend({}, config);
+                    current.route = config.route[i];
+                    if(i > 0){
+                        delete current.nav;
+                    }
+                    configureRoute(current);
+                }
+            }else{
+                configureRoute(config);
+            }
+
+            return router;
+        }
+
+        function addActiveFlag(config) {
+            if(config.isActive){
+                return;
+            }
+
+            config.isActive = ko.computed(function() {
+                var theItem = activeItem();
+                return theItem && theItem.__moduleId__ == config.moduleId;
+            });
+        }
+
+        /**
+         * Parses a query string into an object.
+         * @method parseQueryString
+         * @param {string} queryString The query string to parse.
+         * @return {object} An object keyed according to the query string parameters.
+         */
+        router.parseQueryString = function (queryString) {
+            var queryObject, pairs;
+
+            if (!queryString) {
+                return null;
+            }
+
+            pairs = queryString.split('&');
+
+            if (pairs.length == 0) {
+                return null;
+            }
+
+            queryObject = {};
+
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i];
+                if (pair === '') {
+                    continue;
+                }
+
+                var parts = pair.split('=');
+                queryObject[parts[0]] = parts[1] && decodeURIComponent(parts[1].replace(/\+/g, ' '));
+            }
+
+            return queryObject;
+        };
+
+        /**
+         * Add a route to be tested when the url fragment changes.
+         * @method route
+         * @param {RegEx} routePattern The route pattern to test against.
+         * @param {function} callback The callback to execute when the route pattern is matched.
+         */
+        router.route = function(routePattern, callback) {
+            router.handlers.push({ routePattern: routePattern, callback: callback });
+        };
+
+        /**
+         * Attempt to load the specified URL fragment. If a route succeeds with a match, returns `true`. If no defined routes matches the fragment, returns `false`.
+         * @method loadUrl
+         * @param {string} fragment The URL fragment to find a match for.
+         * @return {boolean} True if a match was found, false otherwise.
+         */
+        router.loadUrl = function(fragment) {
+            var handlers = router.handlers,
+                queryString = null,
+                coreFragment = fragment,
+                queryIndex = fragment.indexOf('?');
+
+            if (queryIndex != -1) {
+                coreFragment = fragment.substring(0, queryIndex);
+                queryString = fragment.substr(queryIndex + 1);
+            }
+
+            if(router.relativeToParentRouter){
+                var instruction = this.parent.activeInstruction();
+                coreFragment = instruction.params.join('/');
+
+                if(coreFragment && coreFragment[0] == '/'){
+                    coreFragment = coreFragment.substr(1);
+                }
+
+                if(!coreFragment){
+                    coreFragment = '';
+                }
+
+                coreFragment = coreFragment.replace('//', '/').replace('//', '/');
+            }
+
+            coreFragment = coreFragment.replace(trailingSlash, '');
+
+            for (var i = 0; i < handlers.length; i++) {
+                var current = handlers[i];
+                if (current.routePattern.test(coreFragment)) {
+                    current.callback(coreFragment, queryString);
+                    return true;
+                }
+            }
+
+            system.log('Route Not Found');
+            router.trigger('router:route:not-found', fragment, router);
+
+            if (currentInstruction) {
+                history.navigate(currentInstruction.fragment, { trigger:false, replace:true });
+            }
+
+            rootRouter.explicitNavigation = false;
+            rootRouter.navigatingBack = false;
+
+            return false;
+        };
+
+        /**
+         * Updates the document title based on the activated module instance, the routing instruction and the app.title.
+         * @method updateDocumentTitle
+         * @param {object} instance The activated module.
+         * @param {object} instruction The routing instruction associated with the action. It has a `config` property that references the original route mapping config.
+         */
+        router.updateDocumentTitle = function(instance, instruction) {
+            if (instruction.config.title) {
+                if (app.title) {
+                    document.title = instruction.config.title + " | " + app.title;
+                } else {
+                    document.title = instruction.config.title;
+                }
+            } else if (app.title) {
+                document.title = app.title;
+            }
+        };
+
+        /**
+         * Save a fragment into the hash history, or replace the URL state if the
+         * 'replace' option is passed. You are responsible for properly URL-encoding
+         * the fragment in advance.
+         * The options object can contain `trigger: false` if you wish to not have the
+         * route callback be fired, or `replace: true`, if
+         * you wish to modify the current URL without adding an entry to the history.
+         * @method navigate
+         * @param {string} fragment The url fragment to navigate to.
+         * @param {object|boolean} options An options object with optional trigger and replace flags. You can also pass a boolean directly to set the trigger option. Trigger is `true` by default.
+         * @return {boolean} Returns true/false from loading the url.
+         */
+        router.navigate = function(fragment, options) {
+            if(fragment && fragment.indexOf('://') != -1){
+                window.location.href = fragment;
+                return true;
+            }
+
+            rootRouter.explicitNavigation = true;
+            return history.navigate(fragment, options);
+        };
+
+        /**
+         * Navigates back in the browser history.
+         * @method navigateBack
+         */
+        router.navigateBack = function() {
+            history.navigateBack();
+        };
+
+        router.attached = function() {
+            setTimeout(function() {
+                isProcessing(false);
+                router.trigger('router:navigation:attached', currentActivation, currentInstruction, router);
+                dequeueInstruction();
+            }, 10);
+        };
+
+        router.compositionComplete = function(){
+            router.trigger('router:navigation:composition-complete', currentActivation, currentInstruction, router);
+        };
+
+        /**
+         * Converts a route to a hash suitable for binding to a link's href.
+         * @method convertRouteToHash
+         * @param {string} route
+         * @return {string} The hash.
+         */
+        router.convertRouteToHash = function(route) {
+            if(router.relativeToParentRouter){
+                var instruction = router.parent.activeInstruction(),
+                    hash = instruction.config.hash + '/' + route;
+
+                if(history._hasPushState){
+                    hash = '/' + hash;
+                }
+
+                hash = hash.replace('//', '/').replace('//', '/');
+                return hash;
+            }
+
+            if(history._hasPushState){
+                return route;
+            }
+
+            return "#" + route;
+        };
+
+        /**
+         * Converts a route to a module id. This is only called if no module id is supplied as part of the route mapping.
+         * @method convertRouteToModuleId
+         * @param {string} route
+         * @return {string} The module id.
+         */
+        router.convertRouteToModuleId = function(route) {
+            return stripParametersFromRoute(route);
+        };
+
+        /**
+         * Converts a route to a displayable title. This is only called if no title is specified as part of the route mapping.
+         * @method convertRouteToTitle
+         * @param {string} route
+         * @return {string} The title.
+         */
+        router.convertRouteToTitle = function(route) {
+            var value = stripParametersFromRoute(route);
+            return value.substring(0, 1).toUpperCase() + value.substring(1);
+        };
+
+        /**
+         * Maps route patterns to modules.
+         * @method map
+         * @param {string|object|object[]} route A route, config or array of configs.
+         * @param {object} [config] The config for the specified route.
+         * @chainable
+         * @example
+ router.map([
+    { route: '', title:'Home', moduleId: 'homeScreen', nav: true },
+    { route: 'customer/:id', moduleId: 'customerDetails'}
+ ]);
+         */
+        router.map = function(route, config) {
+            if (system.isArray(route)) {
+                for (var i = 0; i < route.length; i++) {
+                    router.map(route[i]);
+                }
+
+                return router;
+            }
+
+            if (system.isString(route) || system.isRegExp(route)) {
+                if (!config) {
+                    config = {};
+                } else if (system.isString(config)) {
+                    config = { moduleId: config };
+                }
+
+                config.route = route;
+            } else {
+                config = route;
+            }
+
+            return mapRoute(config);
+        };
+
+        /**
+         * Builds an observable array designed to bind a navigation UI to. The model will exist in the `navigationModel` property.
+         * @method buildNavigationModel
+         * @param {number} defaultOrder The default order to use for navigation visible routes that don't specify an order. The defualt is 100.
+         * @chainable
+         */
+        router.buildNavigationModel = function(defaultOrder) {
+            var nav = [], routes = router.routes;
+            defaultOrder = defaultOrder || 100;
+
+            for (var i = 0; i < routes.length; i++) {
+                var current = routes[i];
+
+                if (current.nav) {
+                    if (!system.isNumber(current.nav)) {
+                        current.nav = defaultOrder;
+                    }
+
+                    addActiveFlag(current);
+                    nav.push(current);
+                }
+            }
+
+            nav.sort(function(a, b) { return a.nav - b.nav; });
+            router.navigationModel(nav);
+
+            return router;
+        };
+
+        /**
+         * Configures how the router will handle unknown routes.
+         * @method mapUnknownRoutes
+         * @param {string|function} [config] If not supplied, then the router will map routes to modules with the same name.
+         * If a string is supplied, it represents the module id to route all unknown routes to.
+         * Finally, if config is a function, it will be called back with the route instruction containing the route info. The function can then modify the instruction by adding a moduleId and the router will take over from there.
+         * @param {string} [replaceRoute] If config is a module id, then you can optionally provide a route to replace the url with.
+         * @chainable
+         */
+        router.mapUnknownRoutes = function(config, replaceRoute) {
+            var catchAllRoute = "*catchall";
+            var catchAllPattern = routeStringToRegExp(catchAllRoute);
+
+            router.route(catchAllPattern, function (fragment, queryString) {
+                var paramInfo = createParams(catchAllPattern, fragment, queryString);
+                var instruction = {
+                    fragment: fragment,
+                    queryString: queryString,
+                    config: {
+                        route: catchAllRoute,
+                        routePattern: catchAllPattern
+                    },
+                    params: paramInfo.params,
+                    queryParams: paramInfo.queryParams
+                };
+
+                if (!config) {
+                    instruction.config.moduleId = fragment;
+                } else if (system.isString(config)) {
+                    instruction.config.moduleId = config;
+                    if(replaceRoute){
+                        history.navigate(replaceRoute, { trigger:false, replace:true });
+                    }
+                } else if (system.isFunction(config)) {
+                    var result = config(instruction);
+                    if (result && result.then) {
+                        result.then(function() {
+                            router.trigger('router:route:before-config', instruction.config, router);
+                            router.trigger('router:route:after-config', instruction.config, router);
+                            queueInstruction(instruction);
+                        });
+                        return;
+                    }
+                } else {
+                    instruction.config = config;
+                    instruction.config.route = catchAllRoute;
+                    instruction.config.routePattern = catchAllPattern;
+                }
+
+                router.trigger('router:route:before-config', instruction.config, router);
+                router.trigger('router:route:after-config', instruction.config, router);
+                queueInstruction(instruction);
+            });
+
+            return router;
+        };
+
+        /**
+         * Resets the router by removing handlers, routes, event handlers and previously configured options.
+         * @method reset
+         * @chainable
+         */
+        router.reset = function() {
+            currentInstruction = currentActivation = undefined;
+            router.handlers = [];
+            router.routes = [];
+            router.off();
+            delete router.options;
+            return router;
+        };
+
+        /**
+         * Makes all configured routes and/or module ids relative to a certain base url.
+         * @method makeRelative
+         * @param {string|object} settings If string, the value is used as the base for routes and module ids. If an object, you can specify `route` and `moduleId` separately. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
+         * @chainable
+         */
+        router.makeRelative = function(settings){
+            if(system.isString(settings)){
+                settings = {
+                    moduleId:settings,
+                    route:settings
+                };
+            }
+
+            if(settings.moduleId && !endsWith(settings.moduleId, '/')){
+                settings.moduleId += '/';
+            }
+
+            if(settings.route && !endsWith(settings.route, '/')){
+                settings.route += '/';
+            }
+
+            if(settings.fromParent){
+                router.relativeToParentRouter = true;
+            }
+
+            router.on('router:route:before-config').then(function(config){
+                if(settings.moduleId){
+                    config.moduleId = settings.moduleId + config.moduleId;
+                }
+
+                if(settings.route){
+                    if(config.route === ''){
+                        config.route = settings.route.substring(0, settings.route.length - 1);
+                    }else{
+                        config.route = settings.route + config.route;
+                    }
+                }
+            });
+
+            return router;
+        };
+
+        /**
+         * Creates a child router.
+         * @method createChildRouter
+         * @return {Router} The child router.
+         */
+        router.createChildRouter = function() {
+            var childRouter = createRouter();
+            childRouter.parent = router;
+            return childRouter;
+        };
+
+        return router;
+    };
+
+    /**
+     * @class RouterModule
+     * @extends Router
+     * @static
+     */
+    rootRouter = createRouter();
+    rootRouter.explicitNavigation = false;
+    rootRouter.navigatingBack = false;
+
+    /**
+     * Activates the router and the underlying history tracking mechanism.
+     * @method activate
+     * @return {Promise} A promise that resolves when the router is ready.
+     */
+    rootRouter.activate = function(options) {
+        return system.defer(function(dfd) {
+            startDeferred = dfd;
+            rootRouter.options = system.extend({ routeHandler: rootRouter.loadUrl }, rootRouter.options, options);
+
+            history.activate(rootRouter.options);
+
+            if(history._hasPushState){
+                var routes = rootRouter.routes,
+                    i = routes.length;
+
+                while(i--){
+                    var current = routes[i];
+                    current.hash = current.hash.replace('#', '');
+                }
+            }
+
+            $(document).delegate("a", 'click', function(evt){
+                rootRouter.explicitNavigation = true;
+
+                if(history._hasPushState){
+                    if(!evt.altKey && !evt.ctrlKey && !evt.metaKey && !evt.shiftKey){
+                        // Get the anchor href and protcol
+                        var href = $(this).attr("href");
+                        var protocol = this.protocol + "//";
+
+                        // Ensure the protocol is not part of URL, meaning its relative.
+                        // Stop the event bubbling to ensure the link will not cause a page refresh.
+                        if (!href || (href.charAt(0) !== "#" && href.slice(protocol.length) !== protocol)) {
+                            evt.preventDefault();
+                            history.navigate(href);
+                        }
+                    }
+                }
+            });
+        }).promise();
+    };
+
+    /**
+     * Disable history, perhaps temporarily. Not useful in a real app, but possibly useful for unit testing Routers.
+     * @method deactivate
+     */
+    rootRouter.deactivate = function() {
+        history.deactivate();
+    };
+
+    /**
+     * Installs the router's custom ko binding handler.
+     * @method install
+     */
+    rootRouter.install = function(){
+        ko.bindingHandlers.router = {
+            init: function() {
+                return { controlsDescendantBindings: true };
+            },
+            update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                var settings = ko.utils.unwrapObservable(valueAccessor()) || {};
+
+                if (settings.__router__) {
+                    settings = {
+                        model:settings.activeItem(),
+                        attached:settings.attached,
+                        compositionComplete:settings.compositionComplete,
+                        activate: false
+                    };
+                } else {
+                    var theRouter = ko.utils.unwrapObservable(settings.router || viewModel.router) || rootRouter;
+                    settings.model = theRouter.activeItem();
+                    settings.attached = theRouter.attached;
+                    settings.compositionComplete = theRouter.compositionComplete;
+                    settings.activate = false;
+                }
+
+                composition.compose(element, settings, bindingContext);
+            }
+        };
+
+        ko.virtualElements.allowedBindings.router = true;
+    };
+
+    return rootRouter;
+});
+
+define('viewmodels/shell',['plugins/router', 'durandal/app'], function (router, app) {
+
+    
+    var selectedSubMenu = ko.observable('');
+    var selectedMainMenu = ko.observable('main');
+    var version = app.version;
+    
+    return {
+        selectedSubMenu: selectedSubMenu,
+        selectedMainMenu: selectedMainMenu,
+        version: version,
+        router: router,
+        search: function () {
+            //It's really easy to show a message box.
+            //You can add custom options too. Also, it returns a promise for the user's response.
+            app.showMessage('Search not yet implemented...');
+        },
+        activate: function () {
+            router.map([
+                { route: '', title: 'Dashboard', moduleId: 'viewmodels/dashboard', nav: true },
+                { route: 'Aguda', title: 'Aguda', moduleId: 'viewmodels/aguda', nav: true },
+                { route: 'Procedures', title: 'Procedures', moduleId: 'viewmodels/procedures', nav: true },
+                { route: 'HamInIsrael', title: 'Ham In Israel', moduleId: 'viewmodels/haminisrael', nav: true },
+                { route: 'HagalMain', title: 'Hagal', moduleId: 'viewmodels/hagalmain', nav: true },
+                { route: 'About', title: 'About', moduleId: 'viewmodels/about', nav: true },
+                { route: 'EventRegistration', title: 'Event Registration', moduleId: 'viewmodels/event_registration', nav: true },
+                { route: 'EventRegistrationAdmin', title: 'Event Registration Admin', moduleId: 'viewmodels/event_registration_admin', nav: false },
+                { route: 'Membership', title: 'Membership', moduleId: 'viewmodels/membership', nav: true },
+                { route: 'Repeaters', title: 'Repeaters', moduleId: 'viewmodels/repeaters', nav: true },
+                { route: 'RepeatersMap', title: 'Repeaters Map', moduleId: 'viewmodels/repeatersmap', nav: true },
+                { route: 'Hagal', title: 'Hagal', moduleId: 'viewmodels/hagal', nav: true },
+                { route: 'HagalArchive', title: 'Hagal Archive', moduleId: 'viewmodels/hagalarchive', nav: true },
+                { route: 'Protocols', title: 'Protocols', moduleId: 'viewmodels/protocols', nav: true },
+                { route: 'QSL', title: 'QSL', moduleId: 'viewmodels/qsl', nav: true },
+                { route: 'Directors', title: 'Directors', moduleId: 'viewmodels/directors', nav: true },
+                { route: 'Contact', title: 'Contact', moduleId: 'viewmodels/contact', nav: true },
+                { route: 'Ham', title: 'Ham', moduleId: 'viewmodels/ham', nav: true },
+                { route: 'Regulations', title: 'Regulations', moduleId: 'viewmodels/regulations', nav: true },
+                { route: 'EchoLink', title: 'EchoLink', moduleId: 'viewmodels/echolink', nav: true },
+                { route: 'WWFF', title: 'WWFF', moduleId: 'viewmodels/wwff', nav: true },
+                { route: 'Freq', title: 'Freq', moduleId: 'viewmodels/freq', nav: true },
+                { route: 'Bandplan', title: 'Bandplan', moduleId: 'viewmodels/english/freq', nav: true },
+                { route: 'Onairhagal', title: 'Onairhagal', moduleId: 'viewmodels/onairhagal', nav: true },
+                { route: 'Holyland', title: 'Holyland', moduleId: 'viewmodels/holyland', nav: true },
+                { route: 'SukotResults', title: 'SukotResults', moduleId: 'viewmodels/sukotresults', nav: true },
+                { route: 'News', title: 'News', moduleId: 'viewmodels/news', nav: true },
+                { route: 'Emergency', title: 'Emergency', moduleId: 'viewmodels/emergency', nav: true },
+                { route: 'CEPT', title: 'CEPT', moduleId: 'viewmodels/english/cept', nav: true },
+                { route: '4X4Z', title: '4X4Z', moduleId: 'viewmodels/english/4x4z', nav: true },
+                { route: '4Z8', title: '4Z8', moduleId: 'viewmodels/english/4z8', nav: true },
+                { route: 'HolylandContest', title: 'Holyland Contest', moduleId: 'viewmodels/holyland/holylandcontest', nav: true },
+                { route: 'HolylandAward', title: 'Holyland Award', moduleId: 'viewmodels/holyland/holylandaward', nav: true },
+                { route: 'HolylandResults', title: 'Holyland Contest Results', moduleId: 'viewmodels/holyland/holylandresults', nav: true },
+                { route: 'HolylandResultsISR', title: 'Holyland Contest Results - Israeli Stations', moduleId: 'viewmodels/holyland/holylandresults_isr', nav: true },
+                { route: 'LogUpload', title: 'Log Upload', moduleId: 'viewmodels/holyland/logupload', nav: true },
+                { route: 'LogUpload2', title: 'Log Upload', moduleId: 'viewmodels/holyland/logupload2', nav: true },
+                { route: 'SilentKeyForest', title: 'Silent Key Forest', moduleId: 'viewmodels/english/skf', nav: true },
+                { route: 'Meetings', title: 'Meetings', moduleId: 'viewmodels/english/meetings', nav: true },
+                { route: 'EN_Membership', title: 'Membership', moduleId: 'viewmodels/english/membership', nav: true },
+                { route: 'Beacons', title: 'Beacons', moduleId: 'viewmodels/english/beacons', nav: true },
+                { route: 'EN_Repeaters', title: 'Repeaters', moduleId: 'viewmodels/english/repeaters', nav: true },
+                { route: 'PA', title: 'Private Area', moduleId: 'viewmodels/pa', nav: true },
+                { route: 'Media', title: 'Media', moduleId: 'viewmodels/media', nav: true },
+                { route: 'DXpeditions', title: 'DXpeditions', moduleId: 'viewmodels/dxpeditions', nav: true },
+                { route: 'NewsManager', title: 'News Manager', moduleId: 'viewmodels/back_office/newsmanager', nav: false },
+                { route: 'Market', title: 'Market', moduleId: 'viewmodels/market', nav: true },
+                { route: 'Register', title: 'Register', moduleId: 'viewmodels/register', nav: true },
+                { route: 'OnlineCourse', title: 'Online Course', moduleId: 'viewmodels/onlinecourse', nav: true },
+                { route: 'Shop', title: 'Shop', moduleId: 'viewmodels/shop', nav: true },
+                { route: 'Import', title: 'Import', moduleId: 'viewmodels/import', nav: true },
+                { route: 'Exams', title: 'Exams', moduleId: 'viewmodels/exams', nav: true },
+                { route: 'ExamForms', title: 'ExamForms', moduleId: 'viewmodels/examforms', nav: true },
+                { route: 'Squares', title: 'Squares', moduleId: 'viewmodels/squares', nav: true },
+                { route: 'HolylandSquares', title: 'Holyland Squares', moduleId: 'viewmodels/holyland/holylandsquares', nav: true },
+				{ route: 'HolylandLogs', title: 'Holyland Logs', moduleId: 'viewmodels/holyland/holylandlogs', nav: true },
+                { route: 'Certificategenerator', title: 'Certificate Generator', moduleId: 'viewmodels/holyland/certificategenerator', nav: true },
+                { route: 'HolylandRules', title: 'Holyland Rules', moduleId: 'viewmodels/holyland/holylandrules', nav: true },
+                { route: 'Gallery', title: 'Gallery', moduleId: 'viewmodels/gallery', nav: true },
+                
+            ]).buildNavigationModel();
+
+            return router.activate();
+        },
+        compositionComplete: function () {
+            !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+        }
+    };
+});
+define('viewmodels/about',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('about');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/aguda',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/components/events',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/events.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/components/features',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/features.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/components/news',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/news.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/components/news_abstract',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/news_abstract.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/components/posts',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/posts.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/contact',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var initMap = function () {
+
+        //OLD VERSION
+        //map = new GMaps({
+        //    div: '#map',
+        //    lat: 32.034412,
+        //    lng: 34.893830
+        //});
+        //var marker = map.addMarker({
+        //    lat: 32.034412,
+        //    lng: 34.893830,
+        //    title: 'Loop, Inc.'
+        //});
+
+        var latlng1 = new google.maps.LatLng(32.034412, 34.893830);
+        var latlng2 = new google.maps.LatLng(32.054412, 34.873830);
+        var mapOptions = {
+            center: latlng1,
+            zoom: 15
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        //map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+
+        var marker = new google.maps.Marker({ position: latlng1, map: map, animation: google.maps.Animation.DROP, title: "בנין חיל הקשר" });
+
+        //var R1 = {
+        //    strokeColor: '#000066',
+        //    strokeOpacity: 0.8,
+        //    strokeWeight: 1,
+        //    fillColor: '#000066',
+        //    fillOpacity: 0.35,
+        //    map: map,
+        //    center: latlng1,
+        //    radius: 500
+        //};
+        //var R2 = {
+        //    strokeColor: '#660000',
+        //    strokeOpacity: 0.8,
+        //    strokeWeight: 1,
+        //    fillColor: '#660000',
+        //    fillOpacity: 0.35,
+        //    map: map,
+        //    center: latlng2,
+        //    radius: 700
+        //};
+        //// Add the circle for this city to the map.
+        //C1 = new google.maps.Circle(R1);
+        //C2 = new google.maps.Circle(R2);
+
+        //google.maps.event.addListener(C1, 'mouseover', function () {
+        //    C2.set('strokeOpacity', 0.1);
+        //    C2.set('fillOpacity', 0.1);
+        //});
+        //google.maps.event.addListener(C1, 'mouseout', function () {
+        //    C2.set('strokeOpacity', 0.8);
+        //    C2.set('fillOpacity', 0.35);
+        //});
+        //google.maps.event.addListener(C2, 'mouseover', function () {
+        //    C1.set('strokeOpacity', 0.1);
+        //    C1.set('fillOpacity', 0.1);
+        //});
+        //google.maps.event.addListener(C2, 'mouseout', function () {
+        //    C1.set('strokeOpacity', 0.8);
+        //    C1.set('fillOpacity', 0.35);
+        //});
+
+    }
+
+    var vm = {
+        compositionComplete: function () {
+            initMap();
+        },
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('contact');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/dashboard',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var activeImage = ko.observable('1');
+    var getActiveImage = function ()
+    {
+        return Math.floor(Math.random() * 7 + 1);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('main');
+            activeImage(getActiveImage());
+        },
+        compositionComplete: function ()
+        {
+            //$('.carousel').carousel({
+            //    interval: 5000,
+            //    pause: 'none'
+            //});
+            //$('.tooltips').tooltip();
+            //$('.popovers').popover();
+        },
+        getActiveImage: getActiveImage,
+        activeImage: activeImage
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/directors',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('directors');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/dxpeditions',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('dxpeditions');
+            shell.selectedMainMenu('ham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/echolink',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('echolink');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/emergency',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('emergency');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/4x4z',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('4x4z');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/4z8',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('4z8');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/beacons',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('beacons');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/cept',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('cept');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/freq',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('bandplan');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/meetings',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('meetings');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/membership',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('membership');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/repeaters',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('repeaters');
+            shell.selectedMainMenu('english');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/english/skf',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var skf = ko.observableArray();
+    var skfcount = ko.observable();
+    var searchInput = ko.observable();
+
+    this.getSKF = function () {
+        httpService.get("Server/skf.php?d=" + Date.now()).done(function (data) { skf(data); }).error(utilities.handleError);
+    }
+    this.getSKFCount = function () {
+        httpService.get("Server/skf_count.php?d=" + Date.now()).done(function (data) { skfcount(data); }).error(utilities.handleError);
+    }
+    
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('skf');
+            shell.selectedMainMenu('english');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+        },
+        compositionComplete: function () {
+            getSKF();
+            getSKFCount();
+            searchInput('');
+        },
+        skf: skf,
+        skfcount: skfcount,
+        searchInput: searchInput
+    };
+
+    return vm;
+});
+define('viewmodels/event_registration',['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {    
+
+    var shell = require('viewmodels/shell');
+
+    var name = ko.observable();
+    var callsign = ko.observable();
+    var email = ko.observable();
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/get_events.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+    
+    this.Send = ko.asyncCommand({
+        execute: function (complete) {
+            if (callsign() == null) {
+                displayService.display("אל תשכח להכניס אות קריאה..", "error");
+            }
+            else if (name() == null) {
+                displayService.display("אל תשכח להכניס שם..", "error");
+            }
+            else if (email() == null) {
+                displayService.display("אל תשכח להכניס אימייל..", "error");
+            }
+            else {
+                var info = {
+                    'info':
+                    {
+                        'name': name(),
+                        'callsign': callsign(),
+                        'email': email(),
+                        'event_id': this.id
+                    }
+                };
+                httpService.post("Server/event_registration.php", info).done(function (data) {
+                    displayService.display(data);
+                    complete(true);
+                    //callsign('');
+                    //name('');
+                    //email('');
+                }).error(function () { displayService.display("Something went wrong..", "error"); utilities.handleError(); complete(true); });
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('eventregistration');
+            shell.selectedMainMenu('aguda');
+            getItems();
+        },
+        compositionComplete: function () {
+            
+        },
+        name: name,
+        callsign: callsign,
+        email: email,
+        getItems: getItems,
+        items: items
+    };
+
+
+    return vm;
+});
+
+define('viewmodels/event_registration_admin',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var list = ko.observableArray();
+    var events = ko.observableArray();
+
+    var getList = function () {
+        httpService.get("Server/get_event_registrants.php?d=" + Date.now()).done(function (result) { list(result); }).error(utilities.handleError);
+    }
+    var getEvents= function () {
+        httpService.get("Server/get_events.php?d=" + Date.now()).done(function (data) { events(data); }).error(utilities.handleError);
+    }
+
+    var getEventRegistrants = function (eventid) {
+        return ko.utils.arrayFilter(list(), function (registrant) {
+            return (registrant.event_id === eventid);
+        });
+    }
+    
+    
+    var vm = {
+        activate: function () {
+            getList();
+            getEvents();
+        },
+        compositionComplete: function () {
+            
+        },
+        list: list,
+        events: events,
+        getEventRegistrants: getEventRegistrants
+    };
+
+    return vm;
+});
+define('viewmodels/examforms',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('examforms');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/exams',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('exams');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/freq',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('freq');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/gallery',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    //properties
+    this.list = ko.observableArray();
+
+    //methods
+    this.getData = function () {
+        $.ajax({
+            type: 'GET',
+            url: "./Server/get_videos.php?d=" + Date.now(),
+        }).done(function (data) {
+            list(data);
+        }).error(function (xhr, ajaxOptions, thrownError) {
+            alert(jQuery.parseJSON(xhr.responseText).error);
+        });
+    }
+
+    var vm = {
+        compositionComplete: function (view) {
+            getData();
+        },
+        activate: function () {
+            shell.selectedSubMenu('videogallery');
+            shell.selectedMainMenu('gallery');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/hagal',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('hagal');
+            shell.selectedMainMenu('hagal');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/hagalarchive',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var hagal = ko.observableArray();
+
+    this.getHagal = function () {
+        httpService.get("Server/hagal.php?d=" + Date.now()).done(function (data) { hagal(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('hagalarchive');
+            shell.selectedMainMenu('hagal');
+        },
+        compositionComplete: function () {
+            getHagal();
+        },
+        hagal: hagal
+    };
+
+    return vm;
+});
+define('viewmodels/hagalmain',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('hagal');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/ham',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('ham');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/haminisrael',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylamd');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland/certificategenerator',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('certificategenerator');
+            shell.selectedMainMenu('holyland');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland/holylandaward',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandaward');
+            shell.selectedMainMenu('holyland');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland/holylandcontest',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandcontest');
+            shell.selectedMainMenu('holyland');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland/holylandlogs',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var logs = ko.observableArray();
+    var counter = ko.observableArray();
+    var DXCCcounter = ko.observableArray();
+    var searchInput = ko.observable();
+
+    this.getlogs = function () {
+        httpService.get("Server/hl_2015.php?d=" + Date.now()).done(function (data) {
+            logs(data);
+            counter(Enumerable.From(logs()).Count());
+            DXCCcounter(Enumerable.From(logs()).Select("$.country").Distinct().Count());
+        }).error(utilities.handleError);
+    }  
+this.getCount = function () {
+    httpService.get("Server/hl2015_count.php?d=" + Date.now()).done(function (data) {
+        counter(data);
+    }).error(utilities.handleError);
+    }	
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandlogs');
+            shell.selectedMainMenu('holyland');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+			getlogs();
+			//getCount();
+            searchInput('');
+        },
+        compositionComplete: function () {
+            
+        },
+        logs: logs,
+        counter: counter,
+        DXCCcounter:DXCCcounter,
+		searchInput: searchInput,
+        year: moment()._d.getUTCFullYear()
+    };
+
+    return vm;
+});
+define('viewmodels/holyland/holylandresults',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+    this.results = ko.observableArray();
+
+    this.years = ko.computed(function () {
+        var temp = Enumerable.From(this.results()).Select("i=>i.year").Distinct().OrderBy(function (x) { return x.year }).Reverse().ToArray();
+        return temp;
+    }, this);
+
+    this.categories = ko.computed(function () {
+            var temp = Enumerable.From(this.results()).Select("i=>i.category").Distinct().ToArray();
+            return temp;
+        }, this);
+
+    this.getResults = function () {
+        httpService.get("Server/hl.php?d=" + Date.now()).done(function (data) { results(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandresults');
+            shell.selectedMainMenu('holyland');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+            getResults();
+        },
+        compositionComplete: function () {
+            
+        },
+        searchInput: searchInput
+    };
+
+    return vm;
+});
+define('viewmodels/holyland/holylandresults_isr',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+    this.results = ko.observableArray();
+
+    this.years = ko.computed(function () {
+        var temp = Enumerable.From(this.results()).Select("i=>i.year").Distinct().OrderBy(function (x) { return x.year }).Reverse().ToArray();
+        return temp;
+    }, this);
+
+    this.categories = ko.computed(function () {
+            var temp = Enumerable.From(this.results()).Select("i=>i.category").Distinct().ToArray();
+            return temp;
+        }, this);
+
+    this.getResults = function () {
+        httpService.get("Server/hl_4x.php?d=" + Date.now()).done(function (data) { results(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandresults_isr');
+            shell.selectedMainMenu('holyland');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+            getResults();
+        },
+        compositionComplete: function () {
+            
+        },
+        searchInput: searchInput
+    };
+
+    return vm;
+});
+define('viewmodels/holyland/holylandrules',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandrules');
+            shell.selectedMainMenu('holyland');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/holyland/holylandsquares',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandsquares');
+            shell.selectedMainMenu('holyland');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+        },
+        compositionComplete: function () {
+            searchInput('');
+        },
+        searchInput: searchInput
+    };
+
+    return vm;
+});
+define('viewmodels/holyland/logupload',['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {
+
+    var shell = require('viewmodels/shell');
+
+
+    //var email = ko.observable();
+    //var category = ko.observable();
+    //var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
+    var file = ko.observable();
+    var uploader;
+
+    var Clear = function () {
+        //$('#registration-form').parsley().reset();
+        //email("");
+        //category("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            //$('#registration-form').parsley().validate();
+            //if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    displayService.display('Do not forget to select your log file', 'error');
+                }
+            //}
+            complete(true);
+        },
+        canExecute: function (isExecuting) {
+            return !isExecuting;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function () {
+        //$('#mobile').tooltip();
+        //$('#phone').tooltip();
+        //$('#id').tooltip();
+        //$('#licensenum').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('logupload');
+            shell.selectedMainMenu('holyland');
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('.selectpicker').selectpicker();
+            var btn = document.getElementById('upload-btn'),
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=log',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 300,
+                allowedExtensions: ['adi', 'txt', 'cabrillo.txt', 'log', 'cbr'],
+                //accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    //alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, ADIF, and CAB files are allowed.');
+                    displayService.display(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, TXT, LOG and CBR files are allowed.', 'error');
+                },
+                onSizeError: function (filename, fileSize) {
+                    //alert(filename + ' is too big. (300K max file size)');
+                    displayService.display(filename + ' is too big. (300K max file size)', 'error');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        var info = {
+                            'info':
+                            {
+                                //'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'timestamp': response.timestamp, 'filename': response.file
+                            }
+                        };
+                        httpService.post("Server/upload_log.php", info).done(function (data) {
+                            if (data.success === true) {
+                                displayService.display(data.msg);
+                            }
+                            else {
+                                displayService.display(data.msg, 'error');
+                            }
+                            Clear();
+                        }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+                    }
+                }
+            });
+
+        },
+
+        //email: email,
+        //category: category,
+        //categories: categories,
+        file: file,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader
+    };
+
+
+    return vm;
+});
+
+
+
+
+define('viewmodels/holyland/logupload2',['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {
+
+    var shell = require('viewmodels/shell');
+
+
+    //var email = ko.observable();
+    //var category = ko.observable();
+    //var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
+    var file = ko.observable();
+    var uploader;
+
+    var Clear = function () {
+        //$('#registration-form').parsley().reset();
+        //email("");
+        //category("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            //$('#registration-form').parsley().validate();
+            //if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    displayService.display('Do not forget to select your log file', 'error');
+                }
+            //}
+            complete(true);
+        },
+        canExecute: function (isExecuting) {
+            return !isExecuting;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function () {
+        //$('#mobile').tooltip();
+        //$('#phone').tooltip();
+        //$('#id').tooltip();
+        //$('#licensenum').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('logupload');
+            shell.selectedMainMenu('holyland');
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('.selectpicker').selectpicker();
+            var btn = document.getElementById('upload-btn'),
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=log',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 300,
+                allowedExtensions: ['adi', 'txt', 'cabrillo.txt', 'log', 'cbr'],
+                //accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    //alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, ADIF, and CAB files are allowed.');
+                    displayService.display(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, TXT, LOG and CBR files are allowed.', 'error');
+                },
+                onSizeError: function (filename, fileSize) {
+                    //alert(filename + ' is too big. (300K max file size)');
+                    displayService.display(filename + ' is too big. (300K max file size)', 'error');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        var info = {
+                            'info':
+                            {
+                                //'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'timestamp': response.timestamp, 'filename': response.file
+                            }
+                        };
+                        httpService.post("Server/upload_log.php", info).done(function (data) {
+                            if (data.success === true) {
+                                displayService.display(data.msg);
+                            }
+                            else {
+                                displayService.display(data.msg, 'error');
+                            }
+                            Clear();
+                        }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+                    }
+                }
+            });
+
+        },
+
+        //email: email,
+        //category: category,
+        //categories: categories,
+        file: file,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader
+    };
+
+
+    return vm;
+});
+
+
+
+
+define('viewmodels/import',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('import');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/market',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/markolit.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('market');
+            shell.selectedMainMenu('aguda');
+        },
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/media',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('media');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/membership',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('membership');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/news',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('news');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/onairhagal',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var files = ko.observableArray();
+
+    this.getHagalFiles = function () {
+        httpService.get("Server/broadcasted_hagal.php?d=" + Date.now()).done(function (data) { files(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('onairhagal');
+            shell.selectedMainMenu('hagal');
+            getHagalFiles();
+        },
+        files: files
+    };
+
+    return vm;
+});
+define('viewmodels/onlinecourse',['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {    
+
+    var shell = require('viewmodels/shell');
+
+    var firstname = ko.observable();
+    var lastname = ko.observable();
+    var efirstname = ko.observable();
+    var elastname = ko.observable();
+    var email = ko.observable();
+    var birthdate = ko.observable();
+    var id = ko.observable();
+    var country = ko.observable();
+    var gender = ko.observable('m');
+    var city = ko.observable();
+    var address = ko.observable();
+    var house = ko.observable();
+    var zip = ko.observable();
+    var phone = ko.observable();
+    var mobile = ko.observable();
+    var reason = ko.observable();
+    var cv = ko.observable();
+    var file = ko.observable();
+    var paymentfile = ko.observable();
+    var uploader;
+    var uploader2;
+
+    var Clear = function () {
+        $('#registration-form').parsley().reset();
+        firstname("");
+        lastname("");
+        efirstname("");
+        elastname("");
+        email("");
+        birthdate("");
+        id("");
+        country("");
+        gender('m');
+        city("");
+        address("");
+        house("");
+        zip("");
+        phone("");
+        mobile("");
+        reason("");
+        cv("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            $('#registration-form').parsley().validate();
+            if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': Date.now(), 'filename': ''
+                            }
+                        };
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("OK! " + data); Clear(); complete(true); }).error(function () { alert("Oops, an error has occured"); utilities.handleError(); complete(true); });
+                    }
+                }
+            }
+            else {
+                complete(true);
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function ()
+    {
+        $('#mobile').tooltip();
+        $('#phone').tooltip();
+        $('#id').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('onlinecourse');
+            shell.selectedMainMenu('aguda');
+            ko.bindingHandlers.datetimepicker = {
+                init: function (element, valueAccessor, allBindingsAccessor) {
+                    $(element).datetimepicker({
+                        format: 'dd/MM/yyyy HH:mm:ss PP',
+                        language: 'en',
+                        pick12HourFormat: true
+                    }).on("changeDate", function (ev) {
+                        var observable = valueAccessor();
+                        observable(ev.date);
+                    });
+                },
+                update: function (element, valueAccessor) {
+                    var value = ko.utils.unwrapObservable(valueAccessor());
+                    $(element).datetimepicker("setValue", value);
+                }
+            };
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('#birthdate').datetimepicker({
+                pickTime: false
+            });
+            $("#birthdate").on("dp.change", function (e) {
+                birthdate(moment(e.date).format('DD-MM-YYYY'));
+            });
+            $('#firstname').focus();
+
+            var btn = document.getElementById('upload-btn'),
+            btn2 = document.getElementById('payment-btn'),
+                
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=img',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    file(response.file);
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else 
+                    {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+                    }
+                }
+            });
+
+            
+
+
+            uploader2 = new ss.SimpleUpload({
+                button: btn2,
+                url: 'Server/uploadHandler.php?dir=payment',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    paymentfile(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        paymentfile(response.file);
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register_online_course.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+
+                    }
+                }
+            });
+            
+
+
+        },
+        firstname: firstname,
+        lastname: lastname,
+        efirstname: efirstname,
+        elastname: elastname,
+        email: email,
+        birthdate: birthdate,
+        id: id,
+        country: country,
+        gender: gender,
+        city: city,
+        address: address,
+        house: house,
+        zip: zip,
+        phone: phone,
+        mobile: mobile,
+        reason: reason,
+        cv: cv,
+        file: file,
+        paymentfile: paymentfile,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader,
+        uploader2: uploader2
+    };
+
+
+    return vm;
+});
+
+define('viewmodels/pa',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('');
+            shell.selectedMainMenu('pa');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/procedures',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('about');
+            shell.selectedMainMenu('procedures');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/protocols',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var annual = ko.observableArray();
+    var protocol = ko.observableArray();
+    var finance = ko.observableArray();
+
+    this.getAnnual = function () {
+        httpService.get("Server/annual.php?d=" + Date.now()).done(function (data) { annual(data); }).error(utilities.handleError);
+    }
+    this.getProtocol = function () {
+        httpService.get("Server/protocol.php?d=" + Date.now()).done(function (data) { protocol(data); }).error(utilities.handleError);
+    }
+    this.getFinance = function () {
+        httpService.get("Server/finance.php?d=" + Date.now()).done(function (data) { finance(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('protocols');
+            shell.selectedMainMenu('aguda');
+        },
+        compositionComplete: function () {
+            getAnnual();
+            getProtocol();
+            getFinance();
+        },
+        annual: annual,
+        protocol: protocol,
+        finance: finance
+    };
+
+    return vm;
+});
+define('viewmodels/qsl',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('qsl');
+            shell.selectedMainMenu('aguda');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/register',['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {    
+
+    var shell = require('viewmodels/shell');
+
+    var firstname = ko.observable();
+    var lastname = ko.observable();
+    var efirstname = ko.observable();
+    var elastname = ko.observable();
+    var email = ko.observable();
+    var licensenum = ko.observable();
+    var callsign = ko.observable();
+    var birthdate = ko.observable();
+    var id = ko.observable();
+    var country = ko.observable();
+    var gender = ko.observable('m');
+    var city = ko.observable();
+    var address = ko.observable();
+    var house = ko.observable();
+    var zip = ko.observable();
+    var phone = ko.observable();
+    var mobile = ko.observable();
+    var reason = ko.observable();
+    var cv = ko.observable();
+    var file = ko.observable();
+    var paymentfile = ko.observable();
+    var uploader;
+    var uploader2;
+
+    var Clear = function () {
+        $('#registration-form').parsley().reset();
+        firstname("");
+        lastname("");
+        efirstname("");
+        elastname("");
+        email("");
+        licensenum("");
+        callsign("");
+        birthdate("");
+        id("");
+        country("");
+        gender('m');
+        city("");
+        address("");
+        house("");
+        zip("");
+        phone("");
+        mobile("");
+        reason("");
+        cv("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            $('#registration-form').parsley().validate();
+            if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': Date.now(), 'filename': ''
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("OK! " + data); Clear(); complete(true); }).error(function () { alert("Oops, an error has occured"); utilities.handleError(); complete(true); });
+                    }
+                }
+            }
+            else {
+                complete(true);
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function ()
+    {
+        $('#mobile').tooltip();
+        $('#phone').tooltip();
+        $('#id').tooltip();
+        $('#licensenum').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('register');
+            shell.selectedMainMenu('aguda');
+            ko.bindingHandlers.datetimepicker = {
+                init: function (element, valueAccessor, allBindingsAccessor) {
+                    $(element).datetimepicker({
+                        format: 'dd/MM/yyyy HH:mm:ss PP',
+                        language: 'en',
+                        pick12HourFormat: true
+                    }).on("changeDate", function (ev) {
+                        var observable = valueAccessor();
+                        observable(ev.date);
+                    });
+                },
+                update: function (element, valueAccessor) {
+                    var value = ko.utils.unwrapObservable(valueAccessor());
+                    $(element).datetimepicker("setValue", value);
+                }
+            };
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('#birthdate').datetimepicker({
+                pickTime: false
+            });
+            $("#birthdate").on("dp.change", function (e) {
+                birthdate(moment(e.date).format('DD-MM-YYYY'));
+            });
+            $('#firstname').focus();
+
+            var btn = document.getElementById('upload-btn'),
+            btn2 = document.getElementById('payment-btn'),
+                
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=img',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    file(response.file);
+                    if (uploader2.getQueueSize() > 0) {
+                        uploader2.submit();
+                    }
+                    else 
+                    {
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+                    }
+                }
+            });
+
+            
+
+
+            uploader2 = new ss.SimpleUpload({
+                button: btn2,
+                url: 'Server/uploadHandler.php?dir=payment',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 600,
+                //allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+                accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    paymentfile(filename);
+                },
+                onExtError: function (filename, extension) {
+                    alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only PNG, JPG, and GIF files are allowed.');
+                },
+                onSizeError: function (filename, fileSize) {
+                    alert(filename + ' is too big. (600K max file size)');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        paymentfile(response.file);
+                        var info = {
+                            'info':
+                            {
+                                'firstname': firstname(), 'lastname': lastname(), 'efirstname': efirstname(), 'elastname': elastname(),
+                                'email': email(), 'licensenum': licensenum(), 'callsign': callsign(), 'birthdate': birthdate(),
+                                'id': id(), 'country': country(), 'gender': gender(), 'city': city(),
+                                'address': address(), 'house': house(), 'zip': zip(), 'phone': phone(),
+                                'mobile': mobile(), 'reason': reason(), 'cv': cv(), 'timestamp': response.timestamp, 'filename': file, 'paymentfilename': paymentfile
+                            }
+                        };
+                        httpService.post("Server/register.php", info).done(function (data) { alert("Very well! " + data); Clear(); }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+
+                    }
+                }
+            });
+            
+
+
+        },
+        firstname: firstname,
+        lastname: lastname,
+        efirstname: efirstname,
+        elastname: elastname,
+        email: email,
+        licensenum: licensenum,
+        callsign: callsign,
+        birthdate: birthdate,
+        id: id,
+        country: country,
+        gender: gender,
+        city: city,
+        address: address,
+        house: house,
+        zip: zip,
+        phone: phone,
+        mobile: mobile,
+        reason: reason,
+        cv: cv,
+        file: file,
+        paymentfile: paymentfile,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader,
+        uploader2: uploader2
+    };
+
+
+    return vm;
+});
+
+define('viewmodels/regulations',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('regulations');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/repeaters',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+    var initMap = function () {
+
+        //points
+        var repeaters = [
+        {
+            lat: 30.614596,
+            lng: 34.804811,
+            description: "ממסר מצפה רמון",
+            name: "R0"
+        }
+        ];
+
+        
+        var P0 = new google.maps.LatLng(30.614596, 34.804811);
+        var P1 = new google.maps.LatLng(31.768689, 35.216128);
+        var P3 = new google.maps.LatLng(32.583741, 35.181742);
+        var P7 = new google.maps.LatLng(32.074502, 34.791491);
+        var P12 = new google.maps.LatLng(32.762539, 35.018685);
+        var P12B = new google.maps.LatLng(29.572127, 34.964874);
+        var P12C = new google.maps.LatLng(31.256257, 34.785504);
+        var P13 = new google.maps.LatLng(31.344768, 35.049863);
+        var P14 = new google.maps.LatLng(32.980831, 35.506225);
+        var P15 = new google.maps.LatLng(32.072165, 34.816521);
+        var P16 = new google.maps.LatLng(32.315934, 34.862816);
+        var P18 = new google.maps.LatLng(32.0553536, 34.8621609);
+        var P73 = new google.maps.LatLng(32.764199, 35.016099);
+        var P45 = new google.maps.LatLng(33.128886, 35.785405);
+        
+        
+        
+        //map
+        var mapOptions = { center: new google.maps.LatLng(31.44741, 35.079346), zoom: 8 };
+        var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        
+        //markers
+        var M0 = new google.maps.Marker({ position: P0, map: map, animation: google.maps.Animation.DROP, title: "ממסר מצפה רמון - R0 - 145.000" });
+        var M1 = new google.maps.Marker({ position: P1, map: map, animation: google.maps.Animation.DROP, title: "ממסר ירושלים - R1 - 145.625" });
+        var M3 = new google.maps.Marker({ position: P3, map: map, animation: google.maps.Animation.DROP, title: "ממסר מגידו - R3 - 145.675" });
+        var M7 = new google.maps.Marker({ position: P7, map: map, animation: google.maps.Animation.DROP, title: "ממסר תל-אביב - R7 - 145.775" });
+        var M12 = new google.maps.Marker({ position: P12, map: map, animation: google.maps.Animation.DROP, title: "ממסר חיפה - R12 - 144.700" });
+        var M12B = new google.maps.Marker({ position: P12B, map: map, animation: google.maps.Animation.DROP, title: "ממסר אילת - R12B - 145.300" });
+        var M12C = new google.maps.Marker({ position: P12C, map: map, animation: google.maps.Animation.DROP, title: "ממסר באר-שבע - R12C - 145.300" });
+        var M13 = new google.maps.Marker({ position: P13, map: map, animation: google.maps.Animation.DROP, title: "ממסר יתיר - R13 - 145.325" });
+        var M14 = new google.maps.Marker({ position: P14, map: map, animation: google.maps.Animation.DROP, title: "ממסר צפת - R14 - 145.350" });
+        var M15 = new google.maps.Marker({ position: P15, map: map, animation: google.maps.Animation.DROP, title: "ממסר גבעתיים - R15 - 144.775" });
+        var M16 = new google.maps.Marker({ position: P16, map: map, animation: google.maps.Animation.DROP, title: "ממסר נתניה - R16 - 145.400" });
+        var M18 = new google.maps.Marker({ position: P18, map: map, animation: google.maps.Animation.DROP, title: "ממסר קרית אונו - R18 - 145.450" });
+        var M73 = new google.maps.Marker({ position: P73, map: map, animation: google.maps.Animation.DROP, title: "ממסר חיפה - UHF - R73 - 438.725" });
+        var M45 = new google.maps.Marker({ position: P45, map: map, animation: google.maps.Animation.DROP, title: "ממסר בנטל - R4.5 - 145.7125" });
+
+        M73.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+
+        var Circ;
+        var CircleProp = {
+            strokeColor: '#555555',
+            strokeOpacity: 0.7,
+            strokeWeight: 1,
+            fillColor: '#555555',
+            fillOpacity: 0.3,
+            map: map,
+            radius: 70000
+        };
+        
+        var over_func = function (e) {
+            if (map.getZoom() < 11) {
+                CircleProp.center = e.latLng;
+                CircleProp.radius = e.radius;
+                Circ = new google.maps.Circle(CircleProp);
+                Circ.setMap(map);
+            }
+        }
+        var out_func = function (e) {
+            Circ.setMap(null);
+        }
+        google.maps.event.addListener(M0, 'mouseover', function (e) { e.radius = 80000; over_func(e); });
+        google.maps.event.addListener(M0, 'mouseout', out_func);
+        google.maps.event.addListener(M1, 'mouseover', function (e) { e.radius = 70000; over_func(e); });
+        google.maps.event.addListener(M1, 'mouseout', out_func);
+        google.maps.event.addListener(M3, 'mouseover', function (e) { e.radius = 60000; over_func(e); });
+        google.maps.event.addListener(M3, 'mouseout', out_func);
+        google.maps.event.addListener(M7, 'mouseover', function (e) { e.radius = 70000; over_func(e); });
+        google.maps.event.addListener(M7, 'mouseout', out_func);
+        google.maps.event.addListener(M12, 'mouseover', function (e) { e.radius = 80000; over_func(e); });
+        google.maps.event.addListener(M12, 'mouseout', out_func);
+        google.maps.event.addListener(M12B, 'mouseover', function (e) { e.radius = 60000; over_func(e); });
+        google.maps.event.addListener(M12B, 'mouseout', out_func);
+        google.maps.event.addListener(M12C, 'mouseover', function (e) { e.radius = 80000; over_func(e); });
+        google.maps.event.addListener(M12C, 'mouseout', out_func);
+        google.maps.event.addListener(M13, 'mouseover', function (e) { e.radius = 70000; over_func(e); });
+        google.maps.event.addListener(M13, 'mouseout', out_func);
+        google.maps.event.addListener(M14, 'mouseover', function (e) { e.radius = 130000; over_func(e); });
+        google.maps.event.addListener(M14, 'mouseout', out_func);
+        google.maps.event.addListener(M15, 'mouseover', function (e) { e.radius = 70000; over_func(e); });
+        google.maps.event.addListener(M15, 'mouseout', out_func);
+        google.maps.event.addListener(M16, 'mouseover', function (e) { e.radius = 50000; over_func(e); });
+        google.maps.event.addListener(M16, 'mouseout', out_func);
+        google.maps.event.addListener(M18, 'mouseover', function (e) { e.radius = 40000; over_func(e); });
+        google.maps.event.addListener(M18, 'mouseout', out_func);
+        google.maps.event.addListener(M73, 'mouseover', function (e) { e.radius = 80000; over_func(e); });
+        google.maps.event.addListener(M73, 'mouseout', out_func);
+        google.maps.event.addListener(M45, 'mouseover', function (e) { e.radius = 50000; over_func(e); });
+        google.maps.event.addListener(M45, 'mouseout', out_func);
+
+    }
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('repeaters');
+            shell.selectedMainMenu('israelham');
+        },
+        compositionComplete: function () {
+            initMap();
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/repeatersmap',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+    
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('repeatersmap');
+            shell.selectedMainMenu('israelham');
+        },
+        compositionComplete: function () {
+            
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/shop',['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/markolit.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('market');
+            shell.selectedMainMenu('aguda');
+            simpleCart({
+                currency: "ILS",
+                checkout: {
+                    type: "PayPal",
+                    email: "gilifon@gmail.com"
+                }
+            });
+        },
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+
+        },
+        items: items
+    };
+
+    return vm;
+});
+define('viewmodels/squares',['services/holylandUtility'], function (holylandUtility) {
+
+    var shell = require('viewmodels/shell');
+    var initMap = function (position) {
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        var myLatlng = new google.maps.LatLng(lat, lng);
+        var mapOptions = { center: new google.maps.LatLng(32.01258834091205, 34.816575050354004), zoom: 12 };
+        var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Good Luck in Holyland Contest!'
+        });
+
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER,
+                drawingModes: [
+                  google.maps.drawing.OverlayType.POLYGON,
+                ]
+            }
+        });
+        drawingManager.setMap(map);
+
+        google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
+            var coordinates = (polygon.getPath().getArray());
+            console.log(coordinates);
+            for (var i=0; i<coordinates.length; i++)
+            {
+                console.log('lat:' + coordinates[i].lat() + ' lng: ' + coordinates[i].lng());
+            }
+        });
+
+        ko.utils.arrayForEach(holylandUtility.Areas(), function (area) {
+            area.poly.setMap(map);
+        });
+
+    }
+
+    var setAreas = function (position)
+    {
+        initMap(position);
+        var square = holylandUtility.getAreaByPosition(position);
+        $('#square').html(square);
+    }
+
+    var vm = {
+        compositionComplete: function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(setAreas);
+
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
+define('viewmodels/sukotresults',['services/utilities', 'services/httpService'], function (utilities) {
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('sukotresults');
+            shell.selectedMainMenu('israelham');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+            searchInput('');
+        },
+		searchInput: searchInput
+    };
+
+    return vm;
+});
+define('viewmodels/wwff',['viewmodels/shell'],function () {
+
+    var shell = require('viewmodels/shell');
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('wwff');
+            shell.selectedMainMenu('israelham');
+        }
+    };
+
+    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
+    //This pattern is also recognized by Durandal so that it can create instances on demand.
+    //If you wish to create a singleton, you should export an object instead of a function.
+    //See the "flickr" module for an example of object export.
+
+    return vm;
+});
 define('text',{load: function(id){throw new Error("Dynamic load not allowed: " + id);}});
 
 define('text!views/about.html',[],function () { return '<div class="container">\r\n    <div class="row-fluid privacy">\r\n\r\n        <h4>אודות האגודה</h4>\r\n        <p>\r\n            אגודת חובבי הרדיו בישראל (ע"ר) הינה עמותה רשומה המאגדת את חובבי הרדיו הישראלים וחובבים זרים אשר בקשו להמנות עם חבריה. האגודה הינה מלכ"ר (מוסד ללא כוונת רווח), והפעילות בתוכה מתבצעת בהתנדבות. האגודה פועלת ע"מ לקדם את תחביב חובבות הרדיו, מייצגת את ישראל בארגון חובבי הרדיו הבינלאומי ומספקת מגוון שירותים לחבריה. האגודה נוסדה ב 18 פברואר 1948 וחברים בה כל נציגי האוכלוסייה בישראל. מבוגרים לצד נוער, עולים ליד ותיקים, תלמידים לצד ראשי אקדמיה, כולל בכירים במשק ובכלכלה\r\n        </p>\r\n        <hr />\r\n        <h4>מטרות האגודה</h4>\r\n        <label>מטרות נבחרות מתוך תקנון האגודה:</label>\r\n        <ol>\r\n            <li>לאגד את חובבי הרדיו בישראל ולפתח יחסי רעות ביניהם.</li>\r\n            <li>לסייע לחברים בכל ענייני חובבות רדיו.</li>\r\n            <li>להפיץ את חובבות הרדיו בציבור ובמיוחד בקרב הנוער ולתרום בכך ליצירתה של עתודה טכנולוגית למדינת ישראל.</li>\r\n            <li>לסייע לקהילה במתן שרותי תקשורת בהתאם לתנאי רישיון משרד התקשורת בעת אירועים מיוחדים ובעת מצוקה.</li>\r\n            <li>לקיים קשרים עם ארגונים ואגודות שמטרותיהם דומות למטרות האגודה.</li>\r\n            <li>לייצג את חברי האגודה בפני מוסדות הממשל במדינת ישראל ובפני כל גורם בארץ ובחו"ל, בנושאים שיש בהם עניין לקיום מטרותיה.</li>\r\n        </ol>\r\n        <hr />\r\n        <h4>משרד האגודה</h4>\r\n        <p>\r\n            משרד  האגודה (לא לשם מסירת דואר)  מתארח בשנים האחרונות בבניין אתר ההנצחה לחללי חיל הקשר והתקשוב ברחוב אלפרט 3 יהוד. המשרד אינו מאויש דרך קבע ויש לקבוע מראש פגישה עם המזכיר. במקום גם ממוקמת תחנת המועדון של האגודה 4X4ARC \r\nאין אפשרות  להשאיר במקום תכתובת פורמלית כל שהיא וכל פניה יש לשלוח אל "אגודת חובבי הרדיו  בישראל " תיבת דואר 17600 תל אביב 6117501\r\n\r\n        </p>\r\n        <hr />\r\n\r\n        <h4>שירותי האגודה</h4>\r\n        <p>במסגרת מימוש מטרות האגודה היא מספק שירות לחבריה הכולל בין היתר:</p>\r\n        <ul>\r\n            <li>ייצוג אינטרסים של חובבי רדיו מול משרד התקשורת</li>\r\n            <li>ייצוג ישראל בארגון חובבי הרדיו הבינלאומי</li>\r\n            <li>תיאום פעולות משותפות לחובבי הרדיו ולגופי ההצלה בארץ</li>\r\n            <li>ידיעון ה"גל"</li>\r\n            <li>ניהול תחרויות כדוגמאת תחרות ארץ הקודש</li>\r\n            <li>הענקת פרסים ותעודות כגון תעודת ארץ הקודש</li>\r\n            <li>דיוור מרוכז של כרטיסי QSL</li>\r\n            <li>תחנת מועדון</li>\r\n            <li>ארגון קורסים לקראת מבחני משרד התקשורת לשם קבלת רשיון חובב רדיו</li>\r\n            <li>ממסרים</li>\r\n            <li>ארגון ימי שדה ומפגשים חברתיים</li>\r\n            <li>הכנה והוצאת כרטיס חבר בגודל כרטיס אשראי</li>\r\n            <li>ייצוג ישראל בתערוכות בינ"ל כגון פרידריכסהפן</li>\r\n            <li>הקצאת כתובת דואר אלקטרוני עם אות הקריאה</li>\r\n        </ul>\r\n        <p>חברות באגודה מותנת בתשלום דמי חבר.</p>\r\n    </div>\r\n</div>\r\n\r\n';});
@@ -626,7 +9481,7 @@ define('text!views/market.html',[],function () { return '<div class="container">
 define('text!views/media.html',[],function () { return '<div class="container">\r\n\r\n    <div class="row-fluid privacy text-center">\r\n        <img class="img-responsive text-center" src="assets/img/under_contruction.jpg" alt="">\r\n    </div>\r\n    <!--/row-fluid-->\r\n\r\n</div>\r\n\r\n';});
 
 
-define('text!views/membership.html',[],function () { return '<div class="container">\r\n    <div class="row-fluid privacy">\r\n        <h4>חברות באגודה</h4>\r\n        <p>\r\n            רשאי להיות חבר אגודה כל חובב רדיו מעל גיל 17 המגיש בקשה להתקבל לאגודה.\r\n            בנוסף, ועדת חברים יכולה לאשר קבלה לאגודה במעמד של ידיד אגודה. ידיד אגודה יכול להיות מי שלא מלאו לו 17 שנה, או שאינו אזרח מדינת ישראל, או מועדון חובבי רדיו, או תאגיד. לידידי האגודה רוב הזכויות של חברי האגודה, למעט הזכות לבחור ולהיבחר למוסדות האגודה.\r\n            ע"מ להרשם לאגודה, צור קשר <a href="#Contact">כאן</a>, או בדוא"ל <a href="mailto:membership@iarc.org">membership@iarc.org</a> או באמצעות <a href="#Register" target="_blank">טופס ההצטרפות</a>.<br />\r\n            החברות באגודה מתוארת ומוגדרת בתקנון האגודה.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/IARC_Policy_2008.pdf" target="_blank">תקנון האגודה</a></li>\r\n        </ul>\r\n        <hr />\r\n        <h4>דמי חבר עבור תושבי ישראל</h4>\r\n        <label>דמי החבר ישמשו למימון שירותי האגודה אשר ניתנים לחבריה.</label>\r\n        <p>דמי החבר עבור תושבי ישראל הינם:</p>\r\n        <ul>\r\n            <li>250 ש"ח לאדם</li>\r\n            <li>300 ש"ח עבור תחנות מועדון ומשפחות באותה כתובת</li>\r\n            <li>150 ש"ח עבור נוער וחיילים</li>\r\n        </ul>\r\n        <!--<p>תשלום דמי החבר יכול להתבצע פנים-מול-פנים (ע"י הגעה למשרדי האגודה, או ע"י פגישת הגזבר), באמצעות דואר (ע"י שליחת המחאה) או ע"י הפקדה לחשבון.</p>-->\r\n        <label>ניתן לשלם את דמי החבר במספר אופנים:</label>\r\n        <ol>\r\n            <li>\r\n                בכרטיס אשראי (למעט אמריקן אקספרס): יש להשתמש בקישור הבא:<br />\r\n                <a href="http://hey.pbme.co/zEY2ZU" target="_blank">http://hey.pbme.co/zEY2ZU</a><br />\r\n                יש לשלם כאורח - לא צריך להתקין אפליקציה!<br />\r\n                למלא את הפרטים הנדרשים כולל אות קריאה\r\n            </li>\r\n            <li>פנים אל פנים עם הגזבר בפגישה במשרדי האגודה: רחוב אלפרט 3 יהוד, או במפגש שהאגודה מקיימת מפעם לפעם.</li>\r\n            <li>המחאה בדואר (לא בדואר רשום) אל משרדי האגודה לכתובת:    אגודת חובבי הרדיו בישראל (ע"ר) ת.ד. 17600 תל אביב מיקוד 6117501<br />יש להקפיד לרשום על גב ההמחאה את אות הקריאה של החובב!</li>\r\n            <li>\r\n                העברה בנקאית אל חשבון האגודה:<br />\r\n                במידה ובחרתם בהעברה בנקאית יש להקפיד לרשום בפרטים גם את אות הקריאה של החובב על מנת להקל על ניהול הרישום והקישור בין הסכום שהועבר לבין החובב המשלם.<br />\r\n                <div class="tag-box tag-box-v2">\r\n                    פרטי החשבון:<br />\r\n                    אגודת חובבי הרדיו בישראל,<br />\r\n                    בנק לאומי (10),<br />\r\n                    מס\' חשבון 02986919,<br />\r\n                    סניף תל גנים 988,<br />\r\n                    גבעתיים, ישראל.<br />\r\n                    (IBAN) מספר זה"ב:<br />\r\n                    IL50 0109 8800 0000 2986 919\r\n                </div>\r\n            </li>\r\n        </ol>\r\n        <hr />\r\n        <h4>דמי חבר עבור תושבי חוץ</h4>\r\n        <p>\r\n            דמי חבר עבור תושבים זרים: 30 דולר ארה"ב לשנה.\r\n        </p>\r\n    </div>\r\n    <!--/row-fluid-->\r\n</div>\r\n';});
+define('text!views/membership.html',[],function () { return '<div class="container">\r\n    <div class="row-fluid privacy">\r\n        <h4>חברות באגודה</h4>\r\n        <p>\r\n            רשאי להיות חבר אגודה כל חובב רדיו מעל גיל 17 המגיש בקשה להתקבל לאגודה.\r\n            בנוסף, ועדת חברים יכולה לאשר קבלה לאגודה במעמד של ידיד אגודה. ידיד אגודה יכול להיות מי שלא מלאו לו 17 שנה, או שאינו אזרח מדינת ישראל, או מועדון חובבי רדיו, או תאגיד. לידידי האגודה רוב הזכויות של חברי האגודה, למעט הזכות לבחור ולהיבחר למוסדות האגודה.\r\n            ע"מ להרשם לאגודה, צור קשר <a href="#Contact">כאן</a>, או בדוא"ל <a href="mailto:membership@iarc.org">membership@iarc.org</a> או באמצעות <a href="#Register" target="_blank">טופס ההצטרפות</a>.<br />\r\n            החברות באגודה מתוארת ומוגדרת בתקנון האגודה.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/IARC_Policy_2008.pdf" target="_blank">תקנון האגודה</a></li>\r\n        </ul>\r\n        <hr />\r\n        <h4>דמי חבר עבור תושבי ישראל</h4>\r\n        <label>דמי החבר ישמשו למימון שירותי האגודה אשר ניתנים לחבריה.</label>\r\n        <p>דמי החבר עבור תושבי ישראל הינם:</p>\r\n        <ul>\r\n            <li>250 ש"ח לאדם</li>\r\n            <li>300 ש"ח עבור תחנות מועדון ומשפחות באותה כתובת</li>\r\n            <li>150 ש"ח עבור נוער וחיילים</li>\r\n        </ul>\r\n        <!--<p>תשלום דמי החבר יכול להתבצע פנים-מול-פנים (ע"י הגעה למשרדי האגודה, או ע"י פגישת הגזבר), באמצעות דואר (ע"י שליחת המחאה) או ע"י הפקדה לחשבון.</p>-->\r\n        <label>ניתן לשלם את דמי החבר במספר אופנים:</label>\r\n        <ol>\r\n            <li>\r\n                בכרטיס אשראי (למעט אמריקן אקספרס): יש להשתמש בקישור הבא:<br />\r\n                                                                        <a href="https://payboxapp.page.link/NfSJCpuQZf6VELdM8" target="_blank">https://payboxapp.page.link/NfSJCpuQZf6VELdM8</a><br />\r\n                יש לשלם כאורח - לא צריך להתקין אפליקציה!<br />\r\n                למלא את הפרטים הנדרשים כולל אות קריאה\r\n            </li>\r\n            <li>פנים אל פנים עם הגזבר בפגישה במשרדי האגודה: רחוב אלפרט 3 יהוד, או במפגש שהאגודה מקיימת מפעם לפעם.</li>\r\n            <li>המחאה בדואר (לא בדואר רשום) אל משרדי האגודה לכתובת:    אגודת חובבי הרדיו בישראל (ע"ר) ת.ד. 17600 תל אביב מיקוד 6117501<br />יש להקפיד לרשום על גב ההמחאה את אות הקריאה של החובב!</li>\r\n            <li>\r\n                העברה בנקאית אל חשבון האגודה:<br />\r\n                במידה ובחרתם בהעברה בנקאית יש להקפיד לרשום בפרטים גם את אות הקריאה של החובב על מנת להקל על ניהול הרישום והקישור בין הסכום שהועבר לבין החובב המשלם.<br />\r\n                <div class="tag-box tag-box-v2">\r\n                    פרטי החשבון:<br />\r\n                    אגודת חובבי הרדיו בישראל,<br />\r\n                    בנק לאומי (10),<br />\r\n                    מס\' חשבון 02986919,<br />\r\n                    סניף תל גנים 988,<br />\r\n                    גבעתיים, ישראל.<br />\r\n                    (IBAN) מספר זה"ב:<br />\r\n                    IL50 0109 8800 0000 2986 919\r\n                </div>\r\n            </li>\r\n        </ol>\r\n        <hr />\r\n        <h4>דמי חבר עבור תושבי חוץ</h4>\r\n        <p>\r\n            דמי חבר עבור תושבים זרים: 30 דולר ארה"ב לשנה.\r\n        </p>\r\n    </div>\r\n    <!--/row-fluid-->\r\n</div>\r\n';});
 
 
 define('text!views/news.html',[],function () { return '<div class="container">\r\n    <div class="container blog-page blog-item">\r\n        <div data-bind="compose: \'viewmodels/components/news\'"></div>\r\n    </div>\r\n</div>\r\n\r\n';});
@@ -653,7 +9508,7 @@ define('text!views/qsl.html',[],function () { return '<div class="container">\r\
 define('text!views/register.html',[],function () { return '<div class="container" style="background-color: #f5fbff">\r\n    <h2>טופס בקשה להצטרף כחבר באגודת חובבי הרדיו בישראל (ע"ר)</h2>\r\n    <h5>\r\n        אנחנו שמחים על החלטתך להצטרף לאגודת חובבי הרדיו בישראל.<br />\r\n        לאחר תשלום דמי החבר, יש למלא את הפרטים בטופס ולצרף קובץ PDF או צילום בכל פורמט מקובל של שובר התשלום ותמונה עדכנית.<br />\r\n        לאחר אישור  על ידי וועדת החברים יושלם הליך הקבלה לחברות באגודה.\r\n    </h5>\r\n    <h5>דמי החבר עבור תושבי ישראל הינם: 250 ש"ח לאדם, 300 ש"ח עבור משפחות ותחנות מועדון, 150 ש"ח עבור נוער וחיילים</h5>\r\n    <h5>לנרשמים לקורס המקוון - עלות הקורס כוללת בתוכה דמי חברות והיא על פי מה שנמסר מרכז ההדרכה</h5>\r\n    <div class="tag-box tag-box-v2">\r\n        פרטי החשבון:<br />\r\n        אגודת חובבי הרדיו בישראל,<br />\r\n        בנק לאומי (10),<br />\r\n        מס\' חשבון 02986919,<br />\r\n        סניף תל גנים 988,<br />\r\n        גבעתיים, ישראל.\r\n    </div>\r\n    <hr />\r\n    <div id="registration-form" class="form-horizontal" data-parsley-validate>\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="lastname" placeholder="שם משפחה" data-bind="value: lastname" tabindex="2" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="lastname" class="col-md-2 control-label">שם משפחה</label>\r\n\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="firstname" placeholder="שם פרטי" data-bind="value: firstname" tabindex="1" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="firstname" class="col-md-2 control-label">שם פרטי</label>\r\n        </div>\r\n        \r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="elastname" placeholder="שם משפחה באנגלית" data-bind="value: elastname" tabindex="4" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="elastname" class="col-md-2 control-label">שם משפחה באנגלית</label>\r\n\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="efirstname" placeholder="שם פרטי באנגלית" data-bind="value: efirstname" tabindex="3" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="efirstname" class="col-md-2 control-label">שם פרטי באנגלית</label>\r\n        </div>\r\n\r\n        <div class="form-group">\r\n            <div class="col-md-6"></div>\r\n            <div class="col-md-4">\r\n                <input type="email" class="form-control" id="email" placeholder="אימייל" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="inputEmail1" class="col-md-2 control-label">אימייל</label>\r\n        </div>\r\n\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="callsign" placeholder="אות קריאה (אם קיים)" style="text-transform: uppercase" data-bind="value: callsign" tabindex="7">\r\n            </div>\r\n            <label for="callsign" class="col-md-2 control-label">אות קריאה (אם קיים)</label>\r\n\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="licensenum" placeholder="מספר רשיון (אם קיים)" data-bind="value: licensenum" data-parsley-type="digits" tabindex="6" data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הרישיון שלך - ספרות בלבד">\r\n            </div>\r\n            <label for="licensenum" class="col-md-2 control-label">מספר רשיון (אם קיים)</label>\r\n        </div>\r\n\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="id" placeholder="תעודת זהות" data-bind="value: id" tabindex="9" data-parsley-errors-messages-disabled data-parsley-type="digits" required data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר תעודת הזהות שלך - ספרות בלבד">\r\n            </div>\r\n            <label for="id" class="col-md-2 control-label">תעודת זהות</label>\r\n\r\n            <div class="col-md-4">\r\n                <div class="input-group date" id="birthdate" data-date-format="DD-MM-YYYY" tabindex="8">\r\n                    <span class="input-group-addon"><span class="icon icon-time"></span>\r\n                    </span>\r\n                    <input type="text" class="form-control" data-bind="value: birthdate" data-parsley-errors-messages-disabled required />\r\n                </div>\r\n            </div>\r\n            <label for="birthdate" class="col-md-2 control-label">תאריך לידה</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <label class="radio radio-inline">\r\n                    <input type="radio" name="flavorGroup" value="m" data-bind="checked: gender" />\r\n                    זכר\r\n                </label>\r\n                <label class="radio radio-inline">\r\n                    <input type="radio" name="flavorGroup" value="f" data-bind="checked: gender" />\r\n                    נקבה</label>\r\n            </div>\r\n            <label for="gender" class="col-md-2 control-label">מין</label>\r\n\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="country" placeholder="אזרחות" data-bind="value: country" tabindex="10" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="country" class="col-md-2 control-label">אזרחות</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="address" placeholder="כתובת" data-bind="value: address" tabindex="13" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="address" class="col-md-2 control-label">כתובת</label>\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="city" placeholder="עיר" data-bind="value: city" tabindex="12" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="city" class="col-md-2 control-label">עיר</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="zip" placeholder="מיקוד" data-bind="value: zip" tabindex="15" data-parsley-errors-messages-disabled required>\r\n            </div>\r\n            <label for="zip" class="col-md-2 control-label">מיקוד</label>\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="house" placeholder="דירה" data-bind="value: house" tabindex="14">\r\n            </div>\r\n            <label for="house" class="col-md-2 control-label">דירה</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="mobile" placeholder="נייד" data-bind="value: mobile" tabindex="17" data-parsley-errors-messages-disabled data-parsley-type="digits" data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הטלפון הנייד שלך - ספרות בלבד">\r\n            </div>\r\n            <label for="mobile" class="col-md-2 control-label">נייד</label>\r\n            <div class="col-md-4">\r\n                <input type="text" class="form-control" id="phone" placeholder="טלפון" data-bind="value: phone" tabindex="16" data-parsley-errors-messages-disabled data-parsley-type="digits" data-toggle="tooltip" data-trigger="focus" title="הכנס את מספר הטלפון שלך - ספרות בלבד">\r\n            </div>\r\n            <label for="phone" class="col-md-2 control-label">טלפון</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-10">\r\n                <textarea class="form-control" id="reason" placeholder="נא לרשום כאן סיבות להגשת הבקשה" data-bind="value: reason" tabindex="18" style="resize: none"></textarea>\r\n            </div>\r\n            <label for="reason" class="col-md-2 control-label">סיבת הבקשה</label>\r\n        </div>\r\n        <div class="form-group">\r\n            <div class="col-md-10">\r\n                <textarea class="form-control" id="cv" placeholder="נא לרשום כאן קורות חיים" data-bind="value: cv" tabindex="19" style="resize: none"></textarea>\r\n            </div>\r\n            <label for="cv" class="col-md-2 control-label">קורות חיים בקצרה</label>\r\n        </div>\r\n        <!--<div class="form-group">\r\n            <div class="col-md-1">\r\n                <button type="button" class="btn btn-success pull-left" data-bind="command: Send">שלח</button>\r\n            </div>\r\n            <div class="col-md-2">\r\n                <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">\r\n            </div>\r\n            <div class="col-md-2 text-left"><span data-bind="text: file"></span></div>\r\n            <div class="col-md-2">\r\n                <input type="button" id="payment-btn" class="btn btn-primary btn-large clearfix" value="צרף אישור תשלום">\r\n            </div>\r\n            <div class="col-md-2 text-left"><span data-bind="text: paymentfile"></span></div>\r\n            <div class="col-md-2">\r\n                <button id="SendBtn" type="button" class="btn btn-default" data-bind="click: Clear">נקה</button>\r\n            </div>\r\n        </div>-->\r\n        <div class="row">\r\n            <div class="col-md-1">\r\n                <button type="button" class="btn btn-success pull-left" data-bind="command: Send">שלח</button>\r\n            </div>\r\n            <div class="col-md-2">\r\n                <input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">\r\n            </div>\r\n            <div class="col-md-2 text-left"><span data-bind="text: file"></span></div>\r\n            <div class="col-md-4">\r\n                <input type="button" id="payment-btn" class="btn btn-primary btn-large clearfix" value="צרף אישור תשלום">או שלח צ\'ק לפי הנחיה טלפונית\r\n            </div>\r\n            <div class="col-md-2 text-left"><span data-bind="text: paymentfile"></span></div>\r\n            <div class="col-md-2">\r\n                <button id="SendBtn" type="button" class="btn btn-default" data-bind="click: Clear">נקה</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n\r\n\r\n    <div class="content-box">\r\n        <div class="clear">\r\n            <!--<input type="button" id="upload-btn" class="btn btn-primary btn-large clearfix" value="בחר תמונה">-->\r\n            <!--<span style="padding-left: 5px; vertical-align: middle;"><i>PNG, JPG, or GIF (500K max file size)</i></span>-->\r\n            <div id="errormsg" class="clearfix redtext">\r\n            </div>\r\n            <div id="pic-progress-wrap" class="progress-wrap" style="margin-top: 10px; margin-bottom: 10px;">\r\n            </div>\r\n            <div id="payment-progress-wrap" class="progress-wrap" style="margin-top: 10px; margin-bottom: 10px;">\r\n            </div>\r\n\r\n            <div id="picbox" class="clear" style="padding-top: 0px; padding-bottom: 10px;">\r\n            </div>\r\n\r\n        </div>\r\n    </div>\r\n\r\n</div>\r\n\r\n';});
 
 
-define('text!views/regulations.html',[],function () { return '<div class="container">\r\n\r\n    <div class="row-fluid privacy">\r\n\r\n        <h4>מורה נבוכים</h4>\r\n        <p>\r\n          לצורך הקמת אנטנה והפעלת תחנת חובב רדיו בישראל זקוקים לאישורים מ3 משרדי ממשלה: משרד התקשורת, המשרד להגנת הסביבה והרשות המקומית.\r\n        </p>\r\n        <hr />\r\n        <h4>משרד התקשורת</h4>\r\n        <p>\r\n            מטרת הרשיון היא בעיקר למנוע הפרעות לשאר המשתמשים בגלי האתר. משרד התקשורת מתנה רשיון חובב רדיו בלימוד (ובחינה) של תכונות גלי רדיו, ציוד רדיו ונהלי הפעלה. התקנות כוללות פרקים על מניעת הפרעות לציבור הרחב ונהלים כיצד להתנהג מול חובבים אחרים.\r\n            <a href="http://www.moc.gov.il/198-he/MOC.aspx" target="_blank">פקודת הטלגרף האלחוטי התשל"ב - 1972</a> קובעת את חובות הרישוי בישראל.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/syllabus_moc.pdf" target="_blank">סילבוס ותקנון  בחינות- (שים לב -נספחים 7+8 הושפעו /בוטלו על ידי מכתב המשרד מיום 14 באוגוסט 2013)</a></li>\r\n            <li><a href="././Content/docs/MOC_exam_rule1.pdf" target="_blank">נוהל בחינה מעשית - הפעלה (שרות חובבי רדיו, 14 באוגוסט 2013)</a></li>\r\n        </ul>\r\n        <hr />\r\n        <h4>המשרד להגנת הסביבה</h4>\r\n        <p>\r\n            בגלל חוק הקרינה בלתי מייננת, התשס"ו - 2006, המשרד להגנת הסביבה מחייב רישוי לכל משדר מעל הספק מסויים.\r\n            תקנות הקרינה הבלתי מייננת התשס"ט - 2009 מחייבות גם את חובבי הרדיו בישראל. כחובבים מעניקות לנו התקנות מספר הקלות, שהעיקרית בהן היא היעדר הצורך בביצוע בדיקות קרינה יקרות ע"י בודק מוסמך. חובב מבצע בעצמו חישובי הערכת סיכונים שמקורם בחשיפה שלו, משפחתו, שכניו והדיירים הסמוכים לתחנתו, כחלק מהגשת הבקשה.\r\n            להלן מספר הסברים ומדריכים בנושא זה באדיבותם של אהוד זגר 4Z4UR וצחי לינדנבאום 4Z1TL.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/rad_request_form.pdf" target="_blank">בקשה לקבלת היתר להקמה והפעלה של מיתקן חובב רדיו</a></li>\r\n            <li><a href="././Content/docs/rad_howto.pdf" target="_blank">הבקשה להיתר הקמה והפעלה – כיצד?</a></li>\r\n            <li><a href="././Content/docs/rad_calc_chart.xls" target="_blank">גליון עזר לחישוב טווח בטיחות והערכת חשיפה לתחנת אלחוט של חובבי רדיו</a></li>\r\n            <!--<li><a href="././Content/docs/rad_manual_april_2011.pdf" target="_blank">מדריך בטיחות קרינה בלתי מייננת לחובבי רדיו</a></li>-->\r\n        </ul>\r\n        <hr />\r\n        <h4>רשות התכנון המקומית</h4>\r\n        <p>\r\n            תפקידה של רשות התכנון המקומית בנושא חובבי הרדיו הוא לעניין מתן היתר בניה לאנטנה. כמו כן, יש הבדל בין אנטנות מסוגים שונים ודין אנטנה עשויה מתיל מתכת אינה כדין כיוונית מסוג יאגי או דומה. באוגוסט 2014 נכנסו לתוקפן תקנות תכנון ובניה המעניקות פטור מהיתר בניה לאנטנה מסוג אנכי בגובה של עד 9 מטר וכן אנטנה מסוג תיל, אך מחייבות בהודעה מתאימה לאחר הקמת האנטנה.<br />\r\n            <a href="././Content/docs/7400.pdf" target="_blank">מאמר הסבר, ינואר 2018</a><br />\r\n        </p>\r\n        <hr />\r\n        \r\n        <h4>עבודה על 60 מטר</h4>\r\n        <p>\r\n            במאי 2013 (ושוב ב 2014) החליט משרד התקשורת לתת אפשרות זמנית למשך שנה לבעלי דרגה א\' ו ב\' שיגישו בקשות פרטניות לשידור נסיוני במספר מצומצם של ערוצים.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/MOC_form_60m.pdf" target="_blank">טופס בקשה לשידור - 60 מטר</a></li>\r\n        </ul>\r\n\r\n    </div>\r\n    <!--/row-fluid-->\r\n\r\n</div>\r\n\r\n';});
+define('text!views/regulations.html',[],function () { return '<div class="container">\r\n\r\n    <div class="row-fluid privacy">\r\n\r\n        <h4>מורה נבוכים</h4>\r\n        <p>\r\n          לצורך הקמת אנטנה והפעלת תחנת חובב רדיו בישראל זקוקים לאישורים מ3 משרדי ממשלה: משרד התקשורת, המשרד להגנת הסביבה והרשות המקומית.\r\n        </p>\r\n        <hr />\r\n        <h4>משרד התקשורת</h4>\r\n        <p>\r\n            מטרת הרשיון היא בעיקר למנוע הפרעות לשאר המשתמשים בגלי האתר. משרד התקשורת מתנה רשיון חובב רדיו בלימוד (ובחינה) של תכונות גלי רדיו, ציוד רדיו ונהלי הפעלה. התקנות כוללות פרקים על מניעת הפרעות לציבור הרחב ונהלים כיצד להתנהג מול חובבים אחרים.\r\n            <a href="http://www.moc.gov.il/198-he/MOC.aspx" target="_blank">פקודת הטלגרף האלחוטי התשל"ב - 1972</a> קובעת את חובות הרישוי בישראל.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/syllabus_moc.pdf" target="_blank">סילבוס ותקנון  בחינות- (שים לב -נספחים 7+8 הושפעו /בוטלו על ידי מכתב המשרד מיום 14 באוגוסט 2013)</a></li>\r\n            <li><a href="././Content/docs/MOC_exam_rule1.pdf" target="_blank">נוהל בחינה מעשית - הפעלה (שרות חובבי רדיו, 14 באוגוסט 2013)</a></li>\r\n        </ul>\r\n        <hr />\r\n        <h4>המשרד להגנת הסביבה</h4>\r\n        <p>\r\n            בגלל חוק הקרינה בלתי מייננת, התשס"ו - 2006, המשרד להגנת הסביבה מחייב רישוי לכל משדר מעל הספק מסויים.\r\n            תקנות הקרינה הבלתי מייננת התשס"ט - 2009 מחייבות גם את חובבי הרדיו בישראל. כחובבים מעניקות לנו התקנות מספר הקלות, שהעיקרית בהן היא היעדר הצורך בביצוע בדיקות קרינה יקרות ע"י בודק מוסמך. חובב מבצע בעצמו חישובי הערכת סיכונים שמקורם בחשיפה שלו, משפחתו, שכניו והדיירים הסמוכים לתחנתו, כחלק מהגשת הבקשה.\r\n            להלן מספר הסברים ומדריכים בנושא זה באדיבותם של אהוד זגר 4Z4UR וצחי לינדנבאום 4Z1TL.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/non_ionizing_radiation_safety_guide.pdf" target="_blank">מדריך בטיחות קרינה בלתי מייננת לחובבי רדיו</a></li>\r\n            <li><a href="././Content/docs/rad_request_form.pdf" target="_blank">בקשה לקבלת היתר להקמה והפעלה של מיתקן חובב רדיו</a></li>\r\n            <li><a href="././Content/docs/rad_howto.pdf" target="_blank">הבקשה להיתר הקמה והפעלה – כיצד?</a></li>\r\n            <li><a href="././Content/docs/rad_calc_chart.xls" target="_blank">גליון עזר לחישוב טווח בטיחות והערכת חשיפה לתחנת אלחוט של חובבי רדיו</a></li>\r\n            <!--<li><a href="././Content/docs/rad_manual_april_2011.pdf" target="_blank">מדריך בטיחות קרינה בלתי מייננת לחובבי רדיו</a></li>-->\r\n        </ul>\r\n        <hr />\r\n        <h4>רשות התכנון המקומית</h4>\r\n        <p>\r\n            תפקידה של רשות התכנון המקומית בנושא חובבי הרדיו הוא לעניין מתן היתר בניה לאנטנה. כמו כן, יש הבדל בין אנטנות מסוגים שונים ודין אנטנה עשויה מתיל מתכת אינה כדין כיוונית מסוג יאגי או דומה. באוגוסט 2014 נכנסו לתוקפן תקנות תכנון ובניה המעניקות פטור מהיתר בניה לאנטנה מסוג אנכי בגובה של עד 9 מטר וכן אנטנה מסוג תיל, אך מחייבות בהודעה מתאימה לאחר הקמת האנטנה.<br />\r\n            <a href="././Content/docs/7400.pdf" target="_blank">מאמר הסבר, ינואר 2018</a><br />\r\n        </p>\r\n        <hr />\r\n        \r\n        <h4>עבודה על 60 מטר</h4>\r\n        <p>\r\n            במאי 2013 (ושוב ב 2014) החליט משרד התקשורת לתת אפשרות זמנית למשך שנה לבעלי דרגה א\' ו ב\' שיגישו בקשות פרטניות לשידור נסיוני במספר מצומצם של ערוצים.\r\n        </p>\r\n        <ul>\r\n            <li><a href="././Content/docs/MOC_form_60m.pdf" target="_blank">טופס בקשה לשידור - 60 מטר</a></li>\r\n        </ul>\r\n\r\n    </div>\r\n    <!--/row-fluid-->\r\n\r\n</div>\r\n\r\n';});
 
 
 define('text!views/repeaters.html',[],function () { return '<style type="text/css">\r\n    .map\r\n    {\r\n        width: 100%;\r\n        height: 800px;\r\n        border-top: solid 1px #eee;\r\n        border-bottom: solid 1px #eee;\r\n    }\r\n\r\n        /* important! bootstrap sets max-width on img to 100% which conflicts with google map canvas*/\r\n        .map img\r\n        {\r\n            max-width: none;\r\n        }\r\n\r\n    .map-box\r\n    {\r\n        height: 750px;\r\n    }\r\n\r\n    .map-box-space\r\n    {\r\n        margin-top: 15px;\r\n    }\r\n\r\n    .map-box-space1\r\n    {\r\n        margin-top: 7px;\r\n    }\r\n</style>\r\n<div class="container">\r\n    <div class="row-fluid privacy">\r\n        <h4>רשת ממסרים ארצית</h4>\r\n        <p>\r\n            בארץ מופעלים ומתוחזקים מספר ממסרים בפריסה ארצית הן ב VHF ו הן ב UHF לנוחיות החובבים בשגרה ולצרכי תקשורת בשעת חירום.\r\n            אחזקת הממסרים מבוצעת באמצעות צוותים של מתנדבים העמלים רבות על תפקודם התקין.\r\n            בין חלק מהממסרים יש קישוריות המשתנה לפי הצורך.\r\n        </p>\r\n        <hr />\r\n    </div>\r\n\r\n    <div class="row-fluid margin-bottom-40">\r\n        <!--<div class="col-md-3">\r\n            <img class="img-responsive" src="assets/img/pages/repeaters/repeaters.jpg" alt="">\r\n        </div>-->\r\n        <div class="col-md-12">\r\n            <span>רב ממסר – חיבור של מספר ממסרים לרשת אחת לצורך כיסוי גאוגרפי רחב</span>\r\n            <div class="panel panel-red margin-bottom-40">\r\n                <div class="panel-heading">\r\n                    <h4 class="panel-title">ממסרי VHF אנלוגיים</h4>\r\n                </div>\r\n                <table class="table table-striped">\r\n                    <thead>\r\n                        <tr>\r\n                            <th style="text-align: right">ממסר</th>\r\n                            <th style="text-align: right">תדר</th>\r\n                            <th style="text-align: right">שיפט</th>\r\n                            <th style="text-align: right">PL(tx)</th>\r\n                            <th style="text-align: right">PL(rx)</th>\r\n                            <th style="text-align: right">מיקום</th>\r\n                            <th style="text-align: right">הערות</th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td>R-0</td>\r\n                            <td>145.600</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>מצפה רמון</td>\r\n                            <td>ממסר דיגיטלי על פי דרישה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-1</td>\r\n                            <td>145.625</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>ירושלים</td>\r\n                            <td>מחובר לרב ממסר</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-3</td>\r\n                            <td>145.675</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>מגידו</td>\r\n                            <td>מחובר לרב ממסר</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-7</td>\r\n                            <td>145.775</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>תל אביב</td>\r\n                            <td>מחובר לרב ממסר</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-12A</td>\r\n                            <td>144.700</td>\r\n                            <td>600Khz +</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>חיפה</td>\r\n                            <td>מחובר לרב ממסר</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-12C</td>\r\n                            <td>145.3125</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>באר שבע</td>\r\n                            <td>לא פעיל זמנית</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-13</td>\r\n                            <td>145.325</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>יתיר</td>\r\n                            <td></td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-14</td>\r\n                            <td>145.350</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>חרמון (עתידי)</td>\r\n                            <td>ממסר דיגיטלי על פי דרישה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-15</td>\r\n                            <td>144.775</td>\r\n                            <td>600Khz +</td>\r\n                            <td>91.5</td>\r\n                            <td>114.8</td>\r\n                            <td>גבעתים</td>\r\n                            <td></td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-16</td>\r\n                            <td>145.400</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td></td>\r\n                            <td>נתניה</td>\r\n                            <td></td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-18</td>\r\n                            <td>145.450</td>\r\n                            <td>600Khz -</td>\r\n                            <td>91.5</td>\r\n                            <td></td>\r\n                            <td>קרית אונו</td>\r\n                            <td></td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n            \r\n\r\n            <div class="panel panel-blue margin-bottom-40">\r\n                <div class="panel-heading">\r\n                    <h4 class="panel-title">ממסרי UHF אנלוגיים</h4>\r\n                </div>\r\n                <table class="table table-striped">\r\n                    <thead>\r\n                        <tr>\r\n                            <th style="text-align: right">ממסר</th>\r\n                            <th style="text-align: right">תדר</th>\r\n                            <th style="text-align: right">שיפט</th>\r\n                            <th style="text-align: right">PL(tx)</th>\r\n                            <th style="text-align: right">PL(rx)</th>\r\n                            <th style="text-align: right">מיקום</th>\r\n                            <th style="text-align: right">הערות</th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td>R-70</td>\r\n                            <td>438.650</td>\r\n                            <td>7.6Mhz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>תל אביב</td>\r\n                            <td>ברירת מחדל ממסר דיגיטלי</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-71</td>\r\n                            <td>438.675</td>\r\n                            <td>7.6Mhz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>ראש העין</td>\r\n                            <td>ברירת מחדל ממסר דיגיטלי</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td>R-73</td>\r\n                            <td>438.725</td>\r\n                            <td>7.6Mhz -</td>\r\n                            <td>91.5</td>\r\n                            <td>91.5</td>\r\n                            <td>חיפה</td>\r\n                            <td>ברירת מחדל ממסר דיגיטלי</td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n\r\n            <div class="panel panel-black margin-bottom-40">\r\n                <div class="panel-heading">\r\n                    <h4 class="panel-title">ממסרי VHF דיגיטליים</h4>\r\n                </div>\r\n                <table class="table table-striped">\r\n                    <thead>\r\n                        <tr>\r\n                            <th style="text-align: right">ממסר</th>\r\n                            <th style="text-align: right">תדר קליטה</th>\r\n                            <th style="text-align: right">תדר שידור</th>\r\n                            <th style="text-align: right">Color Code</th>\r\n                            <th style="text-align: right">מיקום</th>\r\n                            <th style="text-align: right">קבוצה ב TS1</th>\r\n                            <th style="text-align: right">קישוריות</th>\r\n                            <th style="text-align: right">הערות</th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-0</td>\r\n                            <td>145.600</td>\r\n                            <td>145.000</td>\r\n                            <td>1</td>\r\n                            <td>מצפה רמון</td>\r\n                            <td>דינאמי</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>ברירת מחדל – ממסר אנאלוגי</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-12B</td>\r\n                            <td>145.300</td>\r\n                            <td>144.700</td>\r\n                            <td>1</td>\r\n                            <td>אילת (עתידי)</td>\r\n                            <td>425</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>ממסר דיגיטלי בלבד TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-14</td>\r\n                            <td>145.350</td>\r\n                            <td>144.750</td>\r\n                            <td>1</td>\r\n                            <td>חרמון (עתידי)</td>\r\n                            <td>דינאמי</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>ברירת מחדל – ממסר אנאלוגי</td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n\r\n            <div class="panel panel-green margin-bottom-40">\r\n                <div class="panel-heading">\r\n                    <h4 class="panel-title">ממסרי UHF דיגיטליים</h4>\r\n                </div>\r\n                <table class="table table-striped">\r\n                    <thead>\r\n                        <tr>\r\n                            <th style="text-align: right">ממסר</th>\r\n                            <th style="text-align: right">תדר קליטה</th>\r\n                            <th style="text-align: right">תדר שידור</th>\r\n                            <th style="text-align: right">Color Code</th>\r\n                            <th style="text-align: right">מיקום</th>\r\n                            <th style="text-align: right">קבוצה ב TS1</th>\r\n                            <th style="text-align: right">קישוריות</th>\r\n                            <th style="text-align: right">הערות</th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-68 (425101) </td>\r\n                            <td>438.600</td>\r\n                            <td>431.000</td>\r\n                            <td>1</td>\r\n                            <td>ירושלים</td>\r\n                            <td>425</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-68 (425902) </td>\r\n                            <td>438.600</td>\r\n                            <td>431.000</td>\r\n                            <td>1</td>\r\n                            <td>אילת</td>\r\n                            <td>425</td>\r\n                            <td>MMDVM - מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-70 (425201)</td>\r\n                            <td>438.650</td>\r\n                            <td>431.050</td>\r\n                            <td>1</td>\r\n                            <td>תל אביב</td>\r\n                            <td>425</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-71 (425202)</td>\r\n                            <td>438.675</td>\r\n                            <td>431.075</td>\r\n                            <td>1</td>\r\n                            <td>ראש העין</td>\r\n                            <td>425</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-73 (425301)</td>\r\n                            <td>438.725</td>\r\n                            <td>431.125</td>\r\n                            <td>1</td>\r\n                            <td>חיפה</td>\r\n                            <td>425</td>\r\n                            <td>מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-75 (425401)</td>\r\n                            <td>438.775</td>\r\n                            <td>431.175</td>\r\n                            <td>1</td>\r\n                            <td>באר שבע</td>\r\n                            <td>425</td>\r\n                            <td>MMDVM - מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                        <!--<tr>\r\n                    <td style="direction:ltr; text-align:right">R-76 (425901)</td>\r\n                    <td>438.800</td>\r\n                    <td>431.200</td>\r\n                    <td>1</td>\r\n                    <td>מודיעין</td>\r\n                    <td>425</td>\r\n                    <td>MMDVM - מחובר לרשת BrandMeister</td>\r\n                    <td>TS2 פנוי לכל קבוצה</td>\r\n                </tr>-->\r\n                        <tr>\r\n                            <td style="direction:ltr; text-align:right">R-78 (425701)</td>\r\n                            <td>438.850</td>\r\n                            <td>431.250</td>\r\n                            <td>1</td>\r\n                            <td>מעלה גלבוע</td>\r\n                            <td>425</td>\r\n                            <td>MMDVM - מחובר לרשת BrandMeister</td>\r\n                            <td>TS2 פנוי לכל קבוצה</td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n\r\n            <!--<div class="panel panel-black margin-bottom-40">\r\n        <div class="panel-heading">\r\n            <h4 class="panel-title">לינקים</h4>\r\n        </div>\r\n        <table class="table table-striped">\r\n            <thead>\r\n                <tr>\r\n                    <th style="text-align: right">תדר</th>\r\n                    <th style="text-align: right">מיקום</th>\r\n                    <th style="text-align: right">קישור</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr>\r\n                    <td>439.950</td>\r\n                    <td>כוכב הירדן</td>\r\n                    <td>ממסר חיפה</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>-->\r\n        </div>\r\n    </div>\r\n    <!--/row-fluid-->\r\n    <div id="map-canvas" class="map" style="display:none">\r\n    </div>\r\n\r\n</div>\r\n\r\n';});
@@ -676,12 +9531,1234 @@ define('text!views/sukotresults.html',[],function () { return '<div class="conta
 
 define('text!views/wwff.html',[],function () { return '<div class="container">\r\n    <div class="row-fluid privacy">\r\n        <h4>WWFF בישראל - 4XFF</h4>\r\n        <p>\r\n           מטרת התוכנית היא להסב את תשומת הלב לחשיבות השמירה על הטבע - החי, הצומח והדומם.\r\n            ברוח זו מקימים חובבי רדיו את התחנות שלהם ומפעילים מתוך פארקים, גנים לאומיים, שמורות טבע ואיזורים מוגנים.\r\n            התוכנית היא בין לאומית, איננה מסחרית, ומנוהלת ע"י רכזים של מספר רב של תוכניות חי וצומח לאומיות.\r\n            לטובת חובבי הרדיו והטבע הישראלים, מובאת בזו רשימה של אתרי הטבע בישראל כפי שמוכרים ע"י התוכנית.\r\n        </p>\r\n        <p></p>\r\n        <hr />\r\n    </div>\r\n\r\n    <div class="row-fluid">\r\n        <div class="col-md-12">\r\n            <div class="panel panel-grey margin-bottom-40">\r\n                <div class="panel-heading">\r\n                    <span class="panel-title text-right">רשימת אתרי 4XFF</span>\r\n                    <!--<span class="panel-title pull-left">Echolink</span>-->\r\n                </div>\r\n                <table class="table table-striped">\r\n                    <thead>\r\n                        <tr>\r\n                            <th style="text-align: right">מזהה</th>\r\n                            <th style="text-align: right">שם</th>\r\n                            <th style="text-align: right">קישור</th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td>4XFF-001</td>\r\n                            <td>חוף אכזיב</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/achziv/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-002</td>\r\n                            <td>נחל אלכסנדר</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/alexanderStreamHofBetYanai/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-003</td>\r\n                            <td>אשקלון</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/ashkelon/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-004</td>\r\n                            <td>עבדת</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/avdat/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-005</td>\r\n                            <td>יער ברעם</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/baram/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-006</td>\r\n                            <td>עשוש</td>\r\n                            <td><a href="http://www.inature.info/wiki/%D7%A9%D7%9E%D7%95%D7%A8%D7%AA_%D7%A2%D7%A9%D7%95%D7%A9" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-007</td>\r\n                            <td>בית גוברין - מרשה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/betGuvrinMaresha/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-008</td>\r\n                            <td>בית שאן</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/betShean/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-009</td>\r\n                            <td>עיר דוד</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/cityofDavidJerusalem%20Walls/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-010</td>\r\n                            <td>קיסריה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/caesarea/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-011</td>\r\n                            <td>חוף דור\\הבונים</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/dorHabonim/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-012</td>\r\n                            <td>גילבוע</td>\r\n                            <td><a href="http://he.wikipedia.org/wiki/%D7%94%D7%A8_%D7%94%D7%92%D7%9C%D7%91%D7%95%D7%A2" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-013</td>\r\n                            <td>הנחלים הגדולים</td>\r\n                            <td><a href="http://www.inature.info/wiki/%D7%A9%D7%9E%D7%95%D7%A8%D7%AA_%D7%94%D7%A0%D7%97%D7%9C%D7%99%D7%9D_%D7%94%D7%92%D7%93%D7%95%D7%9C%D7%99%D7%9D_%D7%95%D7%A7%D7%98%D7%95%D7%A8%D7%94" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-014</td>\r\n                            <td>הר הנגב</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/negev/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-015</td>\r\n                            <td>החולה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/hula/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-016</td>\r\n                            <td>עין גדי</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/enGedi/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-017</td>\r\n                            <td>מדבר יהודה</td>\r\n                            <td>&nbsp;</td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-018</td>\r\n                            <td>הבשור, אשכול</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/eshkol/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-019</td>\r\n                            <td>הרי יהודה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/yhuda/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-020</td>\r\n                            <td>מכתשים, עין יהב</td>\r\n                            <td><a href="http://www.inature.info/wiki/%D7%A9%D7%9E%D7%95%D7%A8%D7%AA_%D7%9E%D7%9B%D7%AA%D7%A9%D7%99%D7%9D_%D7%A2%D7%99%D7%9F_%D7%99%D7%94%D7%91" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-021</td>\r\n                            <td>הרי אילת</td>\r\n                            <td><a href="http://www.inature.info/wiki/%D7%A9%D7%9E%D7%95%D7%A8%D7%AA_%D7%94%D7%A8%D7%99_%D7%90%D7%99%D7%9C%D7%AA" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-022</td>\r\n                            <td>הר מירון, נחל עמוד</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/meron/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-023</td>\r\n                            <td>הר חרמון, בניאס, שניר, נמרוד</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/nahalSnir/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-024</td>\r\n                            <td>כורסי</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/kursi/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-025</td>\r\n                            <td>הר תבור, נחל תבור</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/nahalTavor/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-026</td>\r\n                            <td>ממשית</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/mamshit/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-027</td>\r\n                            <td>מצדה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/masada/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-028</td>\r\n                            <td>הר הכרמל</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/mountCarmel/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-029</td>\r\n                            <td>פארק הירדן, בטחה, בית צידה, זאכי, מג\'רסה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/majrase/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-030</td>\r\n                            <td>קומראן</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/qumran/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-031</td>\r\n                            <td>פארק שרון</td>\r\n                            <td><a href="http://www.parksharon.co.il/" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-032</td>\r\n                            <td>שבטה</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/shivta/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-033</td>\r\n                            <td>תמנע</td>\r\n                            <td><a href="http://www.parktimna.co.il/" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-034</td>\r\n                            <td>יער יהודיה, גמלא, זוויתן, משושים</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/yehudiyaforest/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-035</td>\r\n                            <td>תל באר שבע</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/telBeerSheva/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-036</td>\r\n                            <td>תל חצור</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/telHazor/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-037</td>\r\n                            <td>מגידו</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/megiddo/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-038</td>\r\n                            <td>ירקון</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/yarkon/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-039</td>\r\n                            <td>מצוקי צין</td>\r\n                            <td><a href="http://www.inature.info/wiki/%D7%A9%D7%9E%D7%95%D7%A8%D7%AA_%D7%94%D7%A8_%D7%A6%D7%99%D7%9F" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                        <tr>\r\n                            <td>4XFF-040</td>\r\n                            <td>ציפורי</td>\r\n                            <td><a href="http://www.parks.org.il/ParksAndReserves/zippori/Pages/default.aspx" target="_blank"><i class="icon-info"></i></a></td>\r\n                            <tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <!--/row-fluid-->\r\n\r\n</div>\r\n\r\n';});
 
-define('plugins/dialog',["durandal/system","durandal/app","durandal/composition","durandal/activator","durandal/viewEngine","jquery","knockout"],function(e,t,n,a,r,o,l){function g(t){return e.defer(function(n){e.isString(t)?e.acquire(t).then(function(t){n.resolve(e.resolveObject(t))}).fail(function(n){e.error("Failed to load dialog module ("+t+"). Details: "+n.message)}):n.resolve(t)}).promise()}var i,s={},d=0,p=function(e,t,n){this.message=e,this.title=t||p.defaultTitle,this.options=n||p.defaultOptions};return p.prototype.selectOption=function(e){i.close(this,e)},p.prototype.getView=function(){return r.processMarkup(p.defaultViewMarkup)},p.setViewUrl=function(e){delete p.prototype.getView,p.prototype.viewUrl=e},p.defaultTitle=t.title||"Application",p.defaultOptions=["Ok"],p.defaultViewMarkup=['<div data-view="plugins/messageBox" class="messageBox">','<div class="modal-header">','<h3 data-bind="text: title"></h3>',"</div>",'<div class="modal-body">','<p class="message" data-bind="text: message"></p>',"</div>",'<div class="modal-footer" data-bind="foreach: options">','<button class="btn" data-bind="click: function () { $parent.selectOption($data); }, text: $data, css: { \'btn-primary\': $index() == 0, autofocus: $index() == 0 }"></button>',"</div>","</div>"].join("\n"),i={MessageBox:p,currentZIndex:1050,getNextZIndex:function(){return++this.currentZIndex},isOpen:function(){return d>0},getContext:function(e){return s[e||"default"]},addContext:function(e,t){t.name=e,s[e]=t;var n="show"+e.substr(0,1).toUpperCase()+e.substr(1);this[n]=function(t,n){return this.show(t,n,e)}},createCompositionSettings:function(e,t){var n={model:e,activate:!1};return t.attached&&(n.attached=t.attached),t.compositionComplete&&(n.compositionComplete=t.compositionComplete),n},getDialog:function(e){return e?e.__dialog__:void 0},close:function(e){var t=this.getDialog(e);if(t){var n=Array.prototype.slice.call(arguments,1);t.close.apply(t,n)}},show:function(t,r,o){var l=this,i=s[o||"default"];return e.defer(function(e){g(t).then(function(t){var o=a.create();o.activateItem(t,r).then(function(a){if(a){var r=t.__dialog__={owner:t,context:i,activator:o,close:function(){var n=arguments;o.deactivateItem(t,!0).then(function(a){a&&(d--,i.removeHost(r),delete t.__dialog__,0==n.length?e.resolve():1==n.length?e.resolve(n[0]):e.resolve.apply(e,n))})}};r.settings=l.createCompositionSettings(t,i),i.addHost(r),d++,n.compose(r.host,r.settings)}else e.resolve(!1)})})}).promise()},showMessage:function(t,n,a){return e.isString(this.MessageBox)?i.show(this.MessageBox,[t,n||p.defaultTitle,a||p.defaultOptions]):i.show(new this.MessageBox(t,n,a))},install:function(e){t.showDialog=function(e,t,n){return i.show(e,t,n)},t.showMessage=function(e,t,n){return i.showMessage(e,t,n)},e.messageBox&&(i.MessageBox=e.messageBox),e.messageBoxView&&(i.MessageBox.prototype.getView=function(){return e.messageBoxView})}},i.addContext("default",{blockoutOpacity:.2,removeDelay:200,addHost:function(e){var t=o("body"),n=o('<div class="modalBlockout"></div>').css({"z-index":i.getNextZIndex(),opacity:this.blockoutOpacity}).appendTo(t),a=o('<div class="modalHost"></div>').css({"z-index":i.getNextZIndex()}).appendTo(t);if(e.host=a.get(0),e.blockout=n.get(0),!i.isOpen()){e.oldBodyMarginRight=t.css("margin-right"),e.oldInlineMarginRight=t.get(0).style.marginRight;var r=o("html"),l=t.outerWidth(!0),g=r.scrollTop();o("html").css("overflow-y","hidden");var s=o("body").outerWidth(!0);t.css("margin-right",s-l+parseInt(e.oldBodyMarginRight)+"px"),r.scrollTop(g)}},removeHost:function(e){if(o(e.host).css("opacity",0),o(e.blockout).css("opacity",0),setTimeout(function(){l.removeNode(e.host),l.removeNode(e.blockout)},this.removeDelay),!i.isOpen()){var t=o("html"),n=t.scrollTop();t.css("overflow-y","").scrollTop(n),e.oldInlineMarginRight?o("body").css("margin-right",e.oldBodyMarginRight):o("body").css("margin-right","")}},compositionComplete:function(e,t,n){var a=o(e),r=a.width(),l=a.height(),g=i.getDialog(n.model);a.css({"margin-top":(-l/2).toString()+"px","margin-left":(-r/2).toString()+"px"}),o(g.host).css("opacity",1),o(e).hasClass("autoclose")&&o(g.blockout).click(function(){g.close()}),o(".autofocus",e).each(function(){o(this).focus()})}}),i});
-define('plugins/http',["jquery","knockout"],function(e,t){return{callbackParam:"callback",get:function(t,n){return e.ajax(t,{data:n})},jsonp:function(t,n,a){return-1==t.indexOf("=?")&&(a=a||this.callbackParam,t+=-1==t.indexOf("?")?"?":"&",t+=a+"=?"),e.ajax({url:t,dataType:"jsonp",data:n})},post:function(n,a){return e.ajax({url:n,data:t.toJSON(a),type:"POST",contentType:"application/json",dataType:"json"})}}});
-define('plugins/observable',["durandal/system","durandal/binder","knockout"],function(e,t,n){function a(e){var t=e[0];return"_"===t||"$"===t}function r(t){if(!t||e.isElement(t)||t.ko===n||t.jquery)return!1;var a=p.call(t);return-1==c.indexOf(a)&&!(t===!0||t===!1)}function o(e,t){var n=e.__observable__,a=!0;if(!n||!n.__full__){n=n||(e.__observable__={}),n.__full__=!0,m.forEach(function(n){e[n]=function(){a=!1;var e=w[n].apply(t,arguments);return a=!0,e}}),L.forEach(function(n){e[n]=function(){a&&t.valueWillMutate();var r=u[n].apply(e,arguments);return a&&t.valueHasMutated(),r}}),h.forEach(function(n){e[n]=function(){for(var r=0,o=arguments.length;o>r;r++)l(arguments[r]);a&&t.valueWillMutate();var g=u[n].apply(e,arguments);return a&&t.valueHasMutated(),g}}),e.splice=function(){for(var n=2,r=arguments.length;r>n;n++)l(arguments[n]);a&&t.valueWillMutate();var o=u.splice.apply(e,arguments);return a&&t.valueHasMutated(),o};for(var r=0,o=e.length;o>r;r++)l(e[r])}}function l(t){var l,g;if(r(t)&&(l=t.__observable__,!l||!l.__full__)){if(l=l||(t.__observable__={}),l.__full__=!0,e.isArray(t)){var s=n.observableArray(t);o(t,s)}else for(var d in t)a(d)||l[d]||(g=t[d],e.isFunction(g)||i(t,d,g));v&&e.log("Converted",t)}}function g(e,t,n){var a;e(t),a=e.peek(),n?a.destroyAll||(a||(a=[],e(a)),o(a,e)):l(a)}function i(t,a,r){var i,s,d=t.__observable__||(t.__observable__={});if(void 0===r&&(r=t[a]),e.isArray(r))i=n.observableArray(r),o(r,i),s=!0;else if("function"==typeof r){if(!n.isObservable(r))return null;i=r}else e.isPromise(r)?(i=n.observable(),r.then(function(t){if(e.isArray(t)){var a=n.observableArray(t);o(t,a),t=a}i(t)})):(i=n.observable(r),l(r));return Object.defineProperty(t,a,{configurable:!0,enumerable:!0,get:i,set:n.isWriteableObservable(i)?function(t){t&&e.isPromise(t)?t.then(function(t){g(i,t,e.isArray(t))}):g(i,t,s)}:void 0}),d[a]=i,i}function s(t,n,a){var r,o=this,l={owner:t,deferEvaluation:!0};return"function"==typeof a?l.read=a:("value"in a&&e.error('For ko.defineProperty, you must not specify a "value" for the property. You must provide a "get" function.'),"function"!=typeof a.get&&e.error('For ko.defineProperty, the third parameter must be either an evaluator function, or an options object containing a function called "get".'),l.read=a.get,l.write=a.set),r=o.computed(l),t[n]=r,i(t,n,r)}var d,p=Object.prototype.toString,c=["[object Function]","[object String]","[object Boolean]","[object Number]","[object Date]","[object RegExp]"],m=["remove","removeAll","destroy","destroyAll","replace"],L=["pop","reverse","sort","shift","splice"],h=["push","unshift"],u=Array.prototype,w=n.observableArray.fn,v=!1;return d=function(e,t){var a,r,o;return e?(a=e.__observable__,a&&(r=a[t])?r:(o=e[t],n.isObservable(o)?o:i(e,t,o))):null},d.defineProperty=s,d.convertProperty=i,d.convertObject=l,d.install=function(e){var n=t.binding;t.binding=function(e,t,a){a.applyBindings&&!a.skipConversion&&l(e),n(e,t)},v=e.logConversion},d});
-define('plugins/serializer',["durandal/system"],function(e){return{typeAttribute:"type",space:void 0,replacer:function(e,t){if(e){var n=e[0];if("_"===n||"$"===n)return void 0}return t},serialize:function(t,n){return n=void 0===n?{}:n,(e.isString(n)||e.isNumber(n))&&(n={space:n}),JSON.stringify(t,n.replacer||this.replacer,n.space||this.space)},getTypeId:function(e){return e?e[this.typeAttribute]:void 0},typeMap:{},registerType:function(){var t=arguments[0];if(1==arguments.length){var n=t[this.typeAttribute]||e.getModuleId(t);this.typeMap[n]=t}else this.typeMap[t]=arguments[1]},reviver:function(e,t,n,a){var r=n(t);if(r){var o=a(r);if(o)return o.fromJSON?o.fromJSON(t):new o(t)}return t},deserialize:function(e,t){var n=this;t=t||{};var a=t.getTypeId||function(e){return n.getTypeId(e)},r=t.getConstructor||function(e){return n.typeMap[e]},o=t.reviver||function(e,t){return n.reviver(e,t,a,r)};return JSON.parse(e,o)}}});
-define('plugins/widget',["durandal/system","durandal/composition","jquery","knockout"],function(e,t,n,a){function r(e,n){var r=a.utils.domData.get(e,i);r||(r={parts:t.cloneNodes(a.virtualElements.childNodes(e))},a.virtualElements.emptyNode(e),a.utils.domData.set(e,i,r)),n.parts=r.parts}var o={},l={},g=["model","view","kind"],i="durandal-widget-data",s={getSettings:function(t){var n=a.utils.unwrapObservable(t())||{};if(e.isString(n))return{kind:n};for(var r in n)n[r]=-1!=a.utils.arrayIndexOf(g,r)?a.utils.unwrapObservable(n[r]):n[r];return n},registerKind:function(e){a.bindingHandlers[e]={init:function(){return{controlsDescendantBindings:!0}},update:function(t,n,a,o,l){var g=s.getSettings(n);g.kind=e,r(t,g),s.create(t,g,l,!0)}},a.virtualElements.allowedBindings[e]=!0},mapKind:function(e,t,n){t&&(l[e]=t),n&&(o[e]=n)},mapKindToModuleId:function(e){return o[e]||s.convertKindToModulePath(e)},convertKindToModulePath:function(e){return"widgets/"+e+"/viewmodel"},mapKindToViewId:function(e){return l[e]||s.convertKindToViewPath(e)},convertKindToViewPath:function(e){return"widgets/"+e+"/view"},createCompositionSettings:function(e,t){return t.model||(t.model=this.mapKindToModuleId(t.kind)),t.view||(t.view=this.mapKindToViewId(t.kind)),t.preserveContext=!0,t.activate=!0,t.activationData=t,t.mode="templated",t},create:function(e,n,a,r){r||(n=s.getSettings(function(){return n},e));var o=s.createCompositionSettings(e,n);t.compose(e,o,a)},install:function(e){if(e.bindingName=e.bindingName||"widget",e.kinds)for(var t=e.kinds,n=0;n<t.length;n++)s.registerKind(t[n]);a.bindingHandlers[e.bindingName]={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t,n,a,o){var l=s.getSettings(t);r(e,l),s.create(e,l,o,!0)}},a.virtualElements.allowedBindings[e.bindingName]=!0}};return s});
-define('transitions/entrance',["durandal/system","durandal/composition","jquery"],function(e,t,n){var a=100,r={marginRight:0,marginLeft:0,opacity:1},o={marginLeft:"",marginRight:"",opacity:"",display:""},l=function(t){return e.defer(function(e){function l(){e.resolve()}function g(){t.keepScrollPosition||n(document).scrollTop(0)}function i(){g(),t.triggerAttach();var e={marginLeft:d?"0":"20px",marginRight:d?"0":"-20px",opacity:0,display:"block"},a=n(t.child);a.css(e),a.animate(r,s,"swing",function(){a.css(o),l()})}if(t.child){var s=t.duration||500,d=!!t.fadeOnly;t.activeView?n(t.activeView).fadeOut(a,i):i()}else n(t.activeView).fadeOut(a,l)}).promise()};return l});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The dialog module enables the display of message boxes, custom modal dialogs and other overlays or slide-out UI abstractions. Dialogs are constructed by the composition system which interacts with a user defined dialog context. The dialog module enforced the activator lifecycle.
+ * @module dialog
+ * @requires system
+ * @requires app
+ * @requires composition
+ * @requires activator
+ * @requires viewEngine
+ * @requires jquery
+ * @requires knockout
+ */
+define('plugins/dialog',['durandal/system', 'durandal/app', 'durandal/composition', 'durandal/activator', 'durandal/viewEngine', 'jquery', 'knockout'], function (system, app, composition, activator, viewEngine, $, ko) {
+    var contexts = {},
+        dialogCount = 0,
+        dialog;
+
+    /**
+     * Models a message box's message, title and options.
+     * @class MessageBox
+     */
+    var MessageBox = function(message, title, options) {
+        this.message = message;
+        this.title = title || MessageBox.defaultTitle;
+        this.options = options || MessageBox.defaultOptions;
+    };
+
+    /**
+     * Selects an option and closes the message box, returning the selected option through the dialog system's promise.
+     * @method selectOption
+     * @param {string} dialogResult The result to select.
+     */
+    MessageBox.prototype.selectOption = function (dialogResult) {
+        dialog.close(this, dialogResult);
+    };
+
+    /**
+     * Provides the view to the composition system.
+     * @method getView
+     * @return {DOMElement} The view of the message box.
+     */
+    MessageBox.prototype.getView = function(){
+        return viewEngine.processMarkup(MessageBox.defaultViewMarkup);
+    };
+
+    /**
+     * Configures a custom view to use when displaying message boxes.
+     * @method setViewUrl
+     * @param {string} viewUrl The view url relative to the base url which the view locator will use to find the message box's view.
+     * @static
+     */
+    MessageBox.setViewUrl = function(viewUrl){
+        delete MessageBox.prototype.getView;
+        MessageBox.prototype.viewUrl = viewUrl;
+    };
+
+    /**
+     * The title to be used for the message box if one is not provided.
+     * @property {string} defaultTitle
+     * @default Application
+     * @static
+     */
+    MessageBox.defaultTitle = app.title || 'Application';
+
+    /**
+     * The options to display in the message box of none are specified.
+     * @property {string[]} defaultOptions
+     * @default ['Ok']
+     * @static
+     */
+    MessageBox.defaultOptions = ['Ok'];
+
+    /**
+     * The markup for the message box's view.
+     * @property {string} defaultViewMarkup
+     * @static
+     */
+    MessageBox.defaultViewMarkup = [
+        '<div data-view="plugins/messageBox" class="messageBox">',
+            '<div class="modal-header">',
+                '<h3 data-bind="text: title"></h3>',
+            '</div>',
+            '<div class="modal-body">',
+                '<p class="message" data-bind="text: message"></p>',
+            '</div>',
+            '<div class="modal-footer" data-bind="foreach: options">',
+                '<button class="btn" data-bind="click: function () { $parent.selectOption($data); }, text: $data, css: { \'btn-primary\': $index() == 0, autofocus: $index() == 0 }"></button>',
+            '</div>',
+        '</div>'
+    ].join('\n');
+
+    function ensureDialogInstance(objOrModuleId) {
+        return system.defer(function(dfd) {
+            if (system.isString(objOrModuleId)) {
+                system.acquire(objOrModuleId).then(function (module) {
+                    dfd.resolve(system.resolveObject(module));
+                }).fail(function(err){
+                    system.error('Failed to load dialog module (' + objOrModuleId + '). Details: ' + err.message);
+                });
+            } else {
+                dfd.resolve(objOrModuleId);
+            }
+        }).promise();
+    }
+
+    /**
+     * @class DialogModule
+     * @static
+     */
+    dialog = {
+        /**
+         * The constructor function used to create message boxes.
+         * @property {MessageBox} MessageBox
+         */
+        MessageBox:MessageBox,
+        /**
+         * The css zIndex that the last dialog was displayed at.
+         * @property {number} currentZIndex
+         */
+        currentZIndex: 1050,
+        /**
+         * Gets the next css zIndex at which a dialog should be displayed.
+         * @method getNextZIndex
+         * @return {number} The next usable zIndex.
+         */
+        getNextZIndex: function () {
+            return ++this.currentZIndex;
+        },
+        /**
+         * Determines whether or not there are any dialogs open.
+         * @method isOpen
+         * @return {boolean} True if a dialog is open. false otherwise.
+         */
+        isOpen: function() {
+            return dialogCount > 0;
+        },
+        /**
+         * Gets the dialog context by name or returns the default context if no name is specified.
+         * @method getContext
+         * @param {string} [name] The name of the context to retrieve.
+         * @return {DialogContext} True context.
+         */
+        getContext: function(name) {
+            return contexts[name || 'default'];
+        },
+        /**
+         * Adds (or replaces) a dialog context.
+         * @method addContext
+         * @param {string} name The name of the context to add.
+         * @param {DialogContext} dialogContext The context to add.
+         */
+        addContext: function(name, dialogContext) {
+            dialogContext.name = name;
+            contexts[name] = dialogContext;
+
+            var helperName = 'show' + name.substr(0, 1).toUpperCase() + name.substr(1);
+            this[helperName] = function (obj, activationData) {
+                return this.show(obj, activationData, name);
+            };
+        },
+        createCompositionSettings: function(obj, dialogContext) {
+            var settings = {
+                model:obj,
+                activate:false
+            };
+
+            if (dialogContext.attached) {
+                settings.attached = dialogContext.attached;
+            }
+
+            if (dialogContext.compositionComplete) {
+                settings.compositionComplete = dialogContext.compositionComplete;
+            }
+
+            return settings;
+        },
+        /**
+         * Gets the dialog model that is associated with the specified object.
+         * @method getDialog
+         * @param {object} obj The object for whom to retrieve the dialog.
+         * @return {Dialog} The dialog model.
+         */
+        getDialog:function(obj){
+            if(obj){
+                return obj.__dialog__;
+            }
+
+            return undefined;
+        },
+        /**
+         * Closes the dialog associated with the specified object.
+         * @method close
+         * @param {object} obj The object whose dialog should be closed.
+         * @param {object} result* The results to return back to the dialog caller after closing.
+         */
+        close:function(obj){
+            var theDialog = this.getDialog(obj);
+            if(theDialog){
+                var rest = Array.prototype.slice.call(arguments, 1);
+                theDialog.close.apply(theDialog, rest);
+            }
+        },
+        /**
+         * Shows a dialog.
+         * @method show
+         * @param {object|string} obj The object (or moduleId) to display as a dialog.
+         * @param {object} [activationData] The data that should be passed to the object upon activation.
+         * @param {string} [context] The name of the dialog context to use. Uses the default context if none is specified.
+         * @return {Promise} A promise that resolves when the dialog is closed and returns any data passed at the time of closing.
+         */
+        show: function(obj, activationData, context) {
+            var that = this;
+            var dialogContext = contexts[context || 'default'];
+
+            return system.defer(function(dfd) {
+                ensureDialogInstance(obj).then(function(instance) {
+                    var dialogActivator = activator.create();
+
+                    dialogActivator.activateItem(instance, activationData).then(function (success) {
+                        if (success) {
+                            var theDialog = instance.__dialog__ = {
+                                owner: instance,
+                                context: dialogContext,
+                                activator: dialogActivator,
+                                close: function () {
+                                    var args = arguments;
+                                    dialogActivator.deactivateItem(instance, true).then(function (closeSuccess) {
+                                        if (closeSuccess) {
+                                            dialogCount--;
+                                            dialogContext.removeHost(theDialog);
+                                            delete instance.__dialog__;
+
+                                            if(args.length == 0){
+                                                dfd.resolve();
+                                            }else if(args.length == 1){
+                                                dfd.resolve(args[0])
+                                            }else{
+                                                dfd.resolve.apply(dfd, args);
+                                            }
+                                        }
+                                    });
+                                }
+                            };
+
+                            theDialog.settings = that.createCompositionSettings(instance, dialogContext);
+                            dialogContext.addHost(theDialog);
+
+                            dialogCount++;
+                            composition.compose(theDialog.host, theDialog.settings);
+                        } else {
+                            dfd.resolve(false);
+                        }
+                    });
+                });
+            }).promise();
+        },
+        /**
+         * Shows a message box.
+         * @method showMessage
+         * @param {string} message The message to display in the dialog.
+         * @param {string} [title] The title message.
+         * @param {string[]} [options] The options to provide to the user.
+         * @return {Promise} A promise that resolves when the message box is closed and returns the selected option.
+         */
+        showMessage:function(message, title, options){
+            if(system.isString(this.MessageBox)){
+                return dialog.show(this.MessageBox, [
+                    message,
+                    title || MessageBox.defaultTitle,
+                    options || MessageBox.defaultOptions
+                ]);
+            }
+
+            return dialog.show(new this.MessageBox(message, title, options));
+        },
+        /**
+         * Installs this module into Durandal; called by the framework. Adds `app.showDialog` and `app.showMessage` convenience methods.
+         * @method install
+         * @param {object} [config] Add a `messageBox` property to supply a custom message box constructor. Add a `messageBoxView` property to supply custom view markup for the built-in message box.
+         */
+        install:function(config){
+            app.showDialog = function(obj, activationData, context) {
+                return dialog.show(obj, activationData, context);
+            };
+
+            app.showMessage = function(message, title, options) {
+                return dialog.showMessage(message, title, options);
+            };
+
+            if(config.messageBox){
+                dialog.MessageBox = config.messageBox;
+            }
+
+            if(config.messageBoxView){
+                dialog.MessageBox.prototype.getView = function(){
+                    return config.messageBoxView;
+                };
+            }
+        }
+    };
+
+    /**
+     * @class DialogContext
+     */
+    dialog.addContext('default', {
+        blockoutOpacity: .2,
+        removeDelay: 200,
+        /**
+         * In this function, you are expected to add a DOM element to the tree which will serve as the "host" for the modal's composed view. You must add a property called host to the modalWindow object which references the dom element. It is this host which is passed to the composition module.
+         * @method addHost
+         * @param {Dialog} theDialog The dialog model.
+         */
+        addHost: function(theDialog) {
+            var body = $('body');
+            var blockout = $('<div class="modalBlockout"></div>')
+                .css({ 'z-index': dialog.getNextZIndex(), 'opacity': this.blockoutOpacity })
+                .appendTo(body);
+
+            var host = $('<div class="modalHost"></div>')
+                .css({ 'z-index': dialog.getNextZIndex() })
+                .appendTo(body);
+
+            theDialog.host = host.get(0);
+            theDialog.blockout = blockout.get(0);
+
+            if (!dialog.isOpen()) {
+                theDialog.oldBodyMarginRight = body.css("margin-right");
+                theDialog.oldInlineMarginRight = body.get(0).style.marginRight;
+
+                var html = $("html");
+                var oldBodyOuterWidth = body.outerWidth(true);
+                var oldScrollTop = html.scrollTop();
+                $("html").css("overflow-y", "hidden");
+                var newBodyOuterWidth = $("body").outerWidth(true);
+                body.css("margin-right", (newBodyOuterWidth - oldBodyOuterWidth + parseInt(theDialog.oldBodyMarginRight)) + "px");
+                html.scrollTop(oldScrollTop); // necessary for Firefox
+            }
+        },
+        /**
+         * This function is expected to remove any DOM machinery associated with the specified dialog and do any other necessary cleanup.
+         * @method removeHost
+         * @param {Dialog} theDialog The dialog model.
+         */
+        removeHost: function(theDialog) {
+            $(theDialog.host).css('opacity', 0);
+            $(theDialog.blockout).css('opacity', 0);
+
+            setTimeout(function() {
+                ko.removeNode(theDialog.host);
+                ko.removeNode(theDialog.blockout);
+            }, this.removeDelay);
+
+            if (!dialog.isOpen()) {
+                var html = $("html");
+                var oldScrollTop = html.scrollTop(); // necessary for Firefox.
+                html.css("overflow-y", "").scrollTop(oldScrollTop);
+
+                if(theDialog.oldInlineMarginRight) {
+                    $("body").css("margin-right", theDialog.oldBodyMarginRight);
+                } else {
+                    $("body").css("margin-right", '');
+                }
+            }
+        },
+        /**
+         * This function is called after the modal is fully composed into the DOM, allowing your implementation to do any final modifications, such as positioning or animation. You can obtain the original dialog object by using `getDialog` on context.model.
+         * @method compositionComplete
+         * @param {DOMElement} child The dialog view.
+         * @param {DOMElement} parent The parent view.
+         * @param {object} context The composition context.
+         */
+        compositionComplete: function (child, parent, context) {
+            var $child = $(child);
+            var width = $child.width();
+            var height = $child.height();
+            var theDialog = dialog.getDialog(context.model);
+
+            $child.css({
+                'margin-top': (-height / 2).toString() + 'px',
+                'margin-left': (-width / 2).toString() + 'px'
+            });
+
+            $(theDialog.host).css('opacity', 1);
+
+            if ($(child).hasClass('autoclose')) {
+                $(theDialog.blockout).click(function() {
+                    theDialog.close();
+                });
+            }
+
+            $('.autofocus', child).each(function() {
+                $(this).focus();
+            });
+        }
+    });
+
+    return dialog;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Enables common http request scenarios.
+ * @module http
+ * @requires jquery
+ * @requires knockout
+ */
+define('plugins/http',['jquery', 'knockout'], function($, ko) {
+    /**
+     * @class HTTPModule
+     * @static
+     */
+    return {
+        /**
+         * The name of the callback parameter to inject into jsonp requests by default.
+         * @property {string} callbackParam
+         * @default callback
+         */
+        callbackParam:'callback',
+        /**
+         * Makes an HTTP GET request.
+         * @method get
+         * @param {string} url The url to send the get request to.
+         * @param {object} [query] An optional key/value object to transform into query string parameters.
+         * @return {Promise} A promise of the get response data.
+         */
+        get:function(url, query) {
+            return $.ajax(url, { data: query });
+        },
+        /**
+         * Makes an JSONP request.
+         * @method jsonp
+         * @param {string} url The url to send the get request to.
+         * @param {object} [query] An optional key/value object to transform into query string parameters.
+         * @param {string} [callbackParam] The name of the callback parameter the api expects (overrides the default callbackParam).
+         * @return {Promise} A promise of the response data.
+         */
+        jsonp: function (url, query, callbackParam) {
+            if (url.indexOf('=?') == -1) {
+                callbackParam = callbackParam || this.callbackParam;
+
+                if (url.indexOf('?') == -1) {
+                    url += '?';
+                } else {
+                    url += '&';
+                }
+
+                url += callbackParam + '=?';
+            }
+
+            return $.ajax({
+                url: url,
+                dataType:'jsonp',
+                data:query
+            });
+        },
+        /**
+         * Makes an HTTP POST request.
+         * @method post
+         * @param {string} url The url to send the post request to.
+         * @param {object} data The data to post. It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
+         * @return {Promise} A promise of the response data.
+         */
+        post:function(url, data) {
+            return $.ajax({
+                url: url,
+                data: ko.toJSON(data),
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json'
+            });
+        }
+    };
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Enables automatic observability of plain javascript object for ES5 compatible browsers. Also, converts promise properties into observables that are updated when the promise resolves.
+ * @module observable
+ * @requires system
+ * @requires binder
+ * @requires knockout
+ */
+define('plugins/observable',['durandal/system', 'durandal/binder', 'knockout'], function(system, binder, ko) {
+    var observableModule,
+        toString = Object.prototype.toString,
+        nonObservableTypes = ['[object Function]', '[object String]', '[object Boolean]', '[object Number]', '[object Date]', '[object RegExp]'],
+        observableArrayMethods = ['remove', 'removeAll', 'destroy', 'destroyAll', 'replace'],
+        arrayMethods = ['pop', 'reverse', 'sort', 'shift', 'splice'],
+        additiveArrayFunctions = ['push', 'unshift'],
+        arrayProto = Array.prototype,
+        observableArrayFunctions = ko.observableArray.fn,
+        logConversion = false;
+
+    /**
+     * You can call observable(obj, propertyName) to get the observable function for the specified property on the object.
+     * @class ObservableModule
+     */
+
+    function shouldIgnorePropertyName(propertyName){
+        var first = propertyName[0];
+        return first === '_' || first === '$';
+    }
+
+    function canConvertType(value) {
+        if (!value || system.isElement(value) || value.ko === ko || value.jquery) {
+            return false;
+        }
+
+        var type = toString.call(value);
+
+        return nonObservableTypes.indexOf(type) == -1 && !(value === true || value === false);
+    }
+
+    function makeObservableArray(original, observable) {
+        var lookup = original.__observable__, notify = true;
+
+        if(lookup && lookup.__full__){
+            return;
+        }
+
+        lookup = lookup || (original.__observable__ = {});
+        lookup.__full__ = true;
+
+        observableArrayMethods.forEach(function(methodName) {
+            original[methodName] = function() {
+                notify = false;
+                var methodCallResult = observableArrayFunctions[methodName].apply(observable, arguments);
+                notify = true;
+                return methodCallResult;
+            };
+        });
+
+        arrayMethods.forEach(function(methodName) {
+            original[methodName] = function() {
+                if(notify){
+                    observable.valueWillMutate();
+                }
+
+                var methodCallResult = arrayProto[methodName].apply(original, arguments);
+
+                if(notify){
+                    observable.valueHasMutated();
+                }
+
+                return methodCallResult;
+            };
+        });
+
+        additiveArrayFunctions.forEach(function(methodName){
+            original[methodName] = function() {
+                for (var i = 0, len = arguments.length; i < len; i++) {
+                    convertObject(arguments[i]);
+                }
+
+                if(notify){
+                    observable.valueWillMutate();
+                }
+
+                var methodCallResult = arrayProto[methodName].apply(original, arguments);
+
+                if(notify){
+                    observable.valueHasMutated();
+                }
+
+                return methodCallResult;
+            };
+        });
+
+        original['splice'] = function() {
+            for (var i = 2, len = arguments.length; i < len; i++) {
+                convertObject(arguments[i]);
+            }
+
+            if(notify){
+                observable.valueWillMutate();
+            }
+
+            var methodCallResult = arrayProto['splice'].apply(original, arguments);
+
+            if(notify){
+                observable.valueHasMutated();
+            }
+
+            return methodCallResult;
+        };
+
+        for (var i = 0, len = original.length; i < len; i++) {
+            convertObject(original[i]);
+        }
+    }
+
+    /**
+     * Converts an entire object into an observable object by re-writing its attributes using ES5 getters and setters. Attributes beginning with '_' or '$' are ignored.
+     * @method convertObject
+     * @param {object} obj The target object to convert.
+     */
+    function convertObject(obj){
+        var lookup, value;
+
+        if(!canConvertType(obj)){
+            return;
+        }
+
+        lookup = obj.__observable__;
+
+        if(lookup && lookup.__full__){
+            return;
+        }
+
+        lookup = lookup || (obj.__observable__ = {});
+        lookup.__full__ = true;
+
+        if (system.isArray(obj)) {
+            var observable = ko.observableArray(obj);
+            makeObservableArray(obj, observable);
+        } else {
+            for (var propertyName in obj) {
+                if(shouldIgnorePropertyName(propertyName)){
+                    continue;
+                }
+
+                if(!lookup[propertyName]){
+                    value = obj[propertyName];
+
+                    if(!system.isFunction(value)){
+                        convertProperty(obj, propertyName, value);
+                    }
+                }
+            }
+        }
+
+        if(logConversion) {
+            system.log('Converted', obj);
+        }
+    }
+
+    function innerSetter(observable, newValue, isArray) {
+        var val;
+        observable(newValue);
+        val = observable.peek();
+
+        //if this was originally an observableArray, then always check to see if we need to add/replace the array methods (if newValue was an entirely new array)
+        if (isArray) {
+            if (!val.destroyAll) {
+                //don't allow null, force to an empty array
+                if (!val) {
+                    val = [];
+                    observable(val);
+                }
+
+                makeObservableArray(val, observable);
+            }
+        } else {
+            convertObject(val);
+        }
+    }
+
+    /**
+     * Converts a normal property into an observable property using ES5 getters and setters.
+     * @method convertProperty
+     * @param {object} obj The target object on which the property to convert lives.
+     * @param {string} propertyName The name of the property to convert.
+     * @param {object} [original] The original value of the property. If not specified, it will be retrieved from the object.
+     * @return {KnockoutObservable} The underlying observable.
+     */
+    function convertProperty(obj, propertyName, original){
+        var observable,
+            isArray,
+            lookup = obj.__observable__ || (obj.__observable__ = {});
+
+        if(original === undefined){
+            original = obj[propertyName];
+        }
+
+        if (system.isArray(original)) {
+            observable = ko.observableArray(original);
+            makeObservableArray(original, observable);
+            isArray = true;
+        } else if (typeof original == "function") {
+            if(ko.isObservable(original)){
+                observable = original;
+            }else{
+                return null;
+            }
+        } else if(system.isPromise(original)) {
+            observable = ko.observable();
+
+            original.then(function (result) {
+                if(system.isArray(result)) {
+                    var oa = ko.observableArray(result);
+                    makeObservableArray(result, oa);
+                    result = oa;
+                }
+
+                observable(result);
+            });
+        } else {
+            observable = ko.observable(original);
+            convertObject(original);
+        }
+
+        Object.defineProperty(obj, propertyName, {
+            configurable: true,
+            enumerable: true,
+            get: observable,
+            set: ko.isWriteableObservable(observable) ? (function (newValue) {
+                if (newValue && system.isPromise(newValue)) {
+                    newValue.then(function (result) {
+                        innerSetter(observable, result, system.isArray(result));
+                    });
+                } else {
+                    innerSetter(observable, newValue, isArray);
+                }
+            }) : undefined
+        });
+
+        lookup[propertyName] = observable;
+        return observable;
+    }
+
+    /**
+     * Defines a computed property using ES5 getters and setters.
+     * @method defineProperty
+     * @param {object} obj The target object on which to create the property.
+     * @param {string} propertyName The name of the property to define.
+     * @param {function|object} evaluatorOrOptions The Knockout computed function or computed options object.
+     * @return {KnockoutComputed} The underlying computed observable.
+     */
+    function defineProperty(obj, propertyName, evaluatorOrOptions) {
+        var ko = this,
+            computedOptions = { owner: obj, deferEvaluation: true },
+            computed;
+
+        if (typeof evaluatorOrOptions === 'function') {
+            computedOptions.read = evaluatorOrOptions;
+        } else {
+            if ('value' in evaluatorOrOptions) {
+                system.error('For ko.defineProperty, you must not specify a "value" for the property. You must provide a "get" function.');
+            }
+
+            if (typeof evaluatorOrOptions.get !== 'function') {
+                system.error('For ko.defineProperty, the third parameter must be either an evaluator function, or an options object containing a function called "get".');
+            }
+
+            computedOptions.read = evaluatorOrOptions.get;
+            computedOptions.write = evaluatorOrOptions.set;
+        }
+
+        computed = ko.computed(computedOptions);
+        obj[propertyName] = computed;
+
+        return convertProperty(obj, propertyName, computed);
+    }
+
+    observableModule = function(obj, propertyName){
+        var lookup, observable, value;
+
+        if (!obj) {
+            return null;
+        }
+
+        lookup = obj.__observable__;
+        if(lookup){
+            observable = lookup[propertyName];
+            if(observable){
+                return observable;
+            }
+        }
+
+        value = obj[propertyName];
+
+        if(ko.isObservable(value)){
+            return value;
+        }
+
+        return convertProperty(obj, propertyName, value);
+    };
+
+    observableModule.defineProperty = defineProperty;
+    observableModule.convertProperty = convertProperty;
+    observableModule.convertObject = convertObject;
+
+    /**
+     * Installs the plugin into the view model binder's `beforeBind` hook so that objects are automatically converted before being bound.
+     * @method install
+     */
+    observableModule.install = function(options) {
+        var original = binder.binding;
+
+        binder.binding = function(obj, view, instruction) {
+            if(instruction.applyBindings && !instruction.skipConversion){
+                convertObject(obj);
+            }
+
+            original(obj, view);
+        };
+
+        logConversion = options.logConversion;
+    };
+
+    return observableModule;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Serializes and deserializes data to/from JSON.
+ * @module serializer
+ * @requires system
+ */
+define('plugins/serializer',['durandal/system'], function(system) {
+    /**
+     * @class SerializerModule
+     * @static
+     */
+    return {
+        /**
+         * The name of the attribute that the serializer should use to identify an object's type.
+         * @property {string} typeAttribute
+         * @default type
+         */
+        typeAttribute: 'type',
+        /**
+         * The amount of space to use for indentation when writing out JSON.
+         * @property {string|number} space
+         * @default undefined
+         */
+        space:undefined,
+        /**
+         * The default replacer function used during serialization. By default properties starting with '_' or '$' are removed from the serialized object.
+         * @method replacer
+         * @param {string} key The object key to check.
+         * @param {object} value The object value to check.
+         * @return {object} The value to serialize.
+         */
+        replacer: function(key, value) {
+            if(key){
+                var first = key[0];
+                if(first === '_' || first === '$'){
+                    return undefined;
+                }
+            }
+
+            return value;
+        },
+        /**
+         * Serializes the object.
+         * @method serialize
+         * @param {object} object The object to serialize.
+         * @param {object} [settings] Settings can specify a replacer or space to override the serializer defaults.
+         * @return {string} The JSON string.
+         */
+        serialize: function(object, settings) {
+            settings = (settings === undefined) ? {} : settings;
+
+            if(system.isString(settings) || system.isNumber(settings)) {
+                settings = { space: settings };
+            }
+
+            return JSON.stringify(object, settings.replacer || this.replacer, settings.space || this.space);
+        },
+        /**
+         * Gets the type id for an object instance, using the configured `typeAttribute`.
+         * @method getTypeId
+         * @param {object} object The object to serialize.
+         * @return {string} The type.
+         */
+        getTypeId: function(object) {
+            if (object) {
+                return object[this.typeAttribute];
+            }
+
+            return undefined;
+        },
+        /**
+         * Maps type ids to object constructor functions. Keys are type ids and values are functions.
+         * @property {object} typeMap.
+         */
+        typeMap: {},
+        /**
+         * Adds a type id/constructor function mampping to the `typeMap`.
+         * @method registerType
+         * @param {string} typeId The type id.
+         * @param {function} constructor The constructor.
+         */
+        registerType: function() {
+            var first = arguments[0];
+
+            if (arguments.length == 1) {
+                var id = first[this.typeAttribute] || system.getModuleId(first);
+                this.typeMap[id] = first;
+            } else {
+                this.typeMap[first] = arguments[1];
+            }
+        },
+        /**
+         * The default reviver function used during deserialization. By default is detects type properties on objects and uses them to re-construct the correct object using the provided constructor mapping.
+         * @method reviver
+         * @param {string} key The attribute key.
+         * @param {object} value The object value associated with the key.
+         * @param {function} getTypeId A custom function used to get the type id from a value.
+         * @param {object} getConstructor A custom function used to get the constructor function associated with a type id.
+         * @return {object} The value.
+         */
+        reviver: function(key, value, getTypeId, getConstructor) {
+            var typeId = getTypeId(value);
+            if (typeId) {
+                var ctor = getConstructor(typeId);
+                if (ctor) {
+                    if (ctor.fromJSON) {
+                        return ctor.fromJSON(value);
+                    }
+
+                    return new ctor(value);
+                }
+            }
+
+            return value;
+        },
+        /**
+         * Deserialize the JSON.
+         * @method deserialize
+         * @param {string} text The JSON string.
+         * @param {object} [settings] Settings can specify a reviver, getTypeId function or getConstructor function.
+         * @return {object} The deserialized object.
+         */
+        deserialize: function(text, settings) {
+            var that = this;
+            settings = settings || {};
+
+            var getTypeId = settings.getTypeId || function(object) { return that.getTypeId(object); };
+            var getConstructor = settings.getConstructor || function(id) { return that.typeMap[id]; };
+            var reviver = settings.reviver || function(key, value) { return that.reviver(key, value, getTypeId, getConstructor); };
+
+            return JSON.parse(text, reviver);
+        }
+    };
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * Layers the widget sugar on top of the composition system.
+ * @module widget
+ * @requires system
+ * @requires composition
+ * @requires jquery
+ * @requires knockout
+ */
+define('plugins/widget',['durandal/system', 'durandal/composition', 'jquery', 'knockout'], function(system, composition, $, ko) {
+    var kindModuleMaps = {},
+        kindViewMaps = {},
+        bindableSettings = ['model', 'view', 'kind'],
+        widgetDataKey = 'durandal-widget-data';
+
+    function extractParts(element, settings){
+        var data = ko.utils.domData.get(element, widgetDataKey);
+
+        if(!data){
+            data = {
+                parts:composition.cloneNodes(ko.virtualElements.childNodes(element))
+            };
+
+            ko.virtualElements.emptyNode(element);
+            ko.utils.domData.set(element, widgetDataKey, data);
+        }
+
+        settings.parts = data.parts;
+    }
+
+    /**
+     * @class WidgetModule
+     * @static
+     */
+    var widget = {
+        getSettings: function(valueAccessor) {
+            var settings = ko.utils.unwrapObservable(valueAccessor()) || {};
+
+            if (system.isString(settings)) {
+                return { kind: settings };
+            }
+
+            for (var attrName in settings) {
+                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+                    settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
+                } else {
+                    settings[attrName] = settings[attrName];
+                }
+            }
+
+            return settings;
+        },
+        /**
+         * Creates a ko binding handler for the specified kind.
+         * @method registerKind
+         * @param {string} kind The kind to create a custom binding handler for.
+         */
+        registerKind: function(kind) {
+            ko.bindingHandlers[kind] = {
+                init: function() {
+                    return { controlsDescendantBindings: true };
+                },
+                update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var settings = widget.getSettings(valueAccessor);
+                    settings.kind = kind;
+                    extractParts(element, settings);
+                    widget.create(element, settings, bindingContext, true);
+                }
+            };
+
+            ko.virtualElements.allowedBindings[kind] = true;
+        },
+        /**
+         * Maps views and module to the kind identifier if a non-standard pattern is desired.
+         * @method mapKind
+         * @param {string} kind The kind name.
+         * @param {string} [viewId] The unconventional view id to map the kind to.
+         * @param {string} [moduleId] The unconventional module id to map the kind to.
+         */
+        mapKind: function(kind, viewId, moduleId) {
+            if (viewId) {
+                kindViewMaps[kind] = viewId;
+            }
+
+            if (moduleId) {
+                kindModuleMaps[kind] = moduleId;
+            }
+        },
+        /**
+         * Maps a kind name to it's module id. First it looks up a custom mapped kind, then falls back to `convertKindToModulePath`.
+         * @method mapKindToModuleId
+         * @param {string} kind The kind name.
+         * @return {string} The module id.
+         */
+        mapKindToModuleId: function(kind) {
+            return kindModuleMaps[kind] || widget.convertKindToModulePath(kind);
+        },
+        /**
+         * Converts a kind name to it's module path. Used to conventionally map kinds who aren't explicitly mapped through `mapKind`.
+         * @method convertKindToModulePath
+         * @param {string} kind The kind name.
+         * @return {string} The module path.
+         */
+        convertKindToModulePath: function(kind) {
+            return 'widgets/' + kind + '/viewmodel';
+        },
+        /**
+         * Maps a kind name to it's view id. First it looks up a custom mapped kind, then falls back to `convertKindToViewPath`.
+         * @method mapKindToViewId
+         * @param {string} kind The kind name.
+         * @return {string} The view id.
+         */
+        mapKindToViewId: function(kind) {
+            return kindViewMaps[kind] || widget.convertKindToViewPath(kind);
+        },
+        /**
+         * Converts a kind name to it's view id. Used to conventionally map kinds who aren't explicitly mapped through `mapKind`.
+         * @method convertKindToViewPath
+         * @param {string} kind The kind name.
+         * @return {string} The view id.
+         */
+        convertKindToViewPath: function(kind) {
+            return 'widgets/' + kind + '/view';
+        },
+        createCompositionSettings: function(element, settings) {
+            if (!settings.model) {
+                settings.model = this.mapKindToModuleId(settings.kind);
+            }
+
+            if (!settings.view) {
+                settings.view = this.mapKindToViewId(settings.kind);
+            }
+
+            settings.preserveContext = true;
+            settings.activate = true;
+            settings.activationData = settings;
+            settings.mode = 'templated';
+
+            return settings;
+        },
+        /**
+         * Creates a widget.
+         * @method create
+         * @param {DOMElement} element The DOMElement or knockout virtual element that serves as the target element for the widget.
+         * @param {object} settings The widget settings.
+         * @param {object} [bindingContext] The current binding context.
+         */
+        create: function(element, settings, bindingContext, fromBinding) {
+            if(!fromBinding){
+                settings = widget.getSettings(function() { return settings; }, element);
+            }
+
+            var compositionSettings = widget.createCompositionSettings(element, settings);
+
+            composition.compose(element, compositionSettings, bindingContext);
+        },
+        /**
+         * Installs the widget module by adding the widget binding handler and optionally registering kinds.
+         * @method install
+         * @param {object} config The module config. Add a `kinds` array with the names of widgets to automatically register. You can also specify a `bindingName` if you wish to use another name for the widget binding, such as "control" for example.
+         */
+        install:function(config){
+            config.bindingName = config.bindingName || 'widget';
+
+            if(config.kinds){
+                var toRegister = config.kinds;
+
+                for(var i = 0; i < toRegister.length; i++){
+                    widget.registerKind(toRegister[i]);
+                }
+            }
+
+            ko.bindingHandlers[config.bindingName] = {
+                init: function() {
+                    return { controlsDescendantBindings: true };
+                },
+                update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var settings = widget.getSettings(valueAccessor);
+                    extractParts(element, settings);
+                    widget.create(element, settings, bindingContext, true);
+                }
+            };
+
+            ko.virtualElements.allowedBindings[config.bindingName] = true;
+        }
+    };
+
+    return widget;
+});
+
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The entrance transition module.
+ * @module entrance
+ * @requires system
+ * @requires composition
+ * @requires jquery
+ */
+define('transitions/entrance',['durandal/system', 'durandal/composition', 'jquery'], function(system, composition, $) {
+    var fadeOutDuration = 100;
+    var endValues = {
+        marginRight: 0,
+        marginLeft: 0,
+        opacity: 1
+    };
+    var clearValues = {
+        marginLeft: '',
+        marginRight: '',
+        opacity: '',
+        display: ''
+    };
+
+    /**
+     * @class EntranceModule
+     * @constructor
+     */
+    var entrance = function(context) {
+        return system.defer(function(dfd) {
+            function endTransition() {
+                dfd.resolve();
+            }
+
+            function scrollIfNeeded() {
+                if (!context.keepScrollPosition) {
+                    $(document).scrollTop(0);
+                }
+            }
+
+            if (!context.child) {
+                $(context.activeView).fadeOut(fadeOutDuration, endTransition);
+            } else {
+                var duration = context.duration || 500;
+                var fadeOnly = !!context.fadeOnly;
+
+                function startTransition() {
+                    scrollIfNeeded();
+                    context.triggerAttach();
+
+                    var startValues = {
+                        marginLeft: fadeOnly ? '0' : '20px',
+                        marginRight: fadeOnly ? '0' : '-20px',
+                        opacity: 0,
+                        display: 'block'
+                    };
+
+                    var $child = $(context.child);
+
+                    $child.css(startValues);
+                    $child.animate(endValues, duration, 'swing', function () {
+                        $child.css(clearValues);
+                        endTransition();
+                    });
+                }
+
+                if (context.activeView) {
+                    $(context.activeView).fadeOut(fadeOutDuration, startTransition);
+                } else {
+                    startTransition();
+                }
+            }
+        }).promise();
+    };
+
+    return entrance;
+});
+
 
 require(["main"]);
 }());

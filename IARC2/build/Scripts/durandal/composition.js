@@ -1,1 +1,621 @@
-define(["durandal/system","durandal/viewLocator","durandal/binder","durandal/viewEngine","durandal/activator","jquery","knockout"],function(e,t,n,a,r,o,l){function g(e){for(var t=[],n={childElements:t,activeView:null},a=l.virtualElements.firstChild(e);a;)1==a.nodeType&&(t.push(a),a.getAttribute(w)&&(n.activeView=a)),a=l.virtualElements.nextSibling(a);return n.activeView||(n.activeView=t[0]),n}function i(){f--,0===f&&setTimeout(function(){for(var e=v.length;e--;)v[e]();v=[]},1)}function s(t,n,a){if(a)n();else if(t.activate&&t.model&&t.model.activate){var r;r=e.isArray(t.activationData)?t.model.activate.apply(t.model,t.activationData):t.model.activate(t.activationData),r&&r.then?r.then(n):r||void 0===r?n():i()}else n()}function d(){var t=this;t.activeView&&t.activeView.removeAttribute(w),t.child&&(t.model&&t.model.attached&&(t.composingNewView||t.alwaysTriggerAttach)&&t.model.attached(t.child,t.parent,t),t.attached&&t.attached(t.child,t.parent,t),t.child.setAttribute(w,!0),t.composingNewView&&t.model&&(t.model.compositionComplete&&h.current.complete(function(){t.model.compositionComplete(t.child,t.parent,t)}),t.model.detached&&l.utils.domNodeDisposal.addDisposeCallback(t.child,function(){t.model.detached(t.child,t.parent,t)})),t.compositionComplete&&h.current.complete(function(){t.compositionComplete(t.child,t.parent,t)})),i(),t.triggerAttach=e.noop}function p(t){if(e.isString(t.transition)){if(t.activeView){if(t.activeView==t.child)return!1;if(!t.child)return!0;if(t.skipTransitionOnSameViewId){var n=t.activeView.getAttribute("data-view"),a=t.child.getAttribute("data-view");return n!=a}}return!0}return!1}function m(e){for(var t=0,n=e.length,a=[];n>t;t++){var r=e[t].cloneNode(!0);a.push(r)}return a}function c(e){var t=m(e.parts),n=h.getParts(t),a=h.getParts(e.child);for(var r in n)o(a[r]).replaceWith(n[r])}function L(t){var n,a,r=l.virtualElements.childNodes(t);if(!e.isArray(r)){var o=[];for(n=0,a=r.length;a>n;n++)o[n]=r[n];r=o}for(n=1,a=r.length;a>n;n++)l.removeNode(r[n])}var h,u={},w="data-active-view",v=[],f=0,b="durandal-composition-data",y="data-part",_="["+y+"]",x=["model","view","transition","area","strategy","activationData"],S={complete:function(e){v.push(e)}};return h={convertTransitionToModuleId:function(e){return"transitions/"+e},defaultTransitionName:null,current:S,addBindingHandler:function(e,t,n){var a,r,o="composition-handler-"+e;t=t||l.bindingHandlers[e],n=n||function(){return void 0},r=l.bindingHandlers[e]={init:function(e,a,r,g,i){var s={trigger:l.observable(null)};return h.current.complete(function(){t.init&&t.init(e,a,r,g,i),t.update&&(l.utils.domData.set(e,o,t),s.trigger("trigger"))}),l.utils.domData.set(e,o,s),n(e,a,r,g,i)},update:function(e,t,n,a,r){var g=l.utils.domData.get(e,o);return g.update?g.update(e,t,n,a,r):(g.trigger(),void 0)}};for(a in t)"init"!==a&&"update"!==a&&(r[a]=t[a])},getParts:function(t){var n={};e.isArray(t)||(t=[t]);for(var a=0;a<t.length;a++){var r=t[a];if(r.getAttribute){var l=r.getAttribute(y);l&&(n[l]=r);for(var g=o(_,r).not(o("[data-bind] "+_,r)),i=0;i<g.length;i++){var s=g.get(i);n[s.getAttribute(y)]=s}}}return n},cloneNodes:m,finalize:function(t){if(t.transition=t.transition||this.defaultTransitionName,t.child||t.activeView)if(p(t)){var a=this.convertTransitionToModuleId(t.transition);e.acquire(a).then(function(e){t.transition=e,e(t).then(function(){if(t.cacheViews){if(t.activeView){var e=n.getBindingInstruction(t.activeView);void 0==e.cacheViews||e.cacheViews||l.removeNode(t.activeView)}}else t.child?L(t.parent):l.virtualElements.emptyNode(t.parent);t.triggerAttach()})}).fail(function(t){e.error("Failed to load transition ("+a+"). Details: "+t.message)})}else{if(t.child!=t.activeView){if(t.cacheViews&&t.activeView){var r=n.getBindingInstruction(t.activeView);void 0==r.cacheViews||r.cacheViews?o(t.activeView).hide():l.removeNode(t.activeView)}t.child?(t.cacheViews||L(t.parent),o(t.child).show()):t.cacheViews||l.virtualElements.emptyNode(t.parent)}t.triggerAttach()}else t.cacheViews||l.virtualElements.emptyNode(t.parent),t.triggerAttach()},bindAndShow:function(e,t,r){t.child=e,t.composingNewView=t.cacheViews?-1==l.utils.arrayIndexOf(t.viewElements,e):!0,s(t,function(){if(t.binding&&t.binding(t.child,t.parent,t),t.preserveContext&&t.bindingContext)t.composingNewView&&(t.parts&&c(t),o(e).hide(),l.virtualElements.prepend(t.parent,e),n.bindContext(t.bindingContext,e,t.model));else if(e){var r=t.model||u,g=l.dataFor(e);if(g!=r){if(!t.composingNewView)return o(e).remove(),a.createView(e.getAttribute("data-view")).then(function(e){h.bindAndShow(e,t,!0)}),void 0;t.parts&&c(t),o(e).hide(),l.virtualElements.prepend(t.parent,e),n.bind(r,e)}}h.finalize(t)},r)},defaultStrategy:function(e){return t.locateViewForObject(e.model,e.area,e.viewElements)},getSettings:function(t){var n,o=t(),g=l.utils.unwrapObservable(o)||{},i=r.isActivator(o);if(e.isString(g))return g=a.isViewUrl(g)?{view:g}:{model:g,activate:!0};if(n=e.getModuleId(g))return g={model:g,activate:!0};!i&&g.model&&(i=r.isActivator(g.model));for(var s in g)g[s]=-1!=l.utils.arrayIndexOf(x,s)?l.utils.unwrapObservable(g[s]):g[s];return i?g.activate=!1:void 0===g.activate&&(g.activate=!0),g},executeStrategy:function(e){e.strategy(e).then(function(t){h.bindAndShow(t,e)})},inject:function(n){return n.model?n.view?(t.locateView(n.view,n.area,n.viewElements).then(function(e){h.bindAndShow(e,n)}),void 0):(n.strategy||(n.strategy=this.defaultStrategy),e.isString(n.strategy)?e.acquire(n.strategy).then(function(e){n.strategy=e,h.executeStrategy(n)}).fail(function(t){e.error("Failed to load view strategy ("+n.strategy+"). Details: "+t.message)}):this.executeStrategy(n),void 0):(this.bindAndShow(null,n),void 0)},compose:function(n,a,r,o){f++,o||(a=h.getSettings(function(){return a},n));var l=g(n);a.activeView=l.activeView,a.parent=n,a.triggerAttach=d,a.bindingContext=r,a.cacheViews&&!a.viewElements&&(a.viewElements=l.childElements),a.model?e.isString(a.model)?e.acquire(a.model).then(function(t){a.model=e.resolveObject(t),h.inject(a)}).fail(function(t){e.error("Failed to load composed module ("+a.model+"). Details: "+t.message)}):h.inject(a):a.view?(a.area=a.area||"partial",a.preserveContext=!0,t.locateView(a.view,a.area,a.viewElements).then(function(e){h.bindAndShow(e,a)})):this.bindAndShow(null,a)}},l.bindingHandlers.compose={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t,n,r,o){var g=h.getSettings(t,e);if(g.mode){var i=l.utils.domData.get(e,b);if(!i){var s=l.virtualElements.childNodes(e);i={},"inline"===g.mode?i.view=a.ensureSingleElement(s):"templated"===g.mode&&(i.parts=m(s)),l.virtualElements.emptyNode(e),l.utils.domData.set(e,b,i)}"inline"===g.mode?g.view=i.view.cloneNode(!0):"templated"===g.mode&&(g.parts=i.parts),g.preserveContext=!0}h.compose(e,g,o,!0)}},l.virtualElements.allowedBindings.compose=!0,h});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The composition module encapsulates all functionality related to visual composition.
+ * @module composition
+ * @requires system
+ * @requires viewLocator
+ * @requires binder
+ * @requires viewEngine
+ * @requires activator
+ * @requires jquery
+ * @requires knockout
+ */
+define(['durandal/system', 'durandal/viewLocator', 'durandal/binder', 'durandal/viewEngine', 'durandal/activator', 'jquery', 'knockout'], function (system, viewLocator, binder, viewEngine, activator, $, ko) {
+    var dummyModel = {},
+        activeViewAttributeName = 'data-active-view',
+        composition,
+        compositionCompleteCallbacks = [],
+        compositionCount = 0,
+        compositionDataKey = 'durandal-composition-data',
+        partAttributeName = 'data-part',
+        partAttributeSelector = '[' + partAttributeName + ']',
+        bindableSettings = ['model', 'view', 'transition', 'area', 'strategy', 'activationData'];
+
+    function getHostState(parent) {
+        var elements = [];
+        var state = {
+            childElements: elements,
+            activeView: null
+        };
+
+        var child = ko.virtualElements.firstChild(parent);
+
+        while (child) {
+            if (child.nodeType == 1) {
+                elements.push(child);
+                if (child.getAttribute(activeViewAttributeName)) {
+                    state.activeView = child;
+                }
+            }
+
+            child = ko.virtualElements.nextSibling(child);
+        }
+
+        if(!state.activeView){
+            state.activeView = elements[0];
+        }
+
+        return state;
+    }
+
+    function endComposition() {
+        compositionCount--;
+
+        if (compositionCount === 0) {
+            setTimeout(function(){
+                var i = compositionCompleteCallbacks.length;
+
+                while(i--) {
+                    compositionCompleteCallbacks[i]();
+                }
+
+                compositionCompleteCallbacks = [];
+            }, 1);
+        }
+    }
+
+    function tryActivate(context, successCallback, skipActivation) {
+        if(skipActivation){
+            successCallback();
+        } else if (context.activate && context.model && context.model.activate) {
+            var result;
+
+            if(system.isArray(context.activationData)) {
+                result = context.model.activate.apply(context.model, context.activationData);
+            } else {
+                result = context.model.activate(context.activationData);
+            }
+
+            if(result && result.then) {
+                result.then(successCallback);
+            } else if(result || result === undefined) {
+                successCallback();
+            } else {
+                endComposition();
+            }
+        } else {
+            successCallback();
+        }
+    }
+
+    function triggerAttach() {
+        var context = this;
+
+        if (context.activeView) {
+            context.activeView.removeAttribute(activeViewAttributeName);
+        }
+
+        if (context.child) {
+            if (context.model && context.model.attached) {
+                if (context.composingNewView || context.alwaysTriggerAttach) {
+                    context.model.attached(context.child, context.parent, context);
+                }
+            }
+
+            if (context.attached) {
+                context.attached(context.child, context.parent, context);
+            }
+
+            context.child.setAttribute(activeViewAttributeName, true);
+
+            if (context.composingNewView && context.model) {
+                if (context.model.compositionComplete) {
+                    composition.current.complete(function () {
+                        context.model.compositionComplete(context.child, context.parent, context);
+                    });
+                }
+
+                if (context.model.detached) {
+                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, function () {
+                        context.model.detached(context.child, context.parent, context);
+                    });
+                }
+            }
+
+            if (context.compositionComplete) {
+                composition.current.complete(function () {
+                    context.compositionComplete(context.child, context.parent, context);
+                });
+            }
+        }
+
+        endComposition();
+        context.triggerAttach = system.noop;
+    }
+
+    function shouldTransition(context) {
+        if (system.isString(context.transition)) {
+            if (context.activeView) {
+                if (context.activeView == context.child) {
+                    return false;
+                }
+
+                if (!context.child) {
+                    return true;
+                }
+
+                if (context.skipTransitionOnSameViewId) {
+                    var currentViewId = context.activeView.getAttribute('data-view');
+                    var newViewId = context.child.getAttribute('data-view');
+                    return currentViewId != newViewId;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function cloneNodes(nodesArray) {
+        for (var i = 0, j = nodesArray.length, newNodesArray = []; i < j; i++) {
+            var clonedNode = nodesArray[i].cloneNode(true);
+            newNodesArray.push(clonedNode);
+        }
+        return newNodesArray;
+    }
+
+    function replaceParts(context){
+        var parts = cloneNodes(context.parts);
+        var replacementParts = composition.getParts(parts);
+        var standardParts = composition.getParts(context.child);
+
+        for (var partId in replacementParts) {
+            $(standardParts[partId]).replaceWith(replacementParts[partId]);
+        }
+    }
+
+    function removePreviousView(parent){
+        var children = ko.virtualElements.childNodes(parent), i, len;
+
+        if(!system.isArray(children)){
+            var arrayChildren = [];
+
+            for(i = 0, len = children.length; i < len; i++){
+                arrayChildren[i] = children[i];
+            }
+
+            children = arrayChildren;
+        }
+
+        for(i = 1,len = children.length; i < len; i++){
+            ko.removeNode(children[i]);
+        }
+    }
+
+    /**
+     * @class CompositionTransaction
+     * @static
+     */
+    var compositionTransaction = {
+        /**
+         * Registers a callback which will be invoked when the current composition transaction has completed. The transaction includes all parent and children compositions.
+         * @method complete
+         * @param {function} callback The callback to be invoked when composition is complete.
+         */
+        complete: function (callback) {
+            compositionCompleteCallbacks.push(callback);
+        }
+    };
+
+    /**
+     * @class CompositionModule
+     * @static
+     */
+    composition = {
+        /**
+         * Converts a transition name to its moduleId.
+         * @method convertTransitionToModuleId
+         * @param {string} name The name of the transtion.
+         * @return {string} The moduleId.
+         */
+        convertTransitionToModuleId: function (name) {
+            return 'transitions/' + name;
+        },
+        /**
+         * The name of the transition to use in all compositions.
+         * @property {string} defaultTransitionName
+         * @default null
+         */
+        defaultTransitionName: null,
+        /**
+         * Represents the currently executing composition transaction.
+         * @property {CompositionTransaction} current
+         */
+        current: compositionTransaction,
+        /**
+         * Registers a binding handler that will be invoked when the current composition transaction is complete.
+         * @method addBindingHandler
+         * @param {string} name The name of the binding handler.
+         * @param {object} [config] The binding handler instance. If none is provided, the name will be used to look up an existing handler which will then be converted to a composition handler.
+         * @param {function} [initOptionsFactory] If the registered binding needs to return options from its init call back to knockout, this function will server as a factory for those options. It will receive the same parameters that the init function does.
+         */
+        addBindingHandler:function(name, config, initOptionsFactory){
+            var key,
+                dataKey = 'composition-handler-' + name,
+                handler;
+
+            config = config || ko.bindingHandlers[name];
+            initOptionsFactory = initOptionsFactory || function(){ return undefined;  };
+
+            handler = ko.bindingHandlers[name] = {
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var data = {
+                        trigger:ko.observable(null)
+                    };
+
+                    composition.current.complete(function(){
+                        if(config.init){
+                            config.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                        }
+
+                        if(config.update){
+                            ko.utils.domData.set(element, dataKey, config);
+                            data.trigger('trigger');
+                        }
+                    });
+
+                    ko.utils.domData.set(element, dataKey, data);
+
+                    return initOptionsFactory(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                },
+                update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var data = ko.utils.domData.get(element, dataKey);
+
+                    if(data.update){
+                        return data.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                    }
+
+                    data.trigger();
+                }
+            };
+
+            for (key in config) {
+                if (key !== "init" && key !== "update") {
+                    handler[key] = config[key];
+                }
+            }
+        },
+        /**
+         * Gets an object keyed with all the elements that are replacable parts, found within the supplied elements. The key will be the part name and the value will be the element itself.
+         * @method getParts
+         * @param {DOMElement\DOMElement[]} elements The element(s) to search for parts.
+         * @return {object} An object keyed by part.
+         */
+        getParts: function(elements) {
+            var parts = {};
+
+            if (!system.isArray(elements)) {
+                elements = [elements];
+            }
+
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+
+                if (element.getAttribute) {
+                    var id = element.getAttribute(partAttributeName);
+                    if (id) {
+                        parts[id] = element;
+                    }
+
+                    var childParts = $(partAttributeSelector, element)
+                        .not($('[data-bind] ' + partAttributeSelector, element));
+
+                    for (var j = 0; j < childParts.length; j++) {
+                        var part = childParts.get(j);
+                        parts[part.getAttribute(partAttributeName)] = part;
+                    }
+                }
+            }
+
+            return parts;
+        },
+        cloneNodes:cloneNodes,
+        finalize: function (context) {
+            context.transition = context.transition || this.defaultTransitionName;
+
+            if(!context.child && !context.activeView){
+                if (!context.cacheViews) {
+                    ko.virtualElements.emptyNode(context.parent);
+                }
+
+                context.triggerAttach();
+            }else if (shouldTransition(context)) {
+                var transitionModuleId = this.convertTransitionToModuleId(context.transition);
+
+                system.acquire(transitionModuleId).then(function (transition) {
+                    context.transition = transition;
+
+                    transition(context).then(function () {
+                        if (!context.cacheViews) {
+                            if(!context.child){
+                                ko.virtualElements.emptyNode(context.parent);
+                            }else{
+                                removePreviousView(context.parent);
+                            }
+                        }else if(context.activeView){
+                            var instruction = binder.getBindingInstruction(context.activeView);
+                            if(instruction.cacheViews != undefined && !instruction.cacheViews){
+                                ko.removeNode(context.activeView);
+                            }
+                        }
+
+                        context.triggerAttach();
+                    });
+                }).fail(function(err){
+                    system.error('Failed to load transition (' + transitionModuleId + '). Details: ' + err.message);
+                });
+            } else {
+                if (context.child != context.activeView) {
+                    if (context.cacheViews && context.activeView) {
+                        var instruction = binder.getBindingInstruction(context.activeView);
+                        if(instruction.cacheViews != undefined && !instruction.cacheViews){
+                            ko.removeNode(context.activeView);
+                        }else{
+                            $(context.activeView).hide();
+                        }
+                    }
+
+                    if (!context.child) {
+                        if (!context.cacheViews) {
+                            ko.virtualElements.emptyNode(context.parent);
+                        }
+                    } else {
+                        if (!context.cacheViews) {
+                            removePreviousView(context.parent);
+                        }
+
+                        $(context.child).show();
+                    }
+                }
+
+                context.triggerAttach();
+            }
+        },
+        bindAndShow: function (child, context, skipActivation) {
+            context.child = child;
+
+            if (context.cacheViews) {
+                context.composingNewView = (ko.utils.arrayIndexOf(context.viewElements, child) == -1);
+            } else {
+                context.composingNewView = true;
+            }
+
+            tryActivate(context, function () {
+                if (context.binding) {
+                    context.binding(context.child, context.parent, context);
+                }
+
+                if (context.preserveContext && context.bindingContext) {
+                    if (context.composingNewView) {
+                        if(context.parts){
+                            replaceParts(context);
+                        }
+
+                        $(child).hide();
+                        ko.virtualElements.prepend(context.parent, child);
+
+                        binder.bindContext(context.bindingContext, child, context.model);
+                    }
+                } else if (child) {
+                    var modelToBind = context.model || dummyModel;
+                    var currentModel = ko.dataFor(child);
+
+                    if (currentModel != modelToBind) {
+                        if (!context.composingNewView) {
+                            $(child).remove();
+                            viewEngine.createView(child.getAttribute('data-view')).then(function(recreatedView) {
+                                composition.bindAndShow(recreatedView, context, true);
+                            });
+                            return;
+                        }
+
+                        if(context.parts){
+                            replaceParts(context);
+                        }
+
+                        $(child).hide();
+                        ko.virtualElements.prepend(context.parent, child);
+
+                        binder.bind(modelToBind, child);
+                    }
+                }
+
+                composition.finalize(context);
+            }, skipActivation);
+        },
+        /**
+         * Eecutes the default view location strategy.
+         * @method defaultStrategy
+         * @param {object} context The composition context containing the model and possibly existing viewElements.
+         * @return {promise} A promise for the view.
+         */
+        defaultStrategy: function (context) {
+            return viewLocator.locateViewForObject(context.model, context.area, context.viewElements);
+        },
+        getSettings: function (valueAccessor, element) {
+            var value = valueAccessor(),
+                settings = ko.utils.unwrapObservable(value) || {},
+                activatorPresent = activator.isActivator(value),
+                moduleId;
+
+            if (system.isString(settings)) {
+                if (viewEngine.isViewUrl(settings)) {
+                    settings = {
+                        view: settings
+                    };
+                } else {
+                    settings = {
+                        model: settings,
+                        activate: true
+                    };
+                }
+
+                return settings;
+            }
+
+            moduleId = system.getModuleId(settings);
+            if (moduleId) {
+                settings = {
+                    model: settings,
+                    activate: true
+                };
+
+                return settings;
+            }
+
+            if(!activatorPresent && settings.model) {
+                activatorPresent = activator.isActivator(settings.model);
+            }
+
+            for (var attrName in settings) {
+                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+                    settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
+                } else {
+                    settings[attrName] = settings[attrName];
+                }
+            }
+
+            if (activatorPresent) {
+                settings.activate = false;
+            } else if (settings.activate === undefined) {
+                settings.activate = true;
+            }
+
+            return settings;
+        },
+        executeStrategy: function (context) {
+            context.strategy(context).then(function (child) {
+                composition.bindAndShow(child, context);
+            });
+        },
+        inject: function (context) {
+            if (!context.model) {
+                this.bindAndShow(null, context);
+                return;
+            }
+
+            if (context.view) {
+                viewLocator.locateView(context.view, context.area, context.viewElements).then(function (child) {
+                    composition.bindAndShow(child, context);
+                });
+                return;
+            }
+
+            if (!context.strategy) {
+                context.strategy = this.defaultStrategy;
+            }
+
+            if (system.isString(context.strategy)) {
+                system.acquire(context.strategy).then(function (strategy) {
+                    context.strategy = strategy;
+                    composition.executeStrategy(context);
+                }).fail(function(err){
+                    system.error('Failed to load view strategy (' + context.strategy + '). Details: ' + err.message);
+                });
+            } else {
+                this.executeStrategy(context);
+            }
+        },
+        /**
+         * Initiates a composition.
+         * @method compose
+         * @param {DOMElement} element The DOMElement or knockout virtual element that serves as the parent for the composition.
+         * @param {object} settings The composition settings.
+         * @param {object} [bindingContext] The current binding context.
+         */
+        compose: function (element, settings, bindingContext, fromBinding) {
+            compositionCount++;
+
+            if(!fromBinding){
+                settings = composition.getSettings(function() { return settings; }, element);
+            }
+
+            var hostState = getHostState(element);
+
+            settings.activeView = hostState.activeView;
+            settings.parent = element;
+            settings.triggerAttach = triggerAttach;
+            settings.bindingContext = bindingContext;
+
+            if (settings.cacheViews && !settings.viewElements) {
+                settings.viewElements = hostState.childElements;
+            }
+
+            if (!settings.model) {
+                if (!settings.view) {
+                    this.bindAndShow(null, settings);
+                } else {
+                    settings.area = settings.area || 'partial';
+                    settings.preserveContext = true;
+
+                    viewLocator.locateView(settings.view, settings.area, settings.viewElements).then(function (child) {
+                        composition.bindAndShow(child, settings);
+                    });
+                }
+            } else if (system.isString(settings.model)) {
+                system.acquire(settings.model).then(function (module) {
+                    settings.model = system.resolveObject(module);
+                    composition.inject(settings);
+                }).fail(function(err){
+                    system.error('Failed to load composed module (' + settings.model + '). Details: ' + err.message);
+                });
+            } else {
+                composition.inject(settings);
+            }
+        }
+    };
+
+    ko.bindingHandlers.compose = {
+        init: function() {
+            return { controlsDescendantBindings: true };
+        },
+        update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var settings = composition.getSettings(valueAccessor, element);
+            if(settings.mode){
+                var data = ko.utils.domData.get(element, compositionDataKey);
+                if(!data){
+                    var childNodes = ko.virtualElements.childNodes(element);
+                    data = {};
+
+                    if(settings.mode === 'inline'){
+                        data.view = viewEngine.ensureSingleElement(childNodes);
+                    }else if(settings.mode === 'templated'){
+                        data.parts = cloneNodes(childNodes);
+                    }
+
+                    ko.virtualElements.emptyNode(element);
+                    ko.utils.domData.set(element, compositionDataKey, data);
+                }
+
+                if(settings.mode === 'inline'){
+                    settings.view = data.view.cloneNode(true);
+                }else if(settings.mode === 'templated'){
+                    settings.parts = data.parts;
+                }
+
+                settings.preserveContext = true;
+            }
+
+            composition.compose(element, settings, bindingContext, true);
+        }
+    };
+
+    ko.virtualElements.allowedBindings.compose = true;
+
+    return composition;
+});

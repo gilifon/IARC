@@ -1,1 +1,30 @@
-define(function(){var t=function(t,n,e){return $.ajax({type:"GET",url:t,data:n,contentType:"application/json",headers:e})},n=function(t,n,e){return $.ajax({url:t,data:n,type:"POST",headers:e})},e={get:t,post:n};return e});
+﻿define(function () {
+    var httpGet = function (url, query, headers) {
+        return $.ajax({
+            type: 'GET',
+            url: url,
+            data: query,
+            contentType: 'application/json',
+            headers: headers
+        });
+    };
+
+    var httpPost = function (url, data, headers) {
+        return $.ajax({
+            url: url,
+            //data: ko.toJSON(data),
+            data: data,
+            type: 'POST',
+            //contentType: 'application/json',
+            //dataType: 'json',
+            headers: headers
+        });
+    };
+
+    var httpService = {
+        get: httpGet,
+        post: httpPost
+    };
+
+    return httpService;
+});

@@ -1,1 +1,20 @@
-define(["services/utilities","services/httpService"],function(e){var t=require("viewmodels/shell"),n=ko.observable(),a={activate:function(){t.selectedSubMenu("sukotresults"),t.selectedMainMenu("israelham"),n.subscribe(function(t){void 0!==t&&e.applyRowSearch("#dataTable tbody tr",t)}),n("")},searchInput:n};return a});
+﻿define(['services/utilities', 'services/httpService'], function (utilities) {
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('sukotresults');
+            shell.selectedMainMenu('israelham');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+            searchInput('');
+        },
+		searchInput: searchInput
+    };
+
+    return vm;
+});

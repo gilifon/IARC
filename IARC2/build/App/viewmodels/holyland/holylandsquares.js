@@ -1,1 +1,23 @@
-define(["services/utilities","services/httpService"],function(t){var e=require("viewmodels/shell"),n=ko.observable(),a={activate:function(){e.selectedSubMenu("holylandsquares"),e.selectedMainMenu("holyland"),n.subscribe(function(e){void 0!==e&&t.applyRowSearch("#dataTable tbody tr",e)})},compositionComplete:function(){n("")},searchInput:n};return a});
+﻿define(['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var searchInput = ko.observable();
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('holylandsquares');
+            shell.selectedMainMenu('holyland');
+            searchInput.subscribe(function (newValue) {
+                if (newValue === undefined)
+                    return;
+                utilities.applyRowSearch("#dataTable tbody tr", newValue);
+            });
+        },
+        compositionComplete: function () {
+            searchInput('');
+        },
+        searchInput: searchInput
+    };
+
+    return vm;
+});

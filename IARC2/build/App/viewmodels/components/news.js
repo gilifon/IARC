@@ -1,1 +1,19 @@
-define(["services/utilities","services/httpService"],function(t,n){require("viewmodels/shell");var e=ko.observableArray(),a=function(){n.get("Server/news.php?d="+Date.now()).done(function(t){e(t)}).error(t.handleError)},r={getItems:a,compositionComplete:function(){a()},items:e};return r});
+﻿define(['services/utilities', 'services/httpService'], function (utilities, httpService) {
+
+    var shell = require('viewmodels/shell');
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/news.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+
+    var vm = {
+        getItems: getItems,
+        compositionComplete: function () {
+            getItems();
+        },
+        items: items
+    };
+
+    return vm;
+});

@@ -1,1 +1,38 @@
-requirejs.config({urlArgs:"version=2019.02",paths:{text:"../Scripts/text",durandal:"../Scripts/durandal",plugins:"../Scripts/durandal/plugins",transitions:"../Scripts/durandal/transitions"}}),define("jquery",function(){return jQuery}),define("knockout",ko),define(["durandal/system","durandal/app","durandal/viewLocator"],function(t,n,e){t.debug(!0),n.title="IARC - New",n.version="2019.02",n.configurePlugins({router:!0,dialog:!0,widget:!0}),n.start().then(function(){e.useConvention(),n.setRoot("viewmodels/shell","entrance")})});
+﻿requirejs.config({
+    urlArgs: "version=2019.02",
+    paths: {
+        'text': '../Scripts/text',
+        'durandal': '../Scripts/durandal',
+        'plugins': '../Scripts/durandal/plugins',
+        'transitions': '../Scripts/durandal/transitions'
+    }
+});
+
+define('jquery', function() { return jQuery; });
+define('knockout', ko);
+
+define(['durandal/system', 'durandal/app', 'durandal/viewLocator'],  function (system, app, viewLocator) {
+    //>>excludeStart("build", true);
+    system.debug(true);
+    //>>excludeEnd("build");
+
+    app.title = 'IARC - New';
+    app.version = "2019.02";
+
+    app.configurePlugins({
+        router: true,
+        dialog: true,
+        widget: true
+    });
+
+    
+
+    app.start().then(function () {
+        //Replace 'viewmodels' in the moduleId with 'views' to locate the view.
+        //Look for partial views in a 'views' folder in the root.
+        viewLocator.useConvention();
+
+        //Show the app by setting the root view model for our application with a transition.
+        app.setRoot('viewmodels/shell', 'entrance');
+    });
+});

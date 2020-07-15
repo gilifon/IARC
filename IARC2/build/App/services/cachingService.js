@@ -1,1 +1,18 @@
-define(function(){var t=function(t,n){amplify.store(t,n)},n=function(t){return amplify.store(t)},e={add:t,get:n};return e});
+﻿define(function (require) {
+
+    var addToCach = function (key, value) {
+        amplify.store(key, value);
+    };
+
+    var getFromCach = function (key) {
+        return amplify.store(key);
+    };
+
+    var cachingService = {
+        add: addToCach,
+        get: getFromCach
+    };
+
+    return cachingService;
+
+});

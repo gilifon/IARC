@@ -1,1 +1,185 @@
-define(["services/utilities","services/httpService","services/displayService"],function(t,e,n){var a,r=require("viewmodels/shell"),g=ko.observable(),o=function(){g(""),a.removeCurrent()},l=ko.asyncCommand({execute:function(t){a.getQueueSize()>0?a.submit():n.display("Do not forget to select your log file","error"),t(!0)},canExecute:function(t){return!t}});this.safe_tags=function(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};var i=function(){},s={activate:function(){r.selectedSubMenu("logupload"),r.selectedMainMenu("holyland")},compositionComplete:function(){i(),$(".selectpicker").selectpicker();var r=document.getElementById("upload-btn"),l=document.getElementById("pic-progress-wrap"),s=(document.getElementById("picbox"),document.getElementById("errormsg"));a=new ss.SimpleUpload({button:r,url:"Server/uploadHandler.php?dir=log",name:"uploadfile",multiple:!1,queue:!1,maxUploads:1,maxSize:300,allowedExtensions:["adi","txt","cabrillo.txt","log","cbr"],hoverClass:"btn-hover",focusClass:"active",disabledClass:"disabled",responseType:"json",autoSubmit:!1,onChange:function(t){g(t)},onExtError:function(t){n.display(t+" is not a permitted file type."+"\n\n"+"Only ADI, TXT, LOG and CBR files are allowed.","error")},onSizeError:function(t){n.display(t+" is too big. (300K max file size)","error")},onSubmit:function(t){var e=document.createElement("div"),n=document.createElement("div"),a=document.createElement("div"),r=document.createElement("div");e.className="prog",r.className="size",n.className="progress progress-striped active",a.className="progress-bar progress-bar-success",n.appendChild(a),e.innerHTML='<span style="vertical-align:middle;">'+safe_tags(t)+" - </span>",e.appendChild(r),e.appendChild(n),l.appendChild(e),this.setProgressBar(a),this.setProgressContainer(e),this.setFileSizeBox(r),s.innerHTML=""},startXHR:function(){var t=document.createElement("button");l.appendChild(t),t.className="btn btn-sm btn-info",t.innerHTML="Cancel",this.setAbortBtn(t,!0)},onComplete:function(a,r){if(!r)return s.innerHTML="Unable to upload file",void 0;if(r.success===!0){var g={info:{timestamp:r.timestamp,filename:r.file}};e.post("Server/upload_log.php",g).done(function(t){t.success===!0?n.display(t.msg):n.display(t.msg,"error"),o()}).error(function(){t.handleError()})}else s.innerHTML=r.msg?r.msg:"Unable to upload file"}})},file:g,Clear:o,Send:l,uploader:a};return s});
+﻿define(['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {
+
+    var shell = require('viewmodels/shell');
+
+
+    //var email = ko.observable();
+    //var category = ko.observable();
+    //var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
+    var file = ko.observable();
+    var uploader;
+
+    var Clear = function () {
+        //$('#registration-form').parsley().reset();
+        //email("");
+        //category("");
+        file("");
+        uploader.removeCurrent();
+    }
+
+    var Send = ko.asyncCommand({
+        execute: function (complete) {
+            //$('#registration-form').parsley().validate();
+            //if ($('#registration-form').parsley().isValid()) {
+                if (uploader.getQueueSize() > 0) {
+                    uploader.submit();
+                }
+                else {
+                    displayService.display('Do not forget to select your log file', 'error');
+                }
+            //}
+            complete(true);
+        },
+        canExecute: function (isExecuting) {
+            return !isExecuting;
+        }
+    });
+
+    this.safe_tags = function (str) {
+        return String(str)
+                 .replace(/&/g, '&amp;')
+                 .replace(/"/g, '&quot;')
+                 .replace(/'/g, '&#39;')
+                 .replace(/</g, '&lt;')
+                 .replace(/>/g, '&gt;');
+    }
+
+    var SetTooltips = function () {
+        //$('#mobile').tooltip();
+        //$('#phone').tooltip();
+        //$('#id').tooltip();
+        //$('#licensenum').tooltip();
+    }
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('logupload');
+            shell.selectedMainMenu('holyland');
+        },
+        compositionComplete: function () {
+            SetTooltips();
+            $('.selectpicker').selectpicker();
+            var btn = document.getElementById('upload-btn'),
+       wrap = document.getElementById('pic-progress-wrap'),
+       picBox = document.getElementById('picbox'),
+       errBox = document.getElementById('errormsg');
+
+
+            uploader = new ss.SimpleUpload({
+                button: btn,
+                url: 'Server/uploadHandler.php?dir=log',
+                //progressUrl: 'Server/uploadProgress.php',
+                name: 'uploadfile',
+                multiple: false,
+                queue: false,
+                maxUploads: 1,
+                maxSize: 300,
+                allowedExtensions: ['adi', 'txt', 'cabrillo.txt', 'log', 'cbr'],
+                //accept: 'image/*',
+                hoverClass: 'btn-hover',
+                focusClass: 'active',
+                disabledClass: 'disabled',
+                responseType: 'json',
+                autoSubmit: false,
+                onChange: function (filename, extension, btn) {
+                    file(filename);
+                },
+                onExtError: function (filename, extension) {
+                    //alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, ADIF, and CAB files are allowed.');
+                    displayService.display(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, TXT, LOG and CBR files are allowed.', 'error');
+                },
+                onSizeError: function (filename, fileSize) {
+                    //alert(filename + ' is too big. (300K max file size)');
+                    displayService.display(filename + ' is too big. (300K max file size)', 'error');
+                },
+                onSubmit: function (filename, ext) {
+                    var prog = document.createElement('div'),
+                        outer = document.createElement('div'),
+                        bar = document.createElement('div'),
+                        size = document.createElement('div');
+
+                    prog.className = 'prog';
+                    size.className = 'size';
+                    outer.className = 'progress progress-striped active';
+                    bar.className = 'progress-bar progress-bar-success';
+
+                    outer.appendChild(bar);
+                    prog.innerHTML = '<span style="vertical-align:middle;">' + safe_tags(filename) + ' - </span>';
+                    prog.appendChild(size);
+                    prog.appendChild(outer);
+                    wrap.appendChild(prog); // 'wrap' is an element on the page
+
+                    this.setProgressBar(bar);
+                    this.setProgressContainer(prog);
+                    this.setFileSizeBox(size);
+
+                    errBox.innerHTML = '';
+                    //btn.value = 'Choose another file';
+
+                },
+                startXHR: function () {
+                    // Dynamically add a "Cancel" button to be displayed when upload begins
+                    // By doing it here ensures that it will only be added in browses which 
+                    // support cancelling uploads
+                    var abort = document.createElement('button');
+
+                    wrap.appendChild(abort);
+                    abort.className = 'btn btn-sm btn-info';
+                    abort.innerHTML = 'Cancel';
+
+                    // Adds click event listener that will cancel the upload
+                    // The second argument is whether the button should be removed after the upload
+                    // true = yes, remove abort button after upload
+                    // false/default = do not remove
+                    this.setAbortBtn(abort, true);
+                },
+                onComplete: function (filename, response) {
+                    if (!response) {
+                        errBox.innerHTML = 'Unable to upload file';
+                        return;
+                    }
+                    if (response.success === true) {
+                        var info = {
+                            'info':
+                            {
+                                //'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'timestamp': response.timestamp, 'filename': response.file
+                            }
+                        };
+                        httpService.post("Server/upload_log.php", info).done(function (data) {
+                            if (data.success === true) {
+                                displayService.display(data.msg);
+                            }
+                            else {
+                                displayService.display(data.msg, 'error');
+                            }
+                            Clear();
+                        }).error(function () { utilities.handleError(); });
+
+                    } else {
+                        if (response.msg) {
+                            errBox.innerHTML = response.msg;
+                        } else {
+                            errBox.innerHTML = 'Unable to upload file';
+                        }
+                    }
+                }
+            });
+
+        },
+
+        //email: email,
+        //category: category,
+        //categories: categories,
+        file: file,
+        Clear: Clear,
+        Send: Send,
+        uploader: uploader
+    };
+
+
+    return vm;
+});
+
+
+

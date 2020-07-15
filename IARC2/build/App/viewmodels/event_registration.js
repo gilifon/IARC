@@ -1,1 +1,68 @@
-define(["services/utilities","services/httpService","services/displayService"],function(t,n,e){var a=require("viewmodels/shell"),r=ko.observable(),g=ko.observable(),o=ko.observable(),l=ko.observableArray(),i=function(){n.get("Server/get_events.php?d="+Date.now()).done(function(t){l(t)}).error(t.handleError)};this.Send=ko.asyncCommand({execute:function(a){if(null==g())e.display("אל תשכח להכניס אות קריאה..","error");else if(null==r())e.display("אל תשכח להכניס שם..","error");else if(null==o())e.display("אל תשכח להכניס אימייל..","error");else{var l={info:{name:r(),callsign:g(),email:o(),event_id:this.id}};n.post("Server/event_registration.php",l).done(function(t){e.display(t),a(!0)}).error(function(){e.display("Something went wrong..","error"),t.handleError(),a(!0)})}},canExecute:function(){return!0}});var s={activate:function(){a.selectedSubMenu("eventregistration"),a.selectedMainMenu("aguda"),i()},compositionComplete:function(){},name:r,callsign:g,email:o,getItems:i,items:l};return s});
+﻿define(['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {    
+
+    var shell = require('viewmodels/shell');
+
+    var name = ko.observable();
+    var callsign = ko.observable();
+    var email = ko.observable();
+    var items = ko.observableArray();
+
+    var getItems = function () {
+        httpService.get("Server/get_events.php?d=" + Date.now()).done(function (data) { items(data); }).error(utilities.handleError);
+    }
+    
+    this.Send = ko.asyncCommand({
+        execute: function (complete) {
+            if (callsign() == null) {
+                displayService.display("אל תשכח להכניס אות קריאה..", "error");
+            }
+            else if (name() == null) {
+                displayService.display("אל תשכח להכניס שם..", "error");
+            }
+            else if (email() == null) {
+                displayService.display("אל תשכח להכניס אימייל..", "error");
+            }
+            else {
+                var info = {
+                    'info':
+                    {
+                        'name': name(),
+                        'callsign': callsign(),
+                        'email': email(),
+                        'event_id': this.id
+                    }
+                };
+                httpService.post("Server/event_registration.php", info).done(function (data) {
+                    displayService.display(data);
+                    complete(true);
+                    //callsign('');
+                    //name('');
+                    //email('');
+                }).error(function () { displayService.display("Something went wrong..", "error"); utilities.handleError(); complete(true); });
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
+    var vm = {
+        activate: function () {
+            shell.selectedSubMenu('eventregistration');
+            shell.selectedMainMenu('aguda');
+            getItems();
+        },
+        compositionComplete: function () {
+            
+        },
+        name: name,
+        callsign: callsign,
+        email: email,
+        getItems: getItems,
+        items: items
+    };
+
+
+    return vm;
+});

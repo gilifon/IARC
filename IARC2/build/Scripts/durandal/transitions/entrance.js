@@ -1,1 +1,79 @@
-define(["durandal/system","durandal/composition","jquery"],function(e,t,n){var a=100,r={marginRight:0,marginLeft:0,opacity:1},o={marginLeft:"",marginRight:"",opacity:"",display:""},l=function(t){return e.defer(function(e){function l(){e.resolve()}function g(){t.keepScrollPosition||n(document).scrollTop(0)}function i(){g(),t.triggerAttach();var e={marginLeft:d?"0":"20px",marginRight:d?"0":"-20px",opacity:0,display:"block"},a=n(t.child);a.css(e),a.animate(r,s,"swing",function(){a.css(o),l()})}if(t.child){var s=t.duration||500,d=!!t.fadeOnly;t.activeView?n(t.activeView).fadeOut(a,i):i()}else n(t.activeView).fadeOut(a,l)}).promise()};return l});
+/**
+ * Durandal 2.0.0 Copyright (c) 2012 Blue Spire Consulting, Inc. All Rights Reserved.
+ * Available via the MIT license.
+ * see: http://durandaljs.com or https://github.com/BlueSpire/Durandal for details.
+ */
+/**
+ * The entrance transition module.
+ * @module entrance
+ * @requires system
+ * @requires composition
+ * @requires jquery
+ */
+define(['durandal/system', 'durandal/composition', 'jquery'], function(system, composition, $) {
+    var fadeOutDuration = 100;
+    var endValues = {
+        marginRight: 0,
+        marginLeft: 0,
+        opacity: 1
+    };
+    var clearValues = {
+        marginLeft: '',
+        marginRight: '',
+        opacity: '',
+        display: ''
+    };
+
+    /**
+     * @class EntranceModule
+     * @constructor
+     */
+    var entrance = function(context) {
+        return system.defer(function(dfd) {
+            function endTransition() {
+                dfd.resolve();
+            }
+
+            function scrollIfNeeded() {
+                if (!context.keepScrollPosition) {
+                    $(document).scrollTop(0);
+                }
+            }
+
+            if (!context.child) {
+                $(context.activeView).fadeOut(fadeOutDuration, endTransition);
+            } else {
+                var duration = context.duration || 500;
+                var fadeOnly = !!context.fadeOnly;
+
+                function startTransition() {
+                    scrollIfNeeded();
+                    context.triggerAttach();
+
+                    var startValues = {
+                        marginLeft: fadeOnly ? '0' : '20px',
+                        marginRight: fadeOnly ? '0' : '-20px',
+                        opacity: 0,
+                        display: 'block'
+                    };
+
+                    var $child = $(context.child);
+
+                    $child.css(startValues);
+                    $child.animate(endValues, duration, 'swing', function () {
+                        $child.css(clearValues);
+                        endTransition();
+                    });
+                }
+
+                if (context.activeView) {
+                    $(context.activeView).fadeOut(fadeOutDuration, startTransition);
+                } else {
+                    startTransition();
+                }
+            }
+        }).promise();
+    };
+
+    return entrance;
+});

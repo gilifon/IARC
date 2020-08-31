@@ -46,6 +46,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="_collapse _navbar-collapse _navbar-responsive-collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li data-bind="css: { active: selectedMainMenu() == 'pa' }">
+                        <a href="https://www.iarc.org/silentkey/" target="_blank">אתר הזיכרון</a>
+                    </li>
                     <li class="dropdown text-left" data-bind="css: { active: selectedMainMenu() == 'english' }" style="direction: ltr">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">
                             <img src="././assets/img/english.png" style="margin-top: -5px" />
@@ -76,16 +79,16 @@
                             <li class="divider">Online Tools</li>
                             <li data-bind="css: { active: selectedSubMenu() == 'holysquare' }"><a href="https://www.iarc.org/holysquare/" target="_blank">Holyland Squares - Online Tool</a></li>
                             <!--<li data-bind="css: { active: selectedSubMenu() == 'HolyTracker' }"><a href="https://play.google.com/store/apps/details?id=org.gts.holytracker" target="_blank">HolyTracker - Spotting App</a></li>
-                            <li data-bind="css: { active: selectedSubMenu() == 'LiveMap' }"><a href="https://iarc.org/squarereg/livemap.html" target="_blank">HolyTracker - Live Map</a></li>-->
+            <li data-bind="css: { active: selectedSubMenu() == 'LiveMap' }"><a href="https://iarc.org/squarereg/livemap.html" target="_blank">HolyTracker - Live Map</a></li>-->
                             <li data-bind="css: { active: selectedSubMenu() == 'holylandsquares' }"><a href="#HolylandSquares">Holyland Squares - Paper Maps</a></li>
                             <li class="divider">Results</li>
                             <li data-bind="css: { active: selectedSubMenu() == 'holylandresults' }"><a href="#HolylandResults">Holyland Contest Results</a></li>
                             <li data-bind="css: { active: selectedSubMenu() == 'holylandresults_isr' }"><a href="#HolylandResultsISR">Holyland Contest Results - 4X</a></li>
                             <li data-bind="css: { active: selectedSubMenu() == 'holylandaward' }"><a href="#HolylandAward">Holyland Award</a></li>
                             <li data-bind="css: { active: selectedSubMenu() == 'logupload' }"><a href="#LogUpload">Upload Holyland Contest Log</a></li>
-							<li data-bind="css: { active: selectedSubMenu() == 'holylandlogs' }"><a href="#HolylandLogs">Holyland Received Logs</a></li>
+                            <li data-bind="css: { active: selectedSubMenu() == 'holylandlogs' }"><a href="#HolylandLogs">Holyland Received Logs</a></li>
                             <li data-bind="css: { active: selectedSubMenu() == 'certificategenerator' }"><a href="#Certificategenerator">Holyland Certificate Request</a></li>
-							
+
                         </ul>
                     </li>
 
@@ -93,13 +96,14 @@
                         <a href="#PA">איזור אישי</a>
                     </li>
                     <li data-bind="css: { active: selectedMainMenu() == 'contact' }">
-                        <a href="#Contact">צור קשר
+                        <a href="#Contact">
+                            צור קשר
                         </a>
                     </li>
                     <!--<li data-bind="css: { active: selectedMainMenu() == 'news' }">
-                        <a href="#News">חדשות
-                        </a>
-                    </li>-->
+        <a href="#News">חדשות
+        </a>
+    </li>-->
                     <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'gallery' }">
                         <a href="#" class="dropdown-toggle">
                             גלריה
@@ -112,7 +116,8 @@
                     </li>
 
                     <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'links' }">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">קישורים
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false">
+                            קישורים
 
                             <i class="icon-angle-down"></i>
                         </a>
@@ -128,9 +133,10 @@
 
                         </ul>
                     </li>
-                     <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'hagal' }">
-                        <a href="#HagalMain" class="dropdown-toggle">הגל
-                           
+                    <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'hagal' }">
+                        <a href="#HagalMain" class="dropdown-toggle">
+                            הגל
+
                             <i class="icon-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -140,8 +146,9 @@
                         </ul>
                     </li>
                     <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'israelham' }">
-                        <a href="#HamInIsrael" class="dropdown-toggle">חובבות רדיו בישראל
-                           
+                        <a href="#HamInIsrael" class="dropdown-toggle">
+                            חובבות רדיו בישראל
+
                             <i class="icon-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -162,8 +169,9 @@
                         </ul>
                     </li>
                     <li class="dropdown" data-bind="css: { active: selectedMainMenu() == 'aguda' }">
-                        <a href="#Aguda" class="dropdown-toggle">האגודה
-                           
+                        <a href="#Aguda" class="dropdown-toggle">
+                            האגודה
+
                             <i class="icon-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -182,7 +190,8 @@
                         </ul>
                     </li>
                     <li data-bind="css: { active: selectedMainMenu() == 'main' }">
-                        <a href="#">דף הבית
+                        <a href="#">
+                            דף הבית
                         </a>
                     </li>
                 </ul>

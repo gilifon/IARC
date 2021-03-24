@@ -7,23 +7,23 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Please send logs to 4z4kxx@gmail.com
         </div>
         <hr />
-        <div id="registration-form" class="form-horizontal" data-parsley-validate style="visibility:hidden">
+        <div id="registration-form" class="form-horizontal" data-parsley-validate style="visibility:visible">
 
             <!--<div class="form-group ">
-                <div class="col-md-2">
-                    <label for="email" class="col-md-2 control-label ">Email</label>
-                </div>
-                <div class="col-md-4">
-                    <input type="email" class="form-control" id="email" placeholder="Email" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>
-                </div>
+            <div class="col-md-2">
+                <label for="email" class="col-md-2 control-label ">Email</label>
+            </div>
+            <div class="col-md-4">
+                <input type="email" class="form-control" id="email" placeholder="Email" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>
+            </div>
 
-                <div class="col-md-2">
-                    <label for="category" class="col-md-2 control-label ">Category</label>
-                </div>
-                <div class="col-md-4">
-                    <select class="selectpicker" id="category" data-bind="options: categories, value: category, optionsCaption: 'Category'" required></select>
-                </div>
-            </div>-->
+            <div class="col-md-2">
+                <label for="category" class="col-md-2 control-label ">Category</label>
+            </div>
+            <div class="col-md-4">
+                <select class="selectpicker" id="category" data-bind="options: categories, value: category, optionsCaption: 'Category'" required></select>
+            </div>
+        </div>-->
             <div>
                 <div class="col-md-1">
                     <button id="ClearBtn" type="button" class="btn btn-default" data-bind="click: Clear">Clear</button>
@@ -82,16 +82,30 @@
             CATEGORY-MODE: text
         </h4>
         The category-mode must be one of the following:<br />
-        SSB<br />
+        MIX<br />
         CW<br />
+        SSB<br />
+        FT8<br />
         DIGI<br />
-        MIXED<br />
+        QRP<br />
+        SOB<br />
+        M5<br />
+        M10<br />
+        POR<br />
+        MOP<br />
+        MM<br />
+        MMP<br />
+        4Z9<br />
+        SHA<br />
+        SWL<br />
+        NEW<br />
         <br />
         <h4>
             CATEGORY-POWER: text
         </h4>
         The category-power must be one of the following:<br />
         HIGH<br />
+        LOW<br />
         QRP<br />
         <br />
         <h4>
@@ -154,7 +168,7 @@
         <h4>END-OF-LOG:</h4>
         Must be the last line of the log submission.<br />
         <br />
-        
+
         <p>
             <h4>EXAMPLE:</h4>
             START-OF-LOG: 3.0<br />

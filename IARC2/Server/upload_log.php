@@ -1,10 +1,10 @@
 <?
-include ("db_web.inc");
+include ("db_holylanddb.inc");
 include ('error.inc');
 // ini_set ( 'display_errors', 1 );
-ini_set ( 'error_reporting', E_ALL );
-include ('sqs.php');
-set_error_handler ( "handleError" );
+ini_set ( 'error_reporting', E_ALL ^ E_NOTICE);
+//include ('sqs.php');
+//set_error_handler ( "handleError" );
 header ( 'Content-type: application/json' );
 $isDebug = false; // Debug mode
                   
@@ -12,30 +12,8 @@ $isDebug = false; // Debug mode
 $info = $_POST ["info"];
 
 $year = date ( "Y" );
-$time_min = strtotime ( '04/01/' . $year . ' second Friday' );
-$time_max = strtotime ( '05/30/' . $year );
-
-if (! $isDebug) {
-	if ($time_min <= time () && $time_max >= time ()) {
-	} else {
-		//die ( json_encode ( array (
-		//		'success' => false,
-		//		'msg' => 'The Holyland log upload, can be uploaded between <strong>' . date ( 'l jS F Y', $time_min ) . "</strong> and <strong>" . date ( 'l jS F Y', $time_max ) . '</strong>' 
-		//) ) );
-	}
-}
 
 // extract all the properties of the registration request
-if (isset ( $info ['email'] )) {
-	$email = $info ['email'];
-} else {
-	$email = '';
-}
-if (isset ( $info ['category'] )) {
-	$category = $info ['category'];
-} else {
-	$category = '';
-}
 if (isset ( $info ['timestamp'] )) {
 	$timestamp = $info ['timestamp'];
 } else {
@@ -48,338 +26,202 @@ if (isset ( $info ['filename'] )) {
 }
 
 // RUN THE ALGORITHM
-$log_data_qso = array ();
-$uniqqso = array ();
-$band = array ();
-$mult = array ();
-$multS = array ();
-$multH = array ();
-$modeUniq = array ();
-$sqsValidation = array ();
-$validQSO = array ();
-$logHeader = array ();
-$logCalculated = array ();
-$invalidQSO = array ();
-$hamqthdata = array ();
-$pointsArr = array ();
-$swl = false;
+$logVer = '';
+$category_operator = '';
+$category_mode = '';
+$category_power = '';
+$callsign = '';
+$email = '';
+$name = '';
+$contest = '';
 
-if (! ($f = fopen ( __DIR__ . "/../holylandLogs/" . $filename, "r" )))
-	// die ( "Could not open the log file $filename" );
+// load the file
+if (! ($f = fopen ( __DIR__ . "/log_uploads/" . $filename, "r" )))
+{
 	die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'Could not open the log file ' . $filename . ' Please contact info@iarc.org' 
+			'msg' => 'Could not open the log file ' . $filename . ' Please contact the contest manager' 
 	) ) );
-$file = fread ( $f, filesize ( __DIR__ . "/../holylandLogs/" . $filename ) );
+}
+$file = fread ( $f, filesize ( __DIR__ . "/log_uploads/" . $filename ) );
 $file_content = addslashes ( $file );
 $rows_log_data = explode ( "\r\n", $file );
 $rows_log_data = preg_replace('!\s+!', ' ', $rows_log_data);
 $rows_log_data = str_replace('NONE', '', $rows_log_data); //remove NONE column in the log
 
-$logVer = trim ( stristr ( array_shift ( (preg_grep ( '/^START-OF-LOG:/', $rows_log_data, 0 )) ), ' ' ) );
-if ($logVer == '2.0') {
-	$logHeader [0] = $logVer;
-	$logHeader [1] = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY:/', $rows_log_data, 0 )) ), ' ' ) );
-	$logHeader [2] = trim ( stristr ( array_shift ( (preg_grep ( '/^CREATED-BY:/', $rows_log_data, 0 )) ), ' ' ) );
-	$logHeader [3] = $category; // category
-	$logHeader [7] = $timestamp; // timestamp
-	$logHeader [8] = $email; // email
-	if (strpos ( $logHeader [1], 'SWL' ) !== false) {
-		$swl = true;
+//Parse the file
+$logVer = dataExtractor('/^START-OF-LOG:/', $rows_log_data);//
+$rows_log_data = str_replace('CATEGORY OPERATOR:','CATEGORY-OPERATOR:',$rows_log_data);
+$rows_log_data = str_replace('CATEGORY MODE:','CATEGORY-MODE:',$rows_log_data);
+$rows_log_data = str_replace('CATEGORY POWER:','CATEGORY-POWER:',$rows_log_data);
+//*********************************** Version Dependened Data ********************************//
+if ($logVer == '3.0') {
+	$category_operator = trim(strtoupper(dataExtractor('/^CATEGORY-OPERATOR:/', $rows_log_data)));
+	$category_mode = trim(strtoupper(dataExtractor('/^CATEGORY-MODE:/', $rows_log_data)));
+	$category_power = trim(strtoupper(dataExtractor('/^CATEGORY-POWER:/', $rows_log_data)));
+}
+else if ($logVer == '2.0') {
+	//CATEGORY: SINGLE-OP ALL HIGH CW
+	$category = trim(strtoupper(dataExtractor('/^CATEGORY:/', $rows_log_data)));
+	list($category_operator, $category_band, $category_power, $category_mode) = explode(" ", $category);
+	if (strtoupper($category_operator) == 'CHECKLOG'){
+		$category_band= "ALL"; 
+		$category_power="HIGH";
+		$category_mode="MIXED";
 	}
 }
-if ($logVer == '3.0') {
-	$logHeader [0] = $logVer;
-	$cat1 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-OPERATOR:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat2 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-BAND:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat3 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-MODE:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat4 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-POWER:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat5 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-STATION:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat6 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-ASSISTED:/', $rows_log_data, 0 )) ), ' ' ) );
-	$cat7 = trim ( stristr ( array_shift ( (preg_grep ( '/^CATEGORY-TRANSMITTER:/', $rows_log_data, 0 )) ), ' ' ) );
-	$logHeader [1] = $cat1 . " " . $cat2 . " " . $cat3 . " " . $cat4 . " " . $cat5 . " " . $cat6 . " " . $cat7;
-	$logHeader [2] = trim ( stristr ( array_shift ( (preg_grep ( '/^CREATED-BY:/', $rows_log_data, 0 )) ), ' ' ) );
-	$logHeader [3] = $category; // category
-	$logHeader [7] = $timestamp; // timestamp
-	$logHeader [8] = $email; // email
-	if (strpos ( $logHeader [1], 'SWL' ) !== false) {
-		$swl = true;
-	}
+$category_operator = str_replace("-NON-ASSISTED","",$category_operator);
+$category_operator = str_replace("-ASSISTED","",$category_operator);
+//*******************************************************************************************//
+
+if (strtoupper($category_operator) != 'SINGLE-OP' && strtoupper($category_operator) != 'MULTI-OP' && strtoupper($category_operator) != 'SWL' && strtoupper($category_operator) != 'CHECKLOG') {
+	die ( json_encode ( array (
+			'success' => false,
+			'msg' => 'CATEGORY-OPERATOR Valid values are: SINGLE-OP, MULTI-OP, SWL, CHECKLOG' 
+	) ) );
+}
+if (strtoupper($category_mode) != 'SSB' && strtoupper($category_mode) != 'CW' && strtoupper($category_mode) != 'DIGI' && strtoupper($category_mode) != 'MIXED' && strtoupper($category_mode) != 'MIX' && strtoupper($category_mode) != 'FT8' && strtoupper($category_mode) != 'SOB' && strtoupper($category_mode) != 'M5' && strtoupper($category_mode) != 'M10' && strtoupper($category_mode) != 'POR' && strtoupper($category_mode) != 'MOP' && strtoupper($category_mode) != 'MM' && strtoupper($category_mode) != 'MMP' && strtoupper($category_mode) != '4Z9' && strtoupper($category_mode) != 'SHA' && strtoupper($category_mode) != 'SWL' && strtoupper($category_mode) != 'NEW') {
+	die ( json_encode ( array (
+			'success' => false,
+			'msg' => 'CATEGORY-MODE Valid values are: SSB, CW, DIGI, MIXED, FT8, QRP, SOB, M5, M10, POR, MOP, MM, MMP, 4Z9, SHA, SWL, NEW' 
+	) ) );
+}	
+if (strtoupper($category_power) != 'HIGH' && strtoupper($category_power) != 'LOW' && strtoupper($category_power) != 'QRP') {
+	die ( json_encode ( array (
+			'success' => false,
+			'msg' => 'CATEGORY-POWER Valid values are: HIGH, LOW, QRP' 
+	) ) );
 }
 
-$logHeader [5] = trim ( stristr ( array_shift ( (preg_grep ( '/^CALLSIGN:/', $rows_log_data, 0 )) ), ' ' ) );
-if (empty ( $logHeader [5] )) {
+$callsign = trim(strtoupper(dataExtractor('/^CALLSIGN:/', $rows_log_data)));
+if (empty ( $callsign)) {
 	die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'Error1. "CALLSIGN:" field in cabrillo header is emtpty' 
+			'msg' => 'CALLSIGN can not be emtpty' 
 	) ) );
 }
-$logHeader [6] = trim ( strtoupper ( str_replace ( '-', ' ', stristr ( array_shift ( (preg_grep ( '/^CONTEST:/', $rows_log_data, 0 )) ), ' ' ) ) ) );
-if (empty ( $logHeader [6] )) {
+$email = dataExtractor('/^EMAIL:/', $rows_log_data);
+// if (empty ( $email)) {
+	// $email = dataExtractor('/^E-MAIL:/', $rows_log_data);
+	// if (empty ( $email)) {
+		// die ( json_encode ( array (
+				// 'success' => false,
+				// 'msg' => 'E-MAIL can not be emtpty' 
+		// ) ) );
+	// }
+// }
+$name = mysqli_real_escape_string($Link, dataExtractor('/^NAME:/', $rows_log_data));
+if (empty ( $name)) {
 	die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'Error3. "CONTEST:" field in cabrillo header is emtpty' 
+			'msg' => 'NAME can not be emtpty' 
 	) ) );
 }
-if (strpos ( $logHeader [6], 'HOLYLAND' ) === false) {
+$contest = trim ( strtoupper ( str_replace ( '-', ' ', dataExtractor('/^CONTEST:/', $rows_log_data) ) ) );
+if (empty ( $contest )) {
 	die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'Error4. "CONTEST:" field is wrong in cabrillo header. Must to be "HOLYLAND"' 
+			'msg' => 'CONTEST can not be emtpty (must be HOLYLAND)' 
+	) ) );
+}
+if (strpos ( $contest, 'HOLYLAND' ) === false) {
+	die ( json_encode ( array (
+			'success' => false,
+			'msg' => 'CONTEST must be HOLYLAND' 
 	) ) );
 }
 // Get data from HAMQTH.com
-$hamqthdata = getHamQth ( $logHeader [5] );
+$country = getHamQth ($callsign);
 
-// Check if SWL or TRX and 4X
-if ($swl) {
-	// SWL
-	// function calculateAll($fldDate, $fldBand, $fldMode, $fldArea, $logDataFile)
-	$logCalculated = calculateAll ( 3, 1, 2, 7, $rows_log_data, $logHeader, $hamqthdata );
-} else {
-	if ($hamqthdata [2] != '336') {
-		// WORLD
-		// function calculateAll($fldDate, $fldBand, $fldMode, $fldArea, $logDataFile)
-		$logCalculated = calculateAll ( 3, 1, 2, 10, $rows_log_data, $logHeader, $hamqthdata );
-	}
-	if ($hamqthdata [2] == '336') {
-		// Israel
-		// function calculateAll($fldDate, $fldBand, $fldMode, $fldArea, $logDataFile)
-		$logCalculated = calculateAllIsrael ( 3, 1, 2, 10, $rows_log_data, $logHeader, $hamqthdata );
+//analyze and insert to DB
+$isValid = true;
+$i = 0;
+$log_data_qso = [];
+$log_data_qso_part = [];
+foreach ( $rows_log_data as $qso ) {
+	if (stristr ( $qso, 'QSO:' )) {
+		$log_data_qso [$i] = $qso;
+		$log_data_qso_part [$i] = explode ( " ", $log_data_qso [$i] );
+		$log_data_qso_part [$i] = array_values ( array_filter ( $log_data_qso_part [$i] ) );
+		if (count($log_data_qso_part[$i]) != 11)
+			$isValid = false;
+		$i++;
 	}
 }
-
-if ($isDebug) {
-	echo '<pre>';
-	print_r ( $logCalculated );
-	echo '</pre>';
-	die ();
-}
-
-if (checkIfLogExist ( $logCalculated [5] [5], $logCalculated [4] )) {
+if ($isValid === false) {
 	die ( json_encode ( array (
+		 'success' => false,
+		 'msg' => 'Log structure is invalid'
+		 ) ) );
+}
+$i = 0;
+foreach ( $log_data_qso as $qso ) {
+	
+	$freq = $log_data_qso_part[$i][1];
+	$mode = $log_data_qso_part[$i][2];
+	$date = str_replace("-","",$log_data_qso_part[$i][3]);
+	$time = $log_data_qso_part[$i][4];
+	$my_call = $log_data_qso_part[$i][5];
+	$rst_sent = $log_data_qso_part[$i][6];
+	$square = $log_data_qso_part[$i][7];
+	$dx_call = $log_data_qso_part[$i][8];
+	$rst_rcvd = $log_data_qso_part[$i][9];
+	$exchange = $log_data_qso_part[$i][10];
+	$i++;
+	
+	$query = "INSERT IGNORE INTO `holyland_log` (`my_call`, `my_square`, `mode`, `frequency`, `band`, `callsign`, `timestamp`, `rst_sent`, `rst_rcvd`, `exchange`, `comment`, `name`, `country`) VALUES ('$my_call', '$square', '$mode', '$freq', '', '$dx_call', '$date $time', '$rst_sent', '$rst_rcvd', '$exchange', '', '', '')";
+	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
+	if (!$result)
+	{
+		die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'Error5. Log file for ' . $logCalculated [5] [5] . ' and ' . $logCalculated [4] . ' year already exist in DB. Please contact info@iarc.org' 
-	) ) );
-} else {
-	if (! $isDebug) {
-		if ($logCalculated [6] [2] != '336') {
-			$mult = count ( array_unique ( $logCalculated [2] [0] ) );
-			$square = null;
-		}
-		if ($logCalculated [6] [2] == '336') {
-			$mult = count ( array_unique ( $logCalculated [2] [0] ) ) + count ( array_unique ( $logCalculated [2] [1] ) );
-			$square = $logCalculated [5] [4];
-		}
-		$submitArr [0] = $logCalculated [5] [5]; // call
-		$submitArr [1] = $logCalculated [4]; // year
-		$submitArr [2] = count ( $logCalculated [1] ); // QSOs
-		$submitArr [3] = $mult; // mults
-		$submitArr [4] = $logCalculated [0] [0] * $submitArr [3]; // score
-		$submitArr [5] = $logCalculated [0] [0]; // points
-		$submitArr [6] = $logCalculated [6] [0]; // continent
-		$submitArr [7] = $logCalculated [6] [1]; // dxcc
-		$submitArr [8] = $square; // square
-		$submitArr [9] = $logCalculated [5] [3]; // category
-		$submitArr [10] = $logCalculated [5] [8]; // email
-		$submitArr [11] = $logCalculated [5] [7]; // timestamp
-		
-		insertIntoDb ( $submitArr );
-	} else {
-		if ($logCalculated [6] [2] != '336') {
-			$mult = count ( array_unique ( $logCalculated [2] [0] ) );
-			$square = null;
-		}
-		if ($logCalculated [6] [2] == '336') {
-			$mult = count ( array_unique ( $logCalculated [2] [0] ) ) + count ( array_unique ( $logCalculated [2] [1] ) );
-			$square = $allFinalArr [5] [4];
-		}
-		$submitArr [0] = $logCalculated [5] [5]; // call
-		$submitArr [1] = $logCalculated [4]; // year
-		$submitArr [2] = count ( $logCalculated [1] ); // QSOs
-		$submitArr [3] = $mult; // mults
-		$submitArr [4] = $logCalculated [0] [0] * $submitArr [3]; // score
-		$submitArr [5] = $logCalculated [0] [0]; // points
-		$submitArr [6] = $logCalculated [6] [0]; // continent
-		$submitArr [7] = $logCalculated [6] [1]; // dxcc
-		$submitArr [8] = $square;
-		$submitArr [9] = $logCalculated [5] [3]; // category
-		$submitArr [10] = $logCalculated [5] [8]; // email
-		$submitArr [11] = $logCalculated [5] [7]; // timestamp
-		
-		/*
-		 * die ( json_encode ( array (
-		 * 'success' => false,
-		 * 'msg' => 'Error9. Log file" ' . $submitArr [0] . ' ' . $submitArr [1] . ' ' . $submitArr [2] . ' ' . $submitArr [3] . ' ' . $submitArr [4] . ' ' . $submitArr [5] . ' ' . $submitArr [6] . ' ' . $submitArr [7] . ' ' . $submitArr [8]
-		 * ) ) );
-		 * // $logCalculated [5] [5];//call
-		 * // $logCalculated [4];//year
-		 * // $logCalculated [6] [0];//continent
-		 * // $logCalculated [6] [1];//dxcc
-		 * // $logCalculated [6] [2];//adif
-		 * // $logCalculated [1] ;//QSOs
-		 * // $logCalculated [5] [4];//square
-		 * // $logCalculated [0] [0];//points
-		 * // $logCalculated [0] [1];//points H
-		 * // $logCalculated [0] [2];//points L
-		 */
+			'msg' => 'Failed to save log.' 
+		) ) );
 	}
 }
+$now = strtotime("now");
+$now = date("Y-m-d H:i:s", $now);
+$query = "INSERT INTO 
+`iarcorg_holylanddb`.`participants` 
+(`callsign`, `category_op`, `category_mode`, `category_power`, `email`, `name`, `country`, `year`, `qsos`, `points`, `timestamp`, `is_manual`) 
+VALUES 
+('$callsign', '$category_operator', '$category_mode', '$category_power', '$email', '$name', '$country[1]', '$year', '$i', '0', '$now', '0') 
+ON DUPLICATE KEY UPDATE 
+`category_op` = '$category_operator',
+`category_mode` = '$category_mode',
+`category_power` = '$category_power',
+`email` = '$email',
+`name` = '$name',
+`country` =  '$country[1]',
+`year` = '$year',
+`timestamp` = '$now',
+`qsos` = '$i'";
+$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
+if (!$result)
+{
+	die ( json_encode ( array (
+		'success' => false,
+		'msg' => 'Failed to add participant.' . mysqli_error($Link)
+	) ) );
+}
+sendMail($email, $callsign, $year, $category_mode, $category_operator, $category_power, $i);
+
+
+echo json_encode ( array (
+				'success' => true,
+				'msg' => 'Thank you for uploading the log.'
+	) );
+
 
 // finally, return a message to the user
 // echo json_encode('Thanks for uploading your log. '. $email. "/" . $category. "/". $timestamp. "/" . $filename. "/" . $dx. "/" . $continent. "/" . $dxcc. "/" . $contest);
 // echo json_encode(array('success' => true, 'msg' => 'Thanks for uploading your log. '. $email. "/" . $category. "/". $timestamp. "/" . $filename. "/" . $dx. "/" . $continent. "/" . $dxcc. "/" . $contest));
 ((is_null($___mysqli_res = mysqli_close( $Link ))) ? false : $___mysqli_res);
-function calculateAll($fldDate, $fldBand, $fldMode, $fldArea, $logDataFile, $fldLogHeader, $dxccData) {
-	require ('sqs.php');
-	$invalidQSO = array ();
-	$i = 0;
-	$points = 0;
-	$pH = 0;
-	$pL = 0;
-	foreach ( $logDataFile as $qso ) {
-		if (stristr ( $qso, 'QSO:' )) {
-			$log_data_qso [$i] = $qso;
-			$log_data_qso_part [$i] = explode ( " ", $log_data_qso [$i] );
-			$log_data_qso_part [$i] = array_values ( array_filter ( $log_data_qso_part [$i] ) );
-			
-			$uniqqso1 = trim ( substr ( $log_data_qso_part [$i] [$fldBand], 0, - 3 ) ); // BAND
-			$uniqqso2 = trim ( $log_data_qso_part [$i] [$fldMode] ); // MODE
-			$uniqqso3 = trim ( $log_data_qso_part [$i] [8] ); // DX callsign
-			$uniqqso4 = isset ( $log_data_qso_part [$i] [$fldArea] ) ? trim ( strtoupper ( $log_data_qso_part [$i] [$fldArea] ) ) : null; // AREA
-			
-			if (in_array ( $uniqqso4, $sqs )) {
-				if ($uniqqso1 <= '7') {
-					$points = $points + 2;
-					$pH = $pH + 2;
-				}
-				if ($uniqqso1 > '7') {
-					$points = $points + 1;
-					$pL = $pL + 1;
-				}
-				$multH [$i] = "$uniqqso1" . "$uniqqso4";
-				$validQSO [$i] = $log_data_qso [$i];
-			} else {
-				$invalidQSO [$i] = $log_data_qso [$i];
-			}
-			// }
-			$sqsValidation [$i] = "$uniqqso1" . "$uniqqso4";
-			$i ++;
-		}
-	}
-	$pointsArr [0] = $points;
-	$pointsArr [1] = $pH;
-	$pointsArr [2] = $pL;
-	$multsArr [0] = $multH;
-	$fldLogHeader [4] = null; // HL square
-	
-	$calculateAllReturn [0] = $pointsArr; // points
-	$calculateAllReturn [1] = $validQSO; // Valid QSO list
-	$calculateAllReturn [2] = $multsArr; // Valid mults list
-	$calculateAllReturn [3] = $invalidQSO; // Invalid QSO list
-	$calculateAllReturn [4] = substr ( trim ( $log_data_qso_part [0] [$fldDate] ), 0, 4 ); // YEAR
-	$calculateAllReturn [5] = $fldLogHeader; // Log header. $fldLogHeader[5] - callsign
-	$calculateAllReturn [6] = $dxccData; // DXCC data
-	$calculateAllReturn [7] = $sqsValidation; // All QSO list
-	return $calculateAllReturn;
-}
-function calculateAllIsrael($fldDate, $fldBand, $fldMode, $fldArea, $logDataFile, $fldLogHeader, $dxccData) {
-	require ('sqs.php');
-	$invalidQSO = array ();
-	$multS = array ();
-	$multH = array ();
-	$i = 0;
-	$points = 0;
-	$pH = 0;
-	$pL = 0;
-	foreach ( $logDataFile as $qso ) {
-		if (stristr ( $qso, 'QSO:' )) {
-			$log_data_qso [$i] = $qso;
-			$log_data_qso_part [$i] = explode ( " ", $log_data_qso [$i] );
-			$log_data_qso_part [$i] = array_values ( array_filter ( $log_data_qso_part [$i] ) );
-			
-			$uniqqso1 = trim ( substr ( $log_data_qso_part [$i] [$fldBand], 0, - 3 ) ); // BAND
-			$uniqqso2 = trim ( $log_data_qso_part [$i] [$fldMode] ); // MODE
-			$uniqqso3 = trim ( $log_data_qso_part [$i] [8] ); // DX callsign
-			$uniqqso4 = isset ( $log_data_qso_part [$i] [$fldArea] ) ? trim ( strtoupper ( $log_data_qso_part [$i] [$fldArea] ) ) : null; // AREA
-			
-			$dxcc = getDxccName ( $uniqqso3 ); // Get DXCC name
-			$multS [$i] = "$uniqqso1" . "$dxcc"; // DXCC on band
-			
-			if (preg_match ( '/^[A-Z]/', $uniqqso4 )) {
-				if (in_array ( $uniqqso4, $sqs )) {
-					if ($uniqqso1 <= '7') {
-						$points = $points + 2;
-						$pH = $pH + 2;
-					}
-					if ($uniqqso1 > '7') {
-						$points = $points + 1;
-						$pL = $pL + 1;
-					}
-					$multH [$i] = "$uniqqso1" . "$uniqqso4";
-					$validQSO [$i] = $log_data_qso [$i];
-				} else {
-					$invalidQSO [$i] = $log_data_qso [$i];
-				}
-			} elseif (is_numeric ( $uniqqso4 )) {
-				if ($dxcc != 'false') {
-					if ($uniqqso1 <= '7') {
-						$points = $points + 2;
-						$pH = $pH + 2;
-					}
-					if ($uniqqso1 > '7') {
-						$points = $points + 1;
-						$pL = $pL + 1;
-					}
-					$multS [$i] = "$uniqqso1" . "$dxcc";
-					$validQSO [$i] = $log_data_qso [$i];
-				}
-			} else {
-				$invalidQSO [$i] = $log_data_qso [$i];
-			}
-			
-			$sqsValidation [$i] = "$uniqqso1" . "$uniqqso4";
-			$i ++;
-		}
-	}
-	$pointsArr [0] = $points;
-	$pointsArr [1] = $pH;
-	$pointsArr [2] = $pL;
-	$multsArr [0] = $multH;
-	$multsArr [1] = $multS;
-	$fldLogHeader [4] = trim ( $log_data_qso_part [0] [7] ); // Square
-	
-	$calculateAllReturn [0] = $pointsArr; // points
-	$calculateAllReturn [1] = $validQSO; // Valid QSO list
-	$calculateAllReturn [2] = $multsArr; // Valid mults list
-	$calculateAllReturn [3] = $invalidQSO; // Invalid QSO list
-	$calculateAllReturn [4] = substr ( trim ( $log_data_qso_part [0] [$fldDate] ), 0, 4 ); // YEAR
-	$calculateAllReturn [5] = $fldLogHeader; // Log header
-	$calculateAllReturn [6] = $dxccData; // DXCC data
-	$calculateAllReturn [7] = $sqsValidation; // All QSO list
-	return $calculateAllReturn;
-}
-function handleError($errno, $errstr, $error_file, $error_line, $error_context) {
-	$errorString = '<b>Error:</b> [' . $errno . '] ' . $errstr . ' - ' . $error_file . ' : ' . $error_line;
-	sendArrayToEmail ( $error_context, $error_line, $errstr, $errorString );
-	
-	die ( json_encode ( array (
-			'success' => false,
-			// 'msg' => '<b>Error:</b> [' . $errno . '] ' . $errstr . ' - ' . $error_file . ':' . $error_line . '<strong>Please check your Cabrilo log file, or contact info@iarc.org</strong>'
-			'msg' => '<b>Error:</b> [' . $errno . '] : ' . $error_line . '<strong> Please check your Cabrilo log file or send your file to info@iarc.org</strong>' 
-	) ) );
-}
-function checkIfLogExist($dx, $year_log) {
-	$sql = "SELECT id FROM hlwtest WHERE `call` = '$dx' and `year` = '$year_log' LIMIT 1";
-	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $sql ) or die ( json_encode ( array (
-			'success' => false,
-			'msg' => 'Error. ' . mysqli_error($GLOBALS["___mysqli_ston"]) 
-	) ) );
-	if (mysqli_num_rows( $result ) > 0) {
-		return true;
-	} else {
-		return false;
-	}
-}
+return;
+
+
+
+
 function getHamQth($dx) {
 	$xml = simplexml_load_file ( "http://www.hamqth.com/dxcc.php?callsign=" . "$dx" );
 	$data [0] = $xml->dxcc->continent;
@@ -387,56 +229,34 @@ function getHamQth($dx) {
 	$data [2] = $xml->dxcc->adif;
 	return $data;
 }
-function getDxccName($a) {
-	$sql = "SELECT name FROM dxcc WHERE prefix = SUBSTRING('" . $a . "', 1, LENGTH(prefix)) ORDER BY LENGTH(prefix) DESC LIMIT 1";
-	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $sql );
-	while ( $row = mysqli_fetch_array( $result,  MYSQLI_ASSOC ) ) {
-		$name = $row ['name'];
-	}
-	if (mysqli_num_rows( $result ) > 0) {
-		return $name;
-	} else {
-		return 'false';
-	}
-}
-function sendMail($array) {
-	$email = $array [0];
-	$dx = $array [1];
-	$year = $array [2];
-	$dxcc = $array [3];
-	$category = $array [4];
-	$qso = $array [5];
-	$timestamp = $array [6];
+
+function sendMail($email, $callsign, $year, $category_mode, $category_operator, $category_power, $qso_count) {
+	$to = $email . ",gilifon@gmail.com";
+	$from = "holyland@iarc.org";
 	
-	$to = $email . ";4x6hp@iarc.org;4z4kx@iarc.org";
-	// $to = $email . ";4x6hp@iarc.org";
-	$from = "info@iarc.org";
-	$subject = "Holyland Contest " . $year . " Log " . $dx;
+	$subject = "Holyland Contest " . $year . " Log (".$callsign.")";
+	
 	$headers = 'From: ' . $from . "\r\n";
 	$headers .= 'MIME-Version: 1.0' . "\r\n";
 	$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-	$message = '<p>Dear ' . $dx . ',</p>
-	<p>We just got Your HC-' . $year . ' log.<br>
-	Thank You very much for Your participation in the Holyland Contest-' . $year . '!
+	$message = '<p>Dear ' . $callsign . ',</p>
+	<p>Thank you very much for your participation and for sending the log.</p>
+	<p>
+		<ul>
+			<li>Call: <strong>' . $callsign . '</strong></li>
+			<li>Mode: <strong>' . $category_mode . '</strong></li>
+			<li>Operator: <strong>' . $category_operator . '</strong></li>
+			<li>Power: <strong>' . $category_power . '</strong></li>
+			<li># of QSOs: <strong>' . $qso_count . '</strong></li>
+		</ul>
 	</p>
 	<p>
-	<ul>
-	<li>Call: <strong>' . $dx . '</strong></li>
-	<li>DXCC: <strong>' . $dxcc . '</strong></li>
-	<li>Category: <strong>' . $category . '</strong></li>
-	<li>QSO: <strong>' . $qso . '</strong></li>
-	<li>uniq: <strong>' . $timestamp . '</strong></li>
-	</ul>
-	</p>
-	<p>
-	Uploaded logs, you can check here: http://iarc.org/iarc/#HolylandLogs
+		Log list: https://iarc.org/iarc/#HolylandLogs <br/>
+		Results (not before May 31th): https://www.iarc.org/iarc/#HolylandResults
 	</p>
 	73! MARK 4Z4KX<br>
 	IARC Contest Manager<br>
-	==============================================================================<br>
-	Mark Stern 4Z4KX; Contest call 4Z0X,  SKYPE: kxmark<br>
-	IARC Contest & Award  Manager, 7.080 Traffic Manager since 1990!<br>
-	A1-OP, FOC-1782, HSC-1781, CWops-368, 5BDXCC, HONOR ROLL #1';
+	==============================================================================<br>';
 	$ok = mail ( $to, $subject, $message, $headers );
 	if ($ok) {
 		return true;
@@ -459,7 +279,7 @@ function insertIntoDb($array) {
 	$timestamp = $array [11]; // timestamp
 	$ip = $_SERVER ['REMOTE_ADDR'];
 	
-	$query = "INSERT INTO hlwtest (`active`, `year`, `call`, `dxcc`, `uniq_timestamp`, `continent`, `category`, `qso`, `points`, `mults`, `score`, `ip`, `date_added`)
+	$query = "INSERT INTO hlwtest (`active`, `year`, `callsign`, `dxcc`, `uniq_timestamp`, `continent`, `category`, `qso`, `points`, `mults`, `score`, `ip`, `date_added`)
 	VALUES (0, '$year', '$dx','$dxcc', '$timestamp', '$continent', '$category', '$qso', '$points', '$mults', '$score', '$ip', now())";
 	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
 	if ($result) {
@@ -489,8 +309,16 @@ function insertIntoDb($array) {
 		) ) );
 	}
 }
+function dataExtractor($field, $data)
+{
+	$temp = preg_grep ( $field, $data, 0 );//'/^START-OF-LOG:/'
+	$temp = array_shift ($temp);
+	$temp = stristr ( $temp, ' ');
+	$temp = trim ($temp);
+	return $temp;
+}
 function sendArrayToEmail($array, $errorLine, $errorStr, $errorString) {
-	$to = '4x6hp@iarc.org';
+	$to = 'gilifon@gmail.com';
 	$from = "info@iarc.org";
 	$subject = "Holyland Contest Log. Error: " . $errorLine . " " . $errorStr;
 	$headers = 'From: ' . $from . "\r\n";

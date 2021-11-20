@@ -12,6 +12,7 @@ $res[] = "";
 //$result = mysqli_query($Link, "select `callsign` as 'call', `dxcc`, `continent`, `category` from hlwtest where active = 0 and `year` = '$year' order by `call` ASC");
 $result = mysqli_query($Link, "SELECT `callsign`,`category_op`,`category_mode`,`category_power`,`email`,`name`,`country`,`year`,`qsos`,`points`,`timestamp` FROM `participants` WHERE `year` = '$year' ORDER BY `callsign` ASC");
 
+$res[] = [];
 while($obj = mysqli_fetch_object($result)) {
 $res[] = $obj;
 }

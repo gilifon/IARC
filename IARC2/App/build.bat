@@ -1,2 +1,2 @@
-cd "C:\Users\gill\Source\Repos\gilifon\IARC\IARC2"
+cd "C:\Users\4Z1KD\source\repos\IARC\IARC2"
 weyland build

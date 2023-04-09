@@ -10,28 +10,60 @@
         <div id="registration-form" class="form-horizontal" data-parsley-validate style="visibility:visible">
 
             <div class="form-groupx">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="email" class="col-md-2 control-label ">Email</label>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-3">
+                        <label for="name" class="control-label ">Full Name</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="name" placeholder="Full Name" data-bind="value: name" tabindex="5" data-parsley-errors-messages-disabled required>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-3">
+                        <label for="callsign" class="control-label ">Callsign</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="callsign" placeholder="Callsign" data-bind="value: callsign" tabindex="5" data-parsley-errors-messages-disabled required>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-3">
+                        <label for="email" class="control-label ">Email</label>
                     </div>
                     <div class="col-md-4">
                         <input type="email" class="form-control" id="email" placeholder="Email" data-bind="value: email" tabindex="5" data-parsley-errors-messages-disabled required>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 10px">
-                    <div class="col-md-2">
-                        <label for="category" class="col-md-2 control-label ">Category</label>
+                    <div class="col-md-3">
+                        <label for="operator" class="control-label ">Operator</label>
                     </div>
-                    <div class="col-md-10">
-                        <select class="category_selectpicker" id="category" data-bind="options: categories, value: category" required></select>
+                    <div class="col-md-8">
+                        <select class="operator_selectpicker" id="operator" data-bind="options: operators, value: operator" required></select>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 10px">
-                    <div class="col-md-2">
-                        <label for="band" class="col-md-2 control-label ">Band</label>
+                    <div class="col-md-3">
+                        <label for="mode" class="control-label ">Mode</label>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
+                        <select class="mode_selectpicker" id="mode" data-bind="options: modes, value: mode" required></select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-3">
+                        <label for="band" class="control-label ">Band</label>
+                    </div>
+                    <div class="col-md-8">
                         <select class="band_selectpicker" id="band" data-bind="options: bands, value: band" required></select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-3">
+                        <label for="power" class="control-label ">Power</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="power_selectpicker" id="power" data-bind="options: powers, value: power" required></select>
                     </div>
                 </div>
             </div>

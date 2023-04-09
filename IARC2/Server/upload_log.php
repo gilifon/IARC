@@ -14,15 +14,50 @@ $info = $_POST ["info"];
 $year = date ( "Y" );
 
 // extract all the properties of the registration request
-if (isset ( $info ['timestamp'] )) {
-	$timestamp = $info ['timestamp'];
+if (isset ( $info ['name'] )) {
+	$_name = $info ['name'];
 } else {
-	$timestamp = '';
+	$_name = '';
+}
+if (isset ( $info ['callsign'] )) {
+	$_callsign = $info ['callsign'];
+} else {
+	$_callsign = '';
+}
+if (isset ( $info ['email'] )) {
+	$_email = $info ['email'];
+} else {
+	$_email = '';
+}
+if (isset ( $info ['operator'] )) {
+	$_operator = $info ['operator'];
+} else {
+	$_operator = '';
+}
+if (isset ( $info ['mode'] )) {
+	$_mode= $info ['mode'];
+} else {
+	$_mode = '';
+}
+if (isset ( $info ['band'] )) {
+	$_band = $info ['band'];
+} else {
+	$_band = '';
+}
+if (isset ( $info ['power'] )) {
+	$_power = $info ['power'];
+} else {
+	$_power = '';
 }
 if (isset ( $info ['filename'] )) {
 	$filename = $info ['filename'];
 } else {
 	$filename = '';
+}
+if (isset ( $info ['timestamp'] )) {
+	$timestamp = $info ['timestamp'];
+} else {
+	$timestamp = '';
 }
 
 // RUN THE ALGORITHM
@@ -32,6 +67,8 @@ $category_mode = '';
 $category_power = '';
 $callsign = '';
 $email = '';
+$category = '';
+$band = '';
 $name = '';
 $contest = '';
 
@@ -50,24 +87,28 @@ $rows_log_data = preg_replace('!\s+!', ' ', $rows_log_data);
 $rows_log_data = str_replace('NONE', '', $rows_log_data); //remove NONE column in the log
 
 //Parse the file
-$logVer = dataExtractor('/^START-OF-LOG:/', $rows_log_data);//
+$logVer = dataExtractor('/^START-OF-LOG/', $rows_log_data);//
 $rows_log_data = str_replace('CATEGORY OPERATOR:','CATEGORY-OPERATOR:',$rows_log_data);
 $rows_log_data = str_replace('CATEGORY MODE:','CATEGORY-MODE:',$rows_log_data);
 $rows_log_data = str_replace('CATEGORY POWER:','CATEGORY-POWER:',$rows_log_data);
 //*********************************** Version Dependened Data ********************************//
 if ($logVer == '3.0') {
-	$category_operator = trim(strtoupper(dataExtractor('/^CATEGORY-OPERATOR:/', $rows_log_data)));
-	$category_mode = trim(strtoupper(dataExtractor('/^CATEGORY-MODE:/', $rows_log_data)));
-	$category_power = trim(strtoupper(dataExtractor('/^CATEGORY-POWER:/', $rows_log_data)));
+	$category_operator = trim(strtoupper(dataExtractor('/^CATEGORY-OPERATOR/', $rows_log_data)));
+	$category_mode = trim(strtoupper(dataExtractor('/^CATEGORY-MODE/', $rows_log_data)));
+	if ($category_mode == '')
+	{
+		$category_mode = trim(strtoupper(dataExtractor('/^CATEGORY-TRANSMITTER/', $rows_log_data)));
+	}
+	$category_power = trim(strtoupper(dataExtractor('/^CATEGORY-POWER/', $rows_log_data)));
 }
 else if ($logVer == '2.0') {
 	//CATEGORY: SINGLE-OP ALL HIGH CW
-	$category = trim(strtoupper(dataExtractor('/^CATEGORY:/', $rows_log_data)));
+	$category = trim(strtoupper(dataExtractor('/^CATEGORY/', $rows_log_data)));
 	list($category_operator, $category_band, $category_power, $category_mode) = explode(" ", $category);
 	if (strtoupper($category_operator) == 'CHECKLOG'){
 		$category_band= "ALL"; 
 		$category_power="HIGH";
-		$category_mode="MIXED";
+		$category_mode="MIX";
 	}
 }
 $category_operator = str_replace("-NON-ASSISTED","",$category_operator);
@@ -83,7 +124,7 @@ if (strtoupper($category_operator) != 'SINGLE-OP' && strtoupper($category_operat
 if (strtoupper($category_mode) != 'SSB' && strtoupper($category_mode) != 'CW' && strtoupper($category_mode) != 'DIGI' && strtoupper($category_mode) != 'MIXED' && strtoupper($category_mode) != 'MIX' && strtoupper($category_mode) != 'FT8' && strtoupper($category_mode) != 'SOB' && strtoupper($category_mode) != 'M5' && strtoupper($category_mode) != 'M10' && strtoupper($category_mode) != 'POR' && strtoupper($category_mode) != 'MOP' && strtoupper($category_mode) != 'MM' && strtoupper($category_mode) != 'MMP' && strtoupper($category_mode) != '4Z9' && strtoupper($category_mode) != 'SHA' && strtoupper($category_mode) != 'SWL' && strtoupper($category_mode) != 'NEW') {
 	die ( json_encode ( array (
 			'success' => false,
-			'msg' => 'CATEGORY-MODE Valid values are: SSB, CW, DIGI, MIXED, FT8, QRP, SOB, M5, M10, POR, MOP, MM, MMP, 4Z9, SHA, SWL, NEW' 
+			'msg' => 'CATEGORY-MODE Valid values are: SSB, CW, DIGI, MIX, FT8, QRP, SOB, M5, M10, POR, MOP, MM, MMP, 4Z9, SHA, SWL, NEW' 
 	) ) );
 }	
 if (strtoupper($category_power) != 'HIGH' && strtoupper($category_power) != 'LOW' && strtoupper($category_power) != 'QRP') {
@@ -93,16 +134,16 @@ if (strtoupper($category_power) != 'HIGH' && strtoupper($category_power) != 'LOW
 	) ) );
 }
 
-$callsign = trim(strtoupper(dataExtractor('/^CALLSIGN:/', $rows_log_data)));
+$callsign = trim(strtoupper(dataExtractor('/^CALLSIGN/', $rows_log_data)));
 if (empty ( $callsign)) {
 	die ( json_encode ( array (
 			'success' => false,
 			'msg' => 'CALLSIGN can not be emtpty' 
 	) ) );
 }
-$email = dataExtractor('/^EMAIL:/', $rows_log_data);
+$email = dataExtractor('/^EMAIL/', $rows_log_data);
 // if (empty ( $email)) {
-	// $email = dataExtractor('/^E-MAIL:/', $rows_log_data);
+	// $email = dataExtractor('/^E-MAIL/', $rows_log_data);
 	// if (empty ( $email)) {
 		// die ( json_encode ( array (
 				// 'success' => false,
@@ -110,14 +151,14 @@ $email = dataExtractor('/^EMAIL:/', $rows_log_data);
 		// ) ) );
 	// }
 // }
-$name = mysqli_real_escape_string($Link, dataExtractor('/^NAME:/', $rows_log_data));
+$name = mysqli_real_escape_string($Link, dataExtractor('/^NAME/', $rows_log_data));
 if (empty ( $name)) {
 	die ( json_encode ( array (
 			'success' => false,
 			'msg' => 'NAME can not be emtpty' 
 	) ) );
 }
-$contest = trim ( strtoupper ( str_replace ( '-', ' ', dataExtractor('/^CONTEST:/', $rows_log_data) ) ) );
+$contest = trim ( strtoupper ( str_replace ( '-', ' ', dataExtractor('/^CONTEST/', $rows_log_data) ) ) );
 if (empty ( $contest )) {
 	die ( json_encode ( array (
 			'success' => false,
@@ -144,7 +185,10 @@ foreach ( $rows_log_data as $qso ) {
 		$log_data_qso_part [$i] = explode ( " ", $log_data_qso [$i] );
 		$log_data_qso_part [$i] = array_values ( array_filter ( $log_data_qso_part [$i] ) );
 		if (count($log_data_qso_part[$i]) != 11)
+		{
 			$isValid = false;
+			die ( json_encode ( array ( 'success' => false, 'msg' => 'QSO #'.($i+1)." is not valid. Please check your log and try again.<br/>".$qso) ) );
+		}
 		$i++;
 	}
 }
@@ -169,7 +213,7 @@ foreach ( $log_data_qso as $qso ) {
 	$exchange = $log_data_qso_part[$i][10];
 	$i++;
 	
-	$query = "INSERT IGNORE INTO `holyland_log` (`my_call`, `my_square`, `mode`, `frequency`, `band`, `callsign`, `timestamp`, `rst_sent`, `rst_rcvd`, `exchange`, `comment`, `name`, `country`) VALUES ('$my_call', '$square', '$mode', '$freq', '', '$dx_call', '$date $time', '$rst_sent', '$rst_rcvd', '$exchange', '', '', '')";
+	$query = "INSERT IGNORE INTO `holyland_log` (`my_callsign`, `my_square`, `mode`, `frequency`, `band`, `dx_callsign`, `timestamp`, `rst_sent`, `rst_rcvd`, `exchange`, `comment`, `name`, `country`) VALUES ('$my_call', '$square', '$mode', '$freq', '', '$dx_call', '$date $time', '$rst_sent', '$rst_rcvd', '$exchange', '', '', '')";
 	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
 	if (!$result)
 	{
@@ -204,6 +248,22 @@ if (!$result)
 		'msg' => 'Failed to add participant.' . mysqli_error($Link)
 	) ) );
 }
+
+$query = "INSERT INTO `iarcorg_holylanddb`.`hltest_logs` 
+	(`ENTRYDATE`,`GUID`,`CALLSIGN`,`EMAIL`,`YEAR`,`LOG`,`NAME`,`CATOPERATOR`,`CATMODE`,`CATPOWER`,`CREATEDBY`,`DXCC`,`CONTINENT`,`ADIF`,`ISPROCESSED`)
+	VALUES
+	('$now','UPLOAD_FROM_WEB','$_callsign','$_email','$year','$file_content','$_name','$_operator','$_mode','$_power','','$country[1]','$country[0]','$country[2]','0') 
+	ON DUPLICATE KEY UPDATE 
+	`ISPROCESSED` = '0'";
+$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
+if (!$result)
+{
+	die ( json_encode ( array (
+		'success' => false,
+		'msg' => 'Failed to add log.' . mysqli_error($Link)
+	) ) );
+}
+
 sendMail($email, $callsign, $year, $category_mode, $category_operator, $category_power, $i);
 
 
@@ -313,7 +373,8 @@ function dataExtractor($field, $data)
 {
 	$temp = preg_grep ( $field, $data, 0 );//'/^START-OF-LOG:/'
 	$temp = array_shift ($temp);
-	$temp = stristr ( $temp, ' ');
+	$temp = stristr ( $temp, ':');
+	$temp = ltrim ($temp, ':');
 	$temp = trim ($temp);
 	return $temp;
 }

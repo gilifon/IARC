@@ -3,19 +3,29 @@
     var shell = require('viewmodels/shell');
 
 
+    var name = ko.observable();
     var email = ko.observable();
-    var category = ko.observable();
-    var categories = ko.observableArray(['SOAB-MIX-HP', 'SOAB-MIX-LP', 'SOAB-CW-HP', 'SOAB-CW-LP', 'SOAB-SSB-HP', 'SOAB-SSB-LP', 'SOSB-CW', 'SOSB-SSB', "MOST", "SOAB-MIX-QRP", "YN", "SWL", "Mobile and Portable"]);
+    var callsign = ko.observable();
+    var operator = ko.observable();
+    var operators = ko.observableArray(['SINGLE-OP', 'MULTI-OP', "YN", "SWL", "Portable", "M5", "M10"]);
     var band = ko.observable();
     var bands = ko.observableArray(["All-Bands", "80", "40", "20", "15", "10"]);
+    var mode = ko.observable();
+    var modes = ko.observableArray(["MIX", "SSB", "CW"]);
+    var power = ko.observable();
+    var powers = ko.observableArray(["HIGH","LOW","QRP"]);
     var file = ko.observable();
     var uploader;
 
     var Clear = function () {
         $('#registration-form').parsley().reset();
+        name("");
         email("");
-        category("");
+        callsign("");
+        operator("");
         band("");
+        mode("");
+        power("");
         file("");
         uploader.removeCurrent();
     }
@@ -61,8 +71,10 @@
         },
         compositionComplete: function () {
             SetTooltips();
-            $('.category_selectpicker').selectpicker();
+            $('.operator_selectpicker').selectpicker();
             $('.band_selectpicker').selectpicker();
+            $('.mode_selectpicker').selectpicker();
+            $('.power_selectpicker').selectpicker();
             var btn = document.getElementById('upload-btn'),
        wrap = document.getElementById('pic-progress-wrap'),
        picBox = document.getElementById('picbox'),
@@ -146,7 +158,7 @@
                         var info = {
                             'info':
                             {
-                                'email': email(), 'category': $('.category_selectpicker').val(), 'band': $('.band_selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'name':name(), 'email': email(), 'callsign': callsign(), 'operator': $('.operator_selectpicker').val(), 'band': $('.band_selectpicker').val(), 'mode': $('.mode_selectpicker').val(), 'power': $('.power_selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
                                 //'timestamp': response.timestamp, 'filename': response.file
                             }
                         };
@@ -171,12 +183,17 @@
             });
 
         },
-
+        name: name,
         email: email,
-        category: category,
-        categories: categories,
+        callsign: callsign,
+        operator: operator,
+        operators: operators,
         band: band,
         bands: bands,
+        mode: mode,
+        modes: modes,
+        power: power,
+        powers: powers,
         file: file,
         Clear: Clear,
         Send: Send,

@@ -213,6 +213,7 @@
     <Content Include="App\viewmodels\dashboard.js" />
     <Content Include="App\viewmodels\components\events.js" />
     <Content Include="App\views\components\posts.html" />
+    <Content Include="App\views\holyland\holylandrules - old.html" />
     <Content Include="App\views\sukotresults.html" />
     <Content Include="App\views\holyland\logupload2.html" />
     <Content Include="App\views\procedures.html" />

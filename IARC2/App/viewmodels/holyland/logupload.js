@@ -3,31 +3,34 @@
     var shell = require('viewmodels/shell');
 
 
-    //var email = ko.observable();
-    //var category = ko.observable();
-    //var categories = ko.observableArray(['SWL', 'SSB', 'MULTIOP', 'MIX', 'CHECKLOG', 'QRP', 'DIGI', 'CW']);
+    var email = ko.observable();
+    var category = ko.observable();
+    var categories = ko.observableArray(['SOAB-MIX-HP', 'SOAB-MIX-LP', 'SOAB-CW-HP', 'SOAB-CW-LP', 'SOAB-SSB-HP', 'SOAB-SSB-LP', 'SOSB-CW', 'SOSB-SSB', "MOST", "SOAB-MIX-QRP", "YN", "SWL", "Mobile and Portable"]);
+    var band = ko.observable();
+    var bands = ko.observableArray(["All-Bands", "80", "40", "20", "15", "10"]);
     var file = ko.observable();
     var uploader;
 
     var Clear = function () {
-        //$('#registration-form').parsley().reset();
-        //email("");
-        //category("");
+        $('#registration-form').parsley().reset();
+        email("");
+        category("");
+        band("");
         file("");
         uploader.removeCurrent();
     }
 
     var Send = ko.asyncCommand({
         execute: function (complete) {
-            //$('#registration-form').parsley().validate();
-            //if ($('#registration-form').parsley().isValid()) {
+            $('#registration-form').parsley().validate();
+            if ($('#registration-form').parsley().isValid()) {
                 if (uploader.getQueueSize() > 0) {
                     uploader.submit();
                 }
                 else {
                     displayService.display('Do not forget to select your log file', 'error');
                 }
-            //}
+            }
             complete(true);
         },
         canExecute: function (isExecuting) {
@@ -45,10 +48,10 @@
     }
 
     var SetTooltips = function () {
-        //$('#mobile').tooltip();
-        //$('#phone').tooltip();
-        //$('#id').tooltip();
-        //$('#licensenum').tooltip();
+        $('#mobile').tooltip();
+        $('#phone').tooltip();
+        $('#id').tooltip();
+        $('#licensenum').tooltip();
     }
 
     var vm = {
@@ -58,7 +61,8 @@
         },
         compositionComplete: function () {
             SetTooltips();
-            $('.selectpicker').selectpicker();
+            $('.category_selectpicker').selectpicker();
+            $('.band_selectpicker').selectpicker();
             var btn = document.getElementById('upload-btn'),
        wrap = document.getElementById('pic-progress-wrap'),
        picBox = document.getElementById('picbox'),
@@ -74,7 +78,7 @@
                 queue: false,
                 maxUploads: 1,
                 maxSize: 300,
-                allowedExtensions: ['adi', 'txt', 'cabrillo.txt', 'log', 'cbr'],
+                allowedExtensions: ['txt', 'cabrillo.txt', 'log', 'cbr'],
                 //accept: 'image/*',
                 hoverClass: 'btn-hover',
                 focusClass: 'active',
@@ -86,7 +90,7 @@
                 },
                 onExtError: function (filename, extension) {
                     //alert(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, ADIF, and CAB files are allowed.');
-                    displayService.display(filename + ' is not a permitted file type.' + "\n\n" + 'Only ADI, TXT, LOG and CBR files are allowed.', 'error');
+                    displayService.display(filename + ' is not a permitted file type.' + "\n\n" + 'Only TXT, LOG and CBR files are allowed.', 'error');
                 },
                 onSizeError: function (filename, fileSize) {
                     //alert(filename + ' is too big. (300K max file size)');
@@ -142,8 +146,8 @@
                         var info = {
                             'info':
                             {
-                                //'email': email(), 'category': $('.selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
-                                'timestamp': response.timestamp, 'filename': response.file
+                                'email': email(), 'category': $('.category_selectpicker').val(), 'band': $('.band_selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                //'timestamp': response.timestamp, 'filename': response.file
                             }
                         };
                         httpService.post("Server/upload_log.php", info).done(function (data) {
@@ -168,9 +172,11 @@
 
         },
 
-        //email: email,
-        //category: category,
-        //categories: categories,
+        email: email,
+        category: category,
+        categories: categories,
+        band: band,
+        bands: bands,
         file: file,
         Clear: Clear,
         Send: Send,

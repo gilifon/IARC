@@ -60,6 +60,62 @@ if (isset ( $info ['timestamp'] )) {
 	$timestamp = '';
 }
 
+$_category = '';
+if ($_operator == "MULTI-OP")
+{
+	$_category .= "MOST";
+}
+else if ($_operator == "SINGLE-OP")
+{
+	$_category .= "SO";
+	if ($_operator == "All-Bands")
+	{
+		$_category .= "AB";
+		$_category .= "-";
+		$_category .= $_mode;
+		$_category .= "-";
+		if ($_power == "HIGH")
+		{
+			$_category .= "HP";
+		}
+		else if ($_power == "LOW")
+		{
+			$_category .= "LP";
+		}
+		else if ($_power == "QRP")
+		{
+			$_category = "SOAB-MIX-QRP";
+		}
+	}
+	else //Single Band
+	{
+		$_category .= "SB";
+		$_category .= "-";
+		$_category .= $_mode;
+		$_category .= "-";
+		if ($_power == "HIGH")
+		{
+			$_category .= "HP";
+		}
+		else if ($_power == "LOW")
+		{
+			$_category .= "LP";
+		}
+		else if ($_power == "QRP")
+		{
+			$_category = "SOAB-MIX-QRP";
+		}
+		$_category .= "-";
+		$_category .= $_band;
+	}
+}
+else
+{
+	$_category .= $_operator;
+}
+
+
+
 // RUN THE ALGORITHM
 $logVer = '';
 $category_operator = '';
@@ -250,10 +306,22 @@ if (!$result)
 }
 
 $query = "INSERT INTO `iarcorg_holylanddb`.`hltest_logs` 
-	(`ENTRYDATE`,`GUID`,`CALLSIGN`,`EMAIL`,`YEAR`,`LOG`,`NAME`,`CATOPERATOR`,`CATMODE`,`CATPOWER`,`CREATEDBY`,`DXCC`,`CONTINENT`,`ADIF`,`ISPROCESSED`)
+	(`ENTRYDATE`,`GUID`,`CALLSIGN`,`EMAIL`,`YEAR`,`LOG`,`NAME`,`CATOPERATOR`,`CATMODE`,`CATPOWER`,`CATBAND`,`CATEGORY`,`CREATEDBY`,`DXCC`,`CONTINENT`,`ADIF`,`ISPROCESSED`)
 	VALUES
-	('$now','UPLOAD_FROM_WEB','$_callsign','$_email','$year','$file_content','$_name','$_operator','$_mode','$_power','','$country[1]','$country[0]','$country[2]','0') 
+	('$now','UPLOAD_FROM_WEB','$_callsign','$_email','$year','$file_content','$_name','$_operator','$_mode','$_power','$_band','$_category','','$country[1]','$country[0]','$country[2]','0') 
 	ON DUPLICATE KEY UPDATE 
+	`CALLSIGN` = '$_callsign',
+	`EMAIL` = '$_email',
+	`NAME` = '$_name',
+	`LOG` = '$file_content',
+	`CATOPERATOR` = '$_operator',
+	`CATMODE` = '$_mode',
+	`CATPOWER` =  '$_power',
+	`CATBAND` = '$_band',
+	`CATEGORY` = '$_category',
+	`DXCC` = '$country[1]',
+	`CONTINENT` = '$country[0]',
+	`ADIF` = '$country[2]',
 	`ISPROCESSED` = '0'";
 $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query );
 if (!$result)

@@ -149,6 +149,7 @@
     <Content Include="App\services\themeManager.js" />
     <Content Include="App\services\utilities.js" />
     <Content Include="App\viewmodels\components\posts.js" />
+    <Content Include="App\viewmodels\book_download.js" />
     <Content Include="App\viewmodels\sukotresults.js" />
     <Content Include="App\viewmodels\holyland\logupload2.js" />
     <Content Include="App\viewmodels\procedures.js" />
@@ -213,6 +214,7 @@
     <Content Include="App\viewmodels\dashboard.js" />
     <Content Include="App\viewmodels\components\events.js" />
     <Content Include="App\views\components\posts.html" />
+    <Content Include="App\views\book_download.html" />
     <Content Include="App\views\holyland\holylandrules - old.html" />
     <Content Include="App\views\sukotresults.html" />
     <Content Include="App\views\holyland\logupload2.html" />

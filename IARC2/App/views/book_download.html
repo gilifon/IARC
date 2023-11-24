@@ -1,0 +1,22 @@
+﻿<div class="container">
+    <div class="row-fluid privacy">
+        <h1>הורדת ספר לימוד</h1>
+
+        <input type="text" class="form-control" placeholder="שם" data-bind="value: name" tabindex="1" width="120"><br />
+        <input type="text" class="form-control" placeholder="אות קריאה (אם יש)" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="120"><br />
+        <input type="text" class="form-control" placeholder="אימייל" data-bind="value: email" tabindex="1" width="120"><br />
+        <input type="text" class="form-control" placeholder="טלפון" data-bind="value: phone" tabindex="1" width="120"><br />
+
+        <div class="row">
+            <div data-bind="with: {id:'B'}" class="col-md-5 text-right" style="padding:10px 0 0 30px;">
+                <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הרשם והורד ספר לימוד לדרגות ב\ד</button>
+            </div>
+            <div data-bind="with: {id:'A'}" class="col-md-5 text-right" style="padding:10px 0 0 30px;">
+                <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הרשם והורד ספר לימוד לדרגה א</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+

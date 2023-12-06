@@ -6753,14 +6753,20 @@ define('viewmodels/book_download',['services/utilities', 'services/httpService',
             //alert(this.id);
             eventid(this.id);
 
-            if (name() == null) {
+            if (name() == null || name() == "") {
                 displayService.display("אל תשכח להכניס שם..", "error");
             }
-            else if (email() == null) {
+            else if (email() == null || email() == "") {
                 displayService.display("אל תשכח להכניס אימייל..", "error");
             }
-            else if (phone() == null) {
+            else if (!email().includes("@")) {
+                displayService.display("בטוח שזה המייל שלך? תבדוק שוב..", "error");
+            }
+            else if (phone() == null || phone() == "") {
                 displayService.display("אל תשכח להכניס טלפון..", "error");
+            }
+            else if (!(/^\d{2,3}-?\d{7}$/.test(phone()))) {
+                displayService.display("משהו בטלפון לא נראה נכון, תבדוק שוב..", "error");
             }
             else {
                 var info = {

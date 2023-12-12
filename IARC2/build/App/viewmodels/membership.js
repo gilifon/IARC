@@ -1,18 +1,69 @@
-﻿define(function () {
+﻿define(['services/utilities', 'services/httpService', 'services/displayService'], function (utilities, httpService, displayService) {
 
     var shell = require('viewmodels/shell');
 
+    var name = ko.observable();
+    var callsign = ko.observable();
+    var account = ko.observable();
+    var phone = ko.observable();
+    var isRegistered = ko.observable(false);
+
+    this.Send = ko.asyncCommand({
+        execute: function (complete) {
+            if (name() == null || name() == "") {
+                displayService.display("אל תשכח להכניס שם..", "error");
+            }
+            else if (account() == null || account() == "") {
+                displayService.display("אל תשכח להכניס מספר חשבון..", "error");
+            }
+            else if (phone() == null || phone() == "") {
+                displayService.display("אל תשכח להכניס טלפון..", "error");
+            }
+            else if (!(/^\d{2,3}-?\d{7}$/.test(phone()))) {
+                displayService.display("משהו בטלפון לא נראה נכון, תבדוק שוב..", "error");
+            }
+            else {
+                var info = {
+                    'info':
+                    {
+                        'name': name(),
+                        'callsign': callsign(),
+                        'account': account(),
+                        'phone': phone()
+                    }
+                };
+                httpService.post("Server/bank_transfer.php", info).done(function (data) {
+                    complete(true);
+                    isRegistered(data.response);
+                    callsign('');
+                    name('');
+                    account('');
+                    phone('');
+
+                }).error(function () { displayService.display("Something went wrong..", "error"); utilities.handleError(); complete(true); });
+            }
+        },
+        canExecute: function (isExecuting) {
+            //return !isExecuting;
+            return true;
+        }
+    });
+
     var vm = {
         activate: function () {
-            shell.selectedSubMenu('membership');
+            shell.selectedSubMenu('membershio');
             shell.selectedMainMenu('aguda');
-        }
+        },
+        compositionComplete: function () {
+
+        },
+        name: name,
+        callsign: callsign,
+        phone: phone,
+        account: account,
+        isRegistered: isRegistered
     };
 
-    //Note: This module exports a function. That means that you, the developer, can create multiple instances.
-    //This pattern is also recognized by Durandal so that it can create instances on demand.
-    //If you wish to create a singleton, you should export an object instead of a function.
-    //See the "flickr" module for an example of object export.
 
     return vm;
 });

@@ -78,10 +78,13 @@ img.img-circle {
    border-color: #bbb;
    box-shadow: 0 0 2px #c9c9c9;
 }
-
+. small-form
+{
+    width: unset;
+}
 /*Form Spacing*/
 .form-spacing .form-control {
-   margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 /*Navigation

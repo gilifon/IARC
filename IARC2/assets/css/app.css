@@ -972,3 +972,10 @@ i.style-switcher-btn-option:hover {
 .page-host {
     top: 0px;
 }
+
+.darker{
+    background-color: #e4e4e4;
+}
+.light-green-panel{
+    background-color: #85ffd2;
+}

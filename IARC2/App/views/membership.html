@@ -29,32 +29,40 @@
 
         <p>חובבים חדשים שיצטרפו לאגודה החל מיום 1.10 לשנת הפעילות הקלנדארית (המסתיימת ב 31.12 )  יזכו לחברות מלאה גם לשנת הפעילות הקלנדארית העוקבת במסגרת התשלום שנעשה.</p>
 
-        <p>
+        <div class="privacy panel-body margin-bottom-20 darker">
+            <h5><b>תשלום באשראי</b></h5>
+            <p>
             את דמי החבר ניתן לשלם בכרטיס אשראי בקישור הבא: <a href="https://courses.iarc.org/product/%D7%AA%D7%A9%D7%9C%D7%95%D7%9D-%D7%93%D7%9E%D7%99-%D7%97%D7%91%D7%A8/" target="_blank">דף תשלום דמי חבר</a>. התשלום בכרטיס מבטיח טיפול יעיל ומהיר בחברות.
-        </p>
-        <div class="privacy panel-body margin-bottom-20">
-            <p>חובבים המעוניינים לשלם בהעברה בנקאית, מתבקשים למלא את הטופס על מנת להקל עלינו באיתור שורת התשלום בחשבון הבנק.<br/>
-            לאחר מילוי הטופס, יופיעו פרטי חשבון הבנק של האגודה, אליו יש להעביר את התשלום.</br>
-            בנוסף, <b>בעת ההעברה הבנקאית באתר הבנק, חובה לציין את אות הקריאה</b>.</br>
-            אנא מלאו אחר הוראות אלה כדי להקל על התהליך ולהמנע מאי נעימות.</p>
+            </p>
+        </div>
+        <div class="privacy panel-body margin-bottom-20 darker">
+            <h5><b>העברה בנקאית</b></h5>
+            <p>
+                חובבים המעוניינים לשלם בהעברה בנקאית, מתבקשים למלא את הטופס על מנת להקל עלינו באיתור שורת התשלום בחשבון הבנק.<br />
+                לאחר מילוי הטופס, יופיעו פרטי חשבון הבנק של האגודה, אליו יש להעביר את התשלום.</br>
+                בנוסף, <b>בעת ההעברה הבנקאית באתר הבנק, חובה לציין את אות הקריאה</b>.</br>
+                אנא מלאו אחר הוראות אלה כדי להקל על התהליך ולהמנע מאי נעימות.
+            </p>
 
             <input type="text" class="form-control small-form" placeholder="שם" data-bind="value: name" tabindex="1" width="60"><br />
             <input type="text" class="form-control small-form" placeholder="אות קריאה" data-bind="value: callsign" tabindex="1" style="text-transform:uppercase" width="60"><br />
             <input type="text" class="form-control small-form" placeholder="מספר חשבון" data-bind="value: account" tabindex="1" width="60"><br />
             <input type="text" class="form-control small-form" placeholder="טלפון" data-bind="value: phone" tabindex="1" width="60"><br />
 
-            <div class="row">
+            <div class="row margin-bottom-10">
                 <div class="col-md-2 text-right pull-right" style="padding:10px 30px 0 0px;">
                     <button id="SendBtn" type="button" class="btn btn-success" data-bind="command: Send">הצג את פרטי חשבון הבנק</button>
                 </div>
             </div>
 
+            <div class="privacy panel-body margin-bottom-20" style="background-color: #c9ffc9" data-bind="visible: isRegistered">
+                בנק לאומי<br />
+                סניף תל-גנים 988<br />
+                מספר חשבון 2986919<br />
+            </div>
+
         </div>
-        <div class="privacy panel-body margin-bottom-20" data-bind="visible: isRegistered">
-            בנק לאומי<br/>
-            סניף 988<br />
-            חשבון 2986919<br />
-        </div>
+        
         <p>
             במידה והחבר אינו יכול לשלם בכרטיס אשראי או בהעברה בנקאית, ניתן לתאם צורת תשלום אחרת עם הגזבר באמצעות פניה למייל info@iarc.org
         </p>

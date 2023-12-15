@@ -16,18 +16,23 @@
 
             if (name() == null || name() == "") {
                 displayService.display("אל תשכח להכניס שם..", "error");
+                complete(true);
             }
             else if (email() == null || email() == "") {
                 displayService.display("אל תשכח להכניס אימייל..", "error");
+                complete(true);
             }
             else if (!email().includes("@")) {
                 displayService.display("בטוח שזה המייל שלך? תבדוק שוב..", "error");
+                complete(true);
             }
             else if (phone() == null || phone() == "") {
                 displayService.display("אל תשכח להכניס טלפון..", "error");
+                complete(true);
             }
             else if (!(/^\d{2,3}-?\d{7}$/.test(phone()))) {
                 displayService.display("משהו בטלפון לא נראה נכון, תבדוק שוב..", "error");
+                complete(true);
             }
             else {
                 var info = {
@@ -56,8 +61,8 @@
             }
         },
         canExecute: function (isExecuting) {
-            //return !isExecuting;
-            return true;
+            return !isExecuting;
+            //return true;
         }
     });
 

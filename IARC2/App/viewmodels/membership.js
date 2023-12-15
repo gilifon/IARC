@@ -12,15 +12,19 @@
         execute: function (complete) {
             if (name() == null || name() == "") {
                 displayService.display("אל תשכח להכניס שם..", "error");
+                complete(true);
             }
             else if (account() == null || account() == "") {
                 displayService.display("אל תשכח להכניס מספר חשבון..", "error");
+                complete(true);
             }
             else if (phone() == null || phone() == "") {
                 displayService.display("אל תשכח להכניס טלפון..", "error");
+                complete(true);
             }
             else if (!(/^\d{2,3}-?\d{7}$/.test(phone()))) {
                 displayService.display("משהו בטלפון לא נראה נכון, תבדוק שוב..", "error");
+                complete(true);
             }
             else {
                 var info = {
@@ -44,8 +48,8 @@
             }
         },
         canExecute: function (isExecuting) {
-            //return !isExecuting;
-            return true;
+            return !isExecuting;
+            //return true;
         }
     });
 

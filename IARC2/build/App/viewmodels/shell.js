@@ -1,21 +1,29 @@
-﻿define(['plugins/router', 'durandal/app'], function (router, app) {
+﻿define(['plugins/router', 'durandal/app', 'services/utilities', 'services/httpService'], function (router, app, utilities, httpService) {
 
     
     var selectedSubMenu = ko.observable('');
     var selectedMainMenu = ko.observable('main');
     var version = app.version;
-    
+    var counter = ko.observable();
+
+    this.getCount = function () {
+        httpService.get("Server/get_mem_count.php?d=" + Date.now()).done(function (data) {
+            counter(data);
+        }).error(utilities.handleError);
+    }
     return {
         selectedSubMenu: selectedSubMenu,
         selectedMainMenu: selectedMainMenu,
         version: version,
         router: router,
+        counter: counter,
         search: function () {
             //It's really easy to show a message box.
             //You can add custom options too. Also, it returns a promise for the user's response.
             app.showMessage('Search not yet implemented...');
         },
         activate: function () {
+            getCount();
             router.map([
                 { route: '', title: 'Dashboard', moduleId: 'viewmodels/dashboard', nav: true },
                 { route: 'Aguda', title: 'Aguda', moduleId: 'viewmodels/aguda', nav: true },

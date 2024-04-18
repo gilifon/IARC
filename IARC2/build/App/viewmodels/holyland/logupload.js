@@ -7,9 +7,11 @@
     var email = ko.observable();
     var callsign = ko.observable();
     var operator = ko.observable();
-    var operators = ko.observableArray(['SINGLE-OP', 'MULTI-OP', "YN", "SWL", "Portable", "M5", "M10"]);
+    var operators = ko.observableArray(['SINGLE-OP', 'MULTI-OP', "SWL", "CHECKLOG"]);
+    var overlays = ko.observableArray(["NONE", "PORTABLE", "M5", "M10", "YN"]);
+    var overlay = ko.observable();
     var band = ko.observable();
-    var bands = ko.observableArray(["All-Bands", "80", "40", "20", "15", "10"]);
+    var bands = ko.observableArray(["ALL", "80", "40", "20", "15", "10"]);
     var mode = ko.observable();
     var modes = ko.observableArray(["MIX", "SSB", "CW"]);
     var power = ko.observable();
@@ -23,6 +25,7 @@
         email("");
         callsign("");
         operator("");
+        overlay("");
         band("");
         mode("");
         power("");
@@ -75,6 +78,7 @@
             $('.band_selectpicker').selectpicker();
             $('.mode_selectpicker').selectpicker();
             $('.power_selectpicker').selectpicker();
+            $('.overlay_selectpicker').selectpicker();
             var btn = document.getElementById('upload-btn'),
        wrap = document.getElementById('pic-progress-wrap'),
        picBox = document.getElementById('picbox'),
@@ -155,16 +159,18 @@
                         return;
                     }
                     if (response.success === true) {
+                        overlay_val = $('.overlay_selectpicker').val();
                         var info = {
                             'info':
                             {
-                                'name':name(), 'email': email(), 'callsign': callsign(), 'operator': $('.operator_selectpicker').val(), 'band': $('.band_selectpicker').val(), 'mode': $('.mode_selectpicker').val(), 'power': $('.power_selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
+                                'name': name(), 'email': email(), 'callsign': callsign(), 'operator': $('.operator_selectpicker').val(), 'overlay': (overlay_val == "NONE") ? "" : overlay_val, 'band': $('.band_selectpicker').val(), 'mode': $('.mode_selectpicker').val(), 'power': $('.power_selectpicker').val(), 'timestamp': response.timestamp, 'filename': response.file
                                 //'timestamp': response.timestamp, 'filename': response.file
                             }
                         };
                         httpService.post("Server/upload_log.php", info).done(function (data) {
                             if (data.success === true) {
                                 displayService.display(data.msg);
+                                httpService.get("Server/calculate_holyland_results.php");
                             }
                             else {
                                 displayService.display(data.msg, 'error');
@@ -188,6 +194,8 @@
         callsign: callsign,
         operator: operator,
         operators: operators,
+        overlay: overlay,
+        overlays: overlays,
         band: band,
         bands: bands,
         mode: mode,
